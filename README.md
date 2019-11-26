@@ -1,2 +1,5 @@
-# CTF_Archieve
-This repo used for CTF Chellenges
+# CTF Achieve
+This repo used for CTF challenges
+
+# List for challenges contained here
+
