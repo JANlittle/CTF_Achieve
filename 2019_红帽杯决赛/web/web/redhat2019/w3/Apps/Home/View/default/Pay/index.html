@@ -1,0 +1,478 @@
+<include file="Public:htmlcommon" />
+<include file="Public:seolist" />
+<include file="Public:headcommon" />
+</head>
+<body>
+	<div class="container">
+		<include file="Public:demonav" />
+        <div class="help-block">提示：由于暂时没有测试用的支付账号，支付功能返回功能还没有调试！</div>
+        <div id="sflex04" class="stepflex">
+            <dl class="first <if condition='$type eq "prolists"  || ($type neq "buy" && $type neq "pay" && $type neq "finish")'>doing<else/>done</if>">
+                <dt class="s-num">1</dt>
+                <dd class="s-text">商品列表<s></s><b></b></dd>
+                <dd></dd>
+            </dl>
+            <dl class="normal <if condition='$type eq "buy"'>doing<elseif condition='$type eq "pay" || $type eq "finish"'/>done</if>">
+                <dt class="s-num">2</dt>
+                <dd class="s-text">购买商品<s></s><b></b></dd>
+            </dl>
+            <dl class="normal <if condition='$type eq "pay"'>doing<elseif condition='$type eq "finish"'/>done</if>">
+                <dt class="s-num">3</dt>
+                <dd class="s-text">订单预览<s></s><b></b></dd>
+            </dl>
+            <dl class="last <if condition='$type eq "finish"'>doing</if>">
+                <dt class="s-num">&nbsp;</dt>
+                <dd class="s-text">完成<s></s><b></b></dd>
+            </dl>
+        </div>
+        <if condition='$type eq "prolists" || ($type neq "buy" && $type neq "pay" && $type neq "finish")'>
+            <notempty name="prolists">
+                <volist name="prolists" id="pro">
+                    <div class="media">
+                        <div class="media-left">
+                            <a href="{:U('index',array('type'=>'buy','proid'=>$pro['id']))}">
+                                <img class="media-object" src="__IMG__/{$pro.thumb}" width="130">
+                            </a>
+                        </div>
+                        <div class="media-body">
+                            <h4 class="media-heading"><a href="{:U('index',array('type'=>'buy','proid'=>$pro['id']))}">{$pro.name}</a></h4>
+                            <p><span>价格：</span><span class="price">￥{$pro.price}</span></p>
+                            <p><span>库存：</span><span class="quantity">{$pro.quantity}</span></p>
+                            <p><span>说明：</span><span class="description">{$pro.description}</span></p>
+                            <p><a href="{:U('index',array('type'=>'buy','proid'=>$pro['id']))}" class='btn btn-primary'>商品详情</a></p>
+                        </div>
+                    </div>
+                </volist>
+            </notempty>
+        <elseif condition='$type eq "buy"'/>
+            <notempty name="prolists">
+                <form action="{:U('index',array('type'=>'pay','proid'=>$prolists['id']))}" method="get" class='form-inline'>
+                    <div class="media">
+                        <div class="media-left">
+                            <img class="media-object" src="__IMG__/{$prolists.thumb}" width="165">
+                        </div>
+                        <div class="media-body">
+                            <h4 class="media-heading">{$prolists.name}</h4>
+                            <p><span>价格：</span><span class="price">￥{$prolists.price}</span></p>
+                            <p><span>库存：</span><span class="quantity">{$prolists.quantity}</span></p>
+                            <p><span>数量：</span><span class="quantity"><input type="number" name="quantity" value="1" class="form-control" placeholder="请输入数量" /></span></p>
+                            <p><span>说明：</span><span class="description">{$prolists.description}</span></p>
+                            <p><input type="submit" name="buy" value="立即购买" class='btn btn-primary'/></p>
+                        </div>
+                    </div>
+                </form>
+            </notempty>
+        <elseif condition='$type eq "pay"'/>
+            <notempty name="prolists">
+            <form action="{:U('pay')}" method="post" target="_blank" id="subPay" <if condition="!session('?echouid')">onsubmit="return false;"</if>>
+                <div class="row">
+                    <div class="col-md-2 text-right"><strong>收货地址：</strong></div>
+                    <div class="col-md-10">
+                        <div class="form-inline">
+                            <select name="address[city]" class='form-control'>
+                                <option value="北京">北京</option>
+                            </select>
+                            <select name="address[area]" class='form-control'>
+                                <option value="西城区">西城区</option>
+                            </select>
+                            <input type="text" name="address[street]" value="长椿街45号" placeholder="请输入详细街道地址" class='form-control' style="width: 200px"/>
+                            <input type="text" name="address[code]" value="350000" placeholder="请输入邮编号码" class='form-control'/>
+                            <input type="text" name="address[name]" value="CopyLian" placeholder="请输入收货人姓名" class='form-control'/>
+                            <input type="text" name="address[tel]" value="18860101320" placeholder="请输入联系电话" class='form-control' />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2 text-right"><strong>订单号：</strong></div>
+                    <div class="col-md-10">{$sn}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2 text-right"><strong>商品名称：</strong></div>
+                    <div class="col-md-10">{$prolists.name}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2 text-right"><strong>商品单价：</strong></div>
+                    <div class="col-md-10">￥{$prolists.price}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2 text-right"><strong>商品数量：</strong></div>
+                    <div class="col-md-10">{$quantity}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2 text-right"><strong>支付金额：</strong></div>
+                    <div class="col-md-10"><strong class='red'>￥{$prolists['price']*$quantity}</strong></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2 text-right"><strong>商品描述：</strong></div>
+                    <div class="col-md-10">{$prolists.description}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2 text-right"><strong>给卖家留言：</strong></div>
+                    <div class="col-md-10">
+                        <textarea name="message" placeholder="请输输入给卖家的留言" class='form-control'></textarea>
+                    </div>
+                </div>
+                <notempty name="payconfig">
+                    <div class="row">
+                        <div class="col-md-2 text-right"><strong>支付方式：</strong></div>
+                        <div class="col-md-10">
+                            <div class="form-group">
+                                <volist name="payconfig" id="payconf">
+                                    <if condition="$payconf['STATUS']">
+                                        <label class="radio-inline">
+                                            <input type="radio" name="paytype" id="{$payconf.PAYTYPE}" value="{$payconf.PAYTYPE}" <eq name="i" value="1">checked="checked"</eq>>{$payconf.PAYNAME}
+                                        </label>
+                                    <else/> 
+                                    <?php --$i;?>  
+                                    </if>
+                                </volist>
+                            </div>
+                        </div>
+                    </div>
+                </notempty>
+                <div class="row">
+                    <div class="col-md-2 text-right"></div>
+                    <div class="col-md-10">
+                        <input type="submit" name="sub" value="去支付" id="sub" class="btn btn-primary" />
+                    </div>
+                </div>
+                <input type="hidden" name="proid" value="{$prolists.id}" />
+                <input type="hidden" name="sn" value="{$sn}" />
+                <input type="hidden" name="name" value="{$prolists.name}" />
+                <input type="hidden" name="price" value="{$prolists.price}" />
+                <input type="hidden" name="quantity" value="{$quantity}" />
+                <input type="hidden" name="money" value="{$prolists['price']*$quantity}" />
+                <input type="hidden" name="description" value="{$prolists.description}" />
+            </form>
+            <script type="text/javascript">
+                $(function(){
+                    $('#sub').click(function(){
+                        $("#subPay").ajaxSubmit({
+                            type:'post',
+                            url:'{:U("Members/checkLogin")}',
+                            data:{url:'{:encode(U("index@$myurl",array("type"=>"pay","proid"=>$prolists["id"],"quantity"=>$quantity),false,true))}'},
+                            success:function(data, textStatus, jqXHR){
+                                //跳转登陆
+                                if(data.status == -1){
+                                    layer.open({
+                                      title:'登录',
+                                      type: 1,
+                                      content: $('#login_layer')
+                                    });
+                                } else if(data.status == 1) {
+                                    layer.open({
+                                        title      : '提示',
+                                        content    : '请确认是否正确支付了订单？',
+                                        btn        : ['我支付成功', '支付失败'],
+                                        icon       : 3,
+                                        yes        : function(index, layero){
+                                            //直接跳转到完成订单
+                                            location.href = '{:U("index@$myurl",array("type"=>"finish","sn"=>$sn),false,true)}';
+                                        },
+                                        btn2       : function(index, layero){
+                                            //直接跳转到完成订单
+                                            location.href = '{:U("index@$myurl",array("type"=>"finish","sn"=>$sn),false,true)}';
+                                        },
+                                        closeBtn    : 0
+                                    });
+                                } else {
+                                    layer.open({
+                                        content:data.info,
+                                        yes:function(index){
+                                            if(data.url){
+                                                location.href = data.url;
+                                            } else {
+                                                layer.close(index);
+                                            }
+                                        },
+                                        icon:2
+                                    });
+                                    //layer.msg(data.info,{icon:2});
+                                }
+                            }
+                        });
+                    });
+                })
+            </script>
+            </notempty>
+        <elseif condition='$type eq "finish"'/>
+            <notempty name="userorder">
+            <eq name="userorder.status" value="0">
+                <form action="{:U('pay')}" method="post" target="_blank" id="subPay" <if condition="!session('?echouid')">onsubmit="return false;"</if>>
+            </eq>
+                <div class="row">
+                    <div class="col-md-2 text-right"><strong>收货地址：</strong></div>
+                    <div class="col-md-10">
+                        {$userorder.address.city}
+                        {$userorder.address.area}
+                        {$userorder.address.street}
+                        <strong>{$userorder.address.code}</strong>
+                        <strong>{$userorder.address.name}</strong>
+                        <strong>{$userorder.address.tel}</strong>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2 text-right"><strong>订单号：</strong></div>
+                    <div class="col-md-10">{$userorder.sn}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2 text-right"><strong>订单名称：</strong></div>
+                    <div class="col-md-10">{$userorder.name}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2 text-right"><strong>订单商品单价：</strong></div>
+                    <div class="col-md-10">￥{$userorder.price}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2 text-right"><strong>订单商品数量：</strong></div>
+                    <div class="col-md-10">{$userorder.quantity}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2 text-right"><strong>订单支付金额：</strong></div>
+                    <div class="col-md-10"><strong class='red'>￥{$userorder.money}</strong></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2 text-right"><strong>订单商品描述：</strong></div>
+                    <div class="col-md-10">{$userorder.description}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2 text-right"><strong>支付状态：</strong></div>
+                    <div class="col-md-10">
+                        <if condition="$userorder['status'] eq 1">
+                            <span class='green'>已支付<span>
+                        <else />
+                            <span class='red'>未支付<span>
+                        </if>   
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2 text-right"><strong>给卖家留言：</strong></div>
+                    <div class="col-md-10">
+                        {$userorder.message}
+                    </div>
+                </div>
+                <if condition="$userorder['status'] eq 0">
+                <notempty name="payconfig">
+                    <div class="row">
+                        <div class="col-md-2 text-right"><strong>支付方式：</strong></div>
+                        <div class="col-md-10">
+                            <div class="form-group">
+                                <volist name="payconfig" id="payconf">
+                                    <if condition="$payconf['STATUS']">
+                                        <label class="radio-inline">
+                                            <input type="radio" name="paytype" id="{$payconf.PAYTYPE}" value="{$payconf.PAYTYPE}" <eq name="i" value="1">checked="checked"</eq>>{$payconf.PAYNAME}
+                                        </label>
+                                    <else/> 
+                                    <?php --$i;?>  
+                                    </if>
+                                </volist>
+                            </div>
+                        </div>
+                    </div>
+                </notempty>
+                <else />
+                    <div class="row">
+                        <div class="col-md-2 text-right"><strong>支付类型：</strong></div>
+                        <div class="col-md-10">{$userorder.paytype}</div>
+                    </div>
+                </if>
+                <eq name="userorder.status" value="0">
+                    <div class="row">
+                        <div class="col-md-2 text-right"></div>
+                        <div class="col-md-10">
+                            <input type="submit" name="sub" value="去支付" id="sub" class="btn btn-primary" />
+                            <a href="javascript:;" class='btn btn-default delOrder'>删除订单</a><!--未支付可删除订单-->
+                        </div>
+                    </div>
+                    <input type="hidden" name="proid" value="{$userorder.proid}" />
+                    <input type="hidden" name="sn" value="{$userorder.sn}" />
+                    <input type="hidden" name="name" value="{$userorder.name}" />
+                    <input type="hidden" name="price" value="{$userorder.price}" />
+                    <input type="hidden" name="quantity" value="{$userorder.quantity}" />
+                    <input type="hidden" name="money" value="{$userorder.money}" />
+                    <input type="hidden" name="description" value="{$userorder.description}" />
+                <else />
+                    <div class="row">
+                        <div class="col-md-2 text-right"><strong>物流信息：</strong></div>
+                        <div class="col-md-10">
+                            <if condition="$userorder['fahuo'] eq 1">
+                                <p class='green'>已发货</p>
+                                <p>
+                                    <span>物流公司：{$userorder.express}；</span>
+                                    <span>运单号码：{$userorder.expressnum}；</span>
+                                    <span>发货时间：{$userorder.fahuotime|date="Y-m-d H:i:s",###}</span>
+                                    <a href="http://m.kuaidi100.com/result.jsp?nu={$userorder.expressnum}" target="_blank" class='btn btn-default'>快递查询</a>
+                                </p>
+                            <elseif condition="$userorder['fahuo'] eq 0" />
+                                未发货
+                            <elseif condition="$userorder['fahuo'] eq 2" />
+                                <p><strong class="green">已收货</strong> </p>
+                                <p>
+                                    <span>物流公司：{$userorder.express}；</span>
+                                    <span>运单号码：{$userorder.expressnum}；</span>
+                                    <span>发货时间：{$userorder.fahuotime|date="Y-m-d H:i:s",###}</span>
+                                    <a href="http://m.kuaidi100.com/result.jsp?nu={$userorder.expressnum}" target="_blank" class='btn btn-default'>快递查询</a>
+                                </p>
+                            <elseif condition="$userorder['fahuo'] eq 3" />
+                                <p><strong class="green">已退货</strong> </p>  
+                            </if>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2 text-right"></div>
+                        <div class="col-md-10">
+                            <if condition="$userorder['fahuo'] eq 1">
+                                <a href="javascript:;" id="ConfirmReceipt" class='btn btn-primary'>确认收货</a>
+                            </if>
+                            <if condition="$userorder['refund'] eq 1">
+                                <a href="javascript:;" class='btn btn-primary' disabled="disabled">退款/退货中...</a>
+                            <elseif condition="$userorder['refund'] eq 2"/>
+                                <span class='red'>退货/退款成功，请注意您的退款信息！</span>
+                                <a href="javascript:;" class='btn btn-default delOrder'>删除订单</a><!--退款完成可删除订单-->
+                            <elseif condition="$userorder['refund'] eq 0"/>
+                                <eq name="userorder.fahuo" value="2">
+                                    <a href="javascript:;" class='btn btn-primary' id="RefundReturn">申请退款/退货</a>
+                                </eq>
+                                <eq name="userorder.fahuo" value="0">
+                                    <a href="javascript:;" class='btn btn-primary' id="RefundReturn">申请退款/退货</a>
+                                </eq>
+                                <eq name="userorder.fahuo" value="3">
+                                    <a href="javascript:;" class='btn btn-default delOrder'>删除订单</a><!--确认收货，且未退款可删除订单-->
+                                </eq>
+                                <div id="RefundDialog" style="display: none;padding: 10px 15px;">
+                                    <div class="help-block">已经发货了的商品，请拒收（<span class='green'>未收货</span>）或者确认收货（<span class='green'>已收货</span>）后寄回！</div>
+                                    <form action="" method="post" id="refundForm" onsubmit="return false;">
+                                        <label for="returntype">申请退款/退货方式：</label>
+                                        <select name="returntype" id="returntype" class="form-control">
+                                            <option value="还没发货，直接退款">还没发货，直接退款</option>
+                                            <option value="已经发货，退货退款">已经发货，退货退款</option>
+                                            <option value="已收到货，退货换货">已收到货，退货换货</option>
+                                            <option value="已收到货，退货退款">已收到货，退货退款</option>
+                                            <option value="其他">其他</option>
+                                        </select>
+                                        <div class="blank5"></div>
+                                        <label for="refunddesc">申请退款/退货说明：</label>
+                                        <textarea name="refunddesc" id="refunddesc" class="form-control" placeholder="请在这里输入申请退款/退货说明"></textarea>
+                                        <div class="blank5"></div>
+                                        <input type="hidden" name="sn" value="{$userorder.sn}">
+                                        <input type="submit" name="sub" id="RefundReturnSub" value="确认退货" class="btn btn-primary" />
+                                    </form>
+                                </div>
+                            </if>
+                        </div>
+                    </div>
+                </eq>
+            <eq name="userorder.status" value="0">    
+                </form>
+            </eq>
+            <!--确认收货-->
+            <eq name="userorder.fahuo" value="1">
+                <script type="text/javascript">
+                    $(function(){
+                        //确认收货
+                        $('#ConfirmReceipt').click(function(){
+                            parent.layer.confirm('现在要确认收货吗？',{icon:3},function(index){
+                                postUrl("{:U('confirmreceipt')}",{sn:'{$userorder.sn}'});
+                            });
+                        });
+                    })
+                </script>
+            </eq>
+            <!--end 确认收货-->
+            <!--删除订单-->
+            <if condition="$userorder['status'] eq 0 || $userorder['refund'] eq 2 || ($userorder['refund'] eq 0 && $userorder['fahuo'] eq 2)">
+                <script type="text/javascript">
+                    $(function(){
+                        //删除订单
+                        $('.delOrder').click(function(){
+                            parent.layer.confirm('现在确认要删除订单吗？',{icon:3},function(index){
+                                postUrl("{:U('delOrder')}",{sn:'{$userorder.sn}'});
+                            });
+                        });
+                    })
+                </script>
+            </if>
+            <!--end 删除订单-->
+            <eq name="userorder.status" value="1">
+                <script type="text/javascript">
+                    $(function(){
+                        //确认收获
+                        $('#RefundReturn').click(function(){
+                            layer.open({
+                                title:'申请退款/退货',
+                                type: 1,
+                                area: ['60%', 'auto'],
+                                content: $('#RefundDialog')
+                            });
+                           
+                        });
+
+                        //提交退款说明
+                        $('#RefundReturnSub').click(function(){
+                             parent.layer.confirm('确定要申请退货/退款吗？',{icon:3},function(index){
+                                submitForm("{:U('refundReturn')}","#refundForm");
+                            });
+                        })
+                    })
+                </script>
+            </ee>
+            <!--去支付-->
+            <if condition="$userorder['status'] eq 0">
+            <script type="text/javascript">
+                $(function(){
+                    $('#sub').click(function(){
+                        $("#subPay").ajaxSubmit({
+                            type:'post',
+                            url:'{:U("Members/checkLogin")}',
+                            data:{url:'{:encode(U("index@$myurl",array("type"=>"finish","sn"=>$userorder["sn"]),false,true))}'},
+                            success:function(data, textStatus, jqXHR){
+                                //跳转登陆
+                                if(data.status == -1){
+                                    layer.open({
+                                      title:'登录',
+                                      type: 1,
+                                      content: $('#login_layer')
+                                    });
+                                } else if(data.status == 1) {
+                                    layer.open({
+                                        title      : '提示',
+                                        content    : '请确认是否正确支付了订单？',
+                                        btn        : ['我支付成功', '支付失败'],
+                                        icon       : 3,
+                                        yes        : function(index, layero){
+                                            //直接跳转到完成订单
+                                            location.href = '{:U("index@$myurl",array("type"=>"finish","sn"=>$userorder["sn"]),false,true)}';
+                                        },
+                                        btn2       : function(index, layero){
+                                            //直接跳转到完成订单
+                                            location.href = '{:U("index@$myurl",array("type"=>"finish","sn"=>$userorder["sn"]),false,true)}';
+                                        },
+                                        closeBtn    : 0
+                                    });
+                                } else {
+                                    layer.open({
+                                        content:data.info,
+                                        yes:function(index){
+                                            if(data.url){
+                                                location.href = data.url;
+                                            } else {
+                                                layer.close(index);
+                                            }
+                                        },
+                                        icon:2
+                                    });
+                                    //layer.msg(data.info,{icon:2});
+                                }
+                            }
+                        });
+                    });
+                })
+            </script>
+            </if>
+             <!--end 去支付-->
+            </notempty>
+        </if>
+<include file="Public:login_layer" />
+<include file="Public:foot" />
+</body>
+</html>

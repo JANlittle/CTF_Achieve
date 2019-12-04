@@ -1,0 +1,87 @@
+<layout name="Public/layout" />
+<div class="main-wrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><a class="crumb-name" href='{:U("index",decode($parameter))}'>短信列表</a><span class="crumb-step">&gt;</span>短信配置</div>
+    </div>
+    <div class="result-wrap table-responsive">
+        <div class="result-content">
+            <form action="" method="post" id="myform" name="myform" onsubmit="return false">
+                <table class="insert-tab table table-hover" width="100%">
+                    <tbody>
+                        <tr>
+                            <th><i class="require-red">*</i>账号：</th>
+                            <td>
+                                <input class="common-text required form-control" id="accout" name="accout" size="50" value="{$data.accout}" type="text" placeholder="请输入账号">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>密码：</th>
+                            <td>
+                                <input class="common-text required form-control" id="password" name="password" size="50" value="{$data.password}" type="text" placeholder="请输入密码">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>验证码长度：</th>
+                            <td>
+                                <input class="common-text required form-control" id="codelength" name="codelength" size="50" value="{$data.codelength}" type="text" placeholder="请输入验证码长度">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>类型：</th>
+                            <td>
+                                <select name="type" class="form-control">
+                                    <option value="0"  <eq name="data.type" value="0">selected="selected"</eq>>字母+数字</option>
+                                    <option value="1"  <eq name="data.type" value="1">selected="selected"</eq>>数字</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>提供商：</th>
+                            <td>
+                                <input class="common-text required form-control" id="applyname" name="applyname" size="50" value="{$data.applyname}" type="text" placeholder="请输入提供商">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>提供商网址：</th>
+                            <td>
+                                <input class="common-text required form-control" id="applyurl" name="applyurl" size="50" value="{$data.applyurl}" type="applyurl" placeholder="请输入提供商网址">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>短信模板：</th>
+                            <td>
+                                <textarea name="content" class="common-textarea form-control" cols="30" rows="3" placeholder="请输入短信模板">{$data.content}</textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>状态：</th>
+                            <td>
+                                <select name="status" class="form-control">
+                                    <option value="1" <eq name="data.status" value="1">selected="selected"</eq>>开启</option>
+                                    <option value="0" <eq name="data.status" value="0">selected="selected"</eq>>关闭</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/messagetest",session("uid")) eq 1'>
+                        <tr>
+                            <th>短信测试：</th>
+                            <td>
+                                <input class="common-text required form-control" style="display: inline-block;width:50%" id="ceshi" name="ceshi" size="50" value="" type="text" placeholder="请输入测试手机"> <input class="btn btn-primary btn6 mr10" value="获取验证码" type="button" id="ceshibutton" onclick='sendCode("{:U("messagetest")}","#ceshi","#ceshibutton");'>
+                            </td>
+                        </tr>
+                        </if>
+                        <tr>
+                            <th></th>
+                            <td>
+                                <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitForm("{:U("setmessage")}","#myform")'>
+                                <input class="btn btn6" onclick="history.go(-1)" value="返回" type="button">
+                            </td>
+                        </tr>
+                    </tbody></table>
+                    <input type="hidden" name='id' value="{$data.id}" />
+            </form>
+        </div>
+    </div>
+
+</div>
+<script src="__PUBLIC__/js/mobile_code.js" type="text/javascript"></script>

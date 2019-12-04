@@ -1,0 +1,47 @@
+<include file="Public:head" />
+<div class="main-wrap">
+    <div class="result-wrap table-responsive" style='padding-top:10px'>
+        <div class="result-content">
+            <form action="" method="post" id="myform" name="myform" onsubmit="return false" enctype="multipart/form-data">
+                <table class="insert-tab table table-hover" width="100%">
+                    <tbody>
+                        <tr>
+                            <th><i class="require-red">*</i>标题：</th>
+                            <td>
+                                <input class="common-text required form-control" id="title" name="title" size="50" value="" type="text" placeholder="请输入标题">
+                            </td>
+                        </tr>
+                        <if condition="$data['type'] eq 1">
+                            <tr>
+                                <th><i class="require-red">*</i>封面图片：</th>
+                                <td>
+                                    <include file="Uploadfile:fileadd" />
+                                    <div class="clear"></div>
+                                </td>
+                            </tr>
+                        </if>
+                        <tr>
+                            <th><i class="require-red">*</i>状态：</th>
+                            <td>
+                                <select name="status" id="status" class="form-control">
+                                    <option value="1" selected="selected">开启</option>
+                                    <option value="0">关闭</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <td>
+                                <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitFormIframe("{:U("optionsadd")}","#myform")'>
+                                <input class="btn btn6" onclick="closeIframe()" value="关闭" type="button">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <input type="hidden" name="vid" value="{$vid}">
+                <input type="hidden" name="type" value="{$data['type']}">
+                <input type="hidden" name="linkcate_parameter" value="{$linkcate_parameter}">
+            </form>
+        </div>
+    </div>
+</div>

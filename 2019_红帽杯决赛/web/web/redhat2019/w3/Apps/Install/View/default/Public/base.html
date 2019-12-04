@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <meta name="renderer" content="webkit">
+        <meta name="author" content="CopyLian">
+        <title>{:C('SYSTEM_TITLE')}</title>
+        <meta name="keywords" content="{:C('SYSTEM_KEYWORDS')}" />
+        <meta name="description" content="{:C('SYSTEM_DESCRIPTION')}" />
+        <link href="__JQUERY__/bootstrap/css/bootstrap.css" rel="stylesheet">
+        <link rel="stylesheet" href="__JQUERY__/bootstrapvalidator/dist/css/bootstrapValidator.css"/>
+        <link href="__CSS__/install.css" rel="stylesheet">
+        <!--[if lt IE 9]>
+            <script src="__JQUERY__/bootstrap/js/html5shiv.min.js"></script>
+            <script src="__JQUERY__/bootstrap/js/respond.min.js"></script>
+        <![endif]-->
+        <script src="__JQUERY__/jquery-2.0.3.min.js"></script>
+        <script src="__JQUERY__/bootstrap/js/bootstrap.js"></script>
+        <script type="text/javascript" src="__JQUERY__/bootstrapvalidator/dist/js/bootstrapValidator.js"></script>
+        <script type="text/javascript" src="__JQUERY__/bootstrapvalidator/dist/js/language/zh_CN.js"></script>
+        <script src="__JQUERY__/layer/layer.js"></script>
+        <script src="__JQUERY__/layer/extend/layer.ext.js"></script>
+        <script type="text/javascript">
+            layer.config({
+                extend: ['skin/moon/style.css'],
+                skin: 'layer-ext-moon'
+            });
+        </script>
+        <script type="text/javascript" src="__JQUERY__/jquery.form.js"></script>
+        <script src="__JQUERY__/jquery.fixedsSerializeArray.js"></script>
+        <script src="__JS__/base.js"></script>
+    </head>
+
+    <body>
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <div class="topbar-logo" style='padding-top: 4px'><a target="_blank" href="http://www.aikehou.com/"><img src="__IMG__/logo.png" alt="爱客猴（echo）内容管理系统 v3.2.3"></a></div>
+                    </div>
+                    <div class="navbar-collapse collapse">
+                    	<ul id="step" class="nav navbar-nav">
+                    		<block name="header"></block>
+                    	</ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="jumbotron masthead">
+            <div class="container">
+                <block name="body"></block>
+            </div>
+        </div>
+
+        <footer class="footer navbar-fixed-bottom">
+            <div class="container">
+                <div>
+                	<block name="footer"></block>
+                </div>
+            </div>
+        </footer>
+    </body>
+</html>

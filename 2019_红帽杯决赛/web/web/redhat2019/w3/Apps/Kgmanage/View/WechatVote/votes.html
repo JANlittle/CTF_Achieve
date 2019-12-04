@@ -1,0 +1,45 @@
+<layout name="Public/layout" />
+<div class="mwrap">
+    <div class="crumb-wrap">
+    <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><a <eq name="type" value='1'>href='{:U("index",decode($parameter))}'<else/>href='{:U("wordindex",decode($parameter))}'</eq>>投票</a><span class="crumb-step">&gt;</span><span class="crumb-name">投票详情</span></div>
+    </div>
+    <div class="result-wrap">
+        <form name="myform" id="myform" method="post">
+            <div class="result-title">
+                <div class="result-list">
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/votesdel",session("uid")) eq 1'>
+                        <a id="batchDel" href="javascript:void(0)" onclick="delall('{:U('votesdel')}')"><i class="icon-font">&#xe037;</i>批量删除</a>
+                    </if>
+                </div>
+            </div>
+            <div class="result-content table-responsive">
+                <table class="result-tab table table-hover" width="100%">
+                    <tr class='head-tr'>
+                        <th class="tc ids-td"><input class="allChoose" onchange="selectAll(this)" id="selectall" type="checkbox"></th>
+                        <th>ID</th>
+                        <th>类型</th>
+                        <th>openid</th>
+                        <th>昵称</th>
+                        <th>操作</th>
+                    </tr>
+                    <volist name="data" id="datalist">
+                    <tr>
+                        <td class="tc ids-td"><input name="ids[]" class='select_ids' value="{$datalist.id}" type="checkbox" ></td>
+                        <td>{$datalist.id}</td>
+                        <td><eq name="datalist.type" value="1">图片<else/>文字</eq></td>
+                        <td>{$datalist.openid}</td>
+                        <td>{$datalist.name}</td>
+                        <td>
+                            <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/votesdel",session("uid")) eq 1'>
+                                <a class="link-del" href="javascript:;" onclick="del('{:U('votesdel')}',{$datalist.id})">删除</a>
+                            </if>
+                        </td>
+                    </tr>
+                    </volist>
+
+                </table>
+                <div class="list-page">{$pagelist}</div>
+            </div>
+        </form>
+    </div>
+</div>

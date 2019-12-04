@@ -1,0 +1,67 @@
+<layout name="Public/layout" />
+<link rel="stylesheet" href="__PUBLIC__/jqueryui/colorpicker/css/jquery.bigcolorpicker.css" type="text/css" />
+<script type="text/javascript" src="__PUBLIC__/jqueryui/colorpicker/js/jquery.bigcolorpicker.min.js"></script>
+<script  type="text/javascript">
+$(function(){
+    $("#titlecolor").bigColorpicker(function(el,color){
+        $(el).val(color).css("color",color);
+    },"L",10);
+})
+</script>
+<div class="main-wrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><a class="crumb-name" href='{:U("index",decode($parameter))}'>关联链接</a><span class="crumb-step">&gt;</span><span>新增链接</span></div>
+    </div>
+    <div class="result-wrap table-responsive">
+        <div class="result-content">
+            <form action="" method="post" id="myform" name="myform" onsubmit="return false" enctype="multipart/form-data">
+                <table class="insert-tab table table-hover" width="100%">
+                    <tbody>
+                        <tr>
+                            <th width="120"><i class="require-red">*</i>名称：</th>
+                            <td>
+                                <input class="common-text required form-control" id="title" name="title" size="50" value="" type="text" placeholder="请输入名称">
+                                <div class="help-block">例如:爱客猴</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>显示颜色：</th>
+                            <td>
+                                <input class="common-text required form-control" id="titlecolor" name="titlecolor" size="50" value="" type="text" placeholder="请输入显示颜色">
+                                <div class="help-block">例如:red,#000</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>URL地址：</th>
+                            <td>
+                                <input class="common-text required form-control" id="url" name="url" size="50" value="" type="text" placeholder="请输入URL地址">
+                                <div class="help-block">不填则替换为系统生成链接</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>描述：</th>
+                            <td><textarea name="description" class="common-textarea form-control" id="description" cols="30" rows="3" placeholder="请输入描述"></textarea></td>
+                        </tr>
+                        <tr>
+                            <th>状态：</th>
+                            <td>
+                                 <select name="status" class="form-control">
+                                    <option value="1" selected="selected">开启</option>
+                                    <option value="0">关闭</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <td>
+                                <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitAjaxForm("{:U("add")}","#myform")'>
+                                <input class="btn btn6" onclick="history.go(-1)" value="返回" type="button">
+                            </td>
+                        </tr>
+                    </tbody></table>
+                    <input type="hidden" name="parameter" value="{$parameter}">
+            </form>
+        </div>
+    </div>
+
+</div>

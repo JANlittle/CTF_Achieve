@@ -1,0 +1,47 @@
+<layout name="Public/layout" />
+<div class="main-wrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><a class="crumb-name" href='{:U("notice",decode($parameter))}'>通知管理</a><span class="crumb-step">&gt;</span><span>新增通知</span></div>
+    </div>
+    <div class="result-wrap table-responsive">
+        <div class="result-content">
+            <form action="" method="post" id="myform" name="myform" onsubmit="return false">
+                <table class="insert-tab table table-hover" width="100%">
+                    <tbody>
+                        <tr>
+                            <th><i class="require-red">*</i>标题：</th>
+                            <td>
+                                <input class="common-text required form-control" id="title" name="title" size="50" value="" type="text" placeholder="请输入标题">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style='width:120px'>内容：</th>
+                            <td>
+                                <!-- 加载编辑器的容器 -->
+                                <textarea name="content" id="container" style="width:100%;height:250px;line-height:20px"></textarea>
+                                <include file="Public:ueditor" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>状态：</th>
+                            <td>
+                                <select name="status" class="form-control">
+                                    <option value="1" selected="selected">开启</option>
+                                    <option value="0">关闭</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <td>
+                                <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitForm("{:U("noticeadd")}","#myform")'>
+                                <input class="btn btn6" onclick="history.go(-1)" value="返回" type="button">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <input type="hidden" name="parameter" value="{$parameter}">
+            </form>
+        </div>
+    </div>
+</div>

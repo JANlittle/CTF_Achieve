@@ -1,0 +1,58 @@
+<layout name="Public/layout" />
+<div class="mwrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><span class="crumb-name">微信宣传页</span></div>
+    </div>
+    <div class="result-wrap table-responsive" style='padding-bottom:0;'>
+        <form name="myform" id="myform" method="post" onsubmit="return false" enctype="multipart/form-data">
+            <div class="result-content">
+                <div class="tab-wrap">
+                    <table class="insert-tab table table-hover" id="tab1" width="100%">
+                        <tbody>
+                            <tr>
+                                <th width="150"><i class="require-red">*</i>宣传页标题名：</th>
+                                <td>
+                                    <input class="common-text required form-control" id="title" name="title" size="50" value="{$data.title}" type="text" placeholder="请输入宣传页标题">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><i class="require-red">*</i>二维码图片：</th>
+                                <td>
+                                    <include file="Uploadfile:fileedit" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>功能简介：</th>
+                                <td>
+                                    <textarea name="remark" class="common-textarea form-control" id="remark" cols="30" rows="3" placeholder="请输入简介">{$data.remark}</textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>版权信息：</th>
+                                <td>
+                                    <input class="common-text required form-control" id="copyright" name="copyright" size="50" value="{$data.copyright}" type="text" placeholder="例如：©2001-2013 echo信息科技公众号版权所有">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="blank15"></div>
+                    <table width="100%">
+                        <tbody>
+                            <tr>
+                                <th></th>
+                                <td>
+                                    <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitAjaxForm("{:U("index")}","#myform")'>
+                                    <a class="btn btn-warning btn6 mr10" href="{:U('Wechat/Extension/index')}" target="_blank">查看推广页</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="blank15"></div>
+                </div>
+            </div>
+            <input type="hidden" name="thumbw" value="{$thumbw}">
+            <input type="hidden" name="thumbh" value="{$thumbh}">
+            <input type="hidden" name="id" value="{$data.id}">
+        </form>
+    </div>
+</div>

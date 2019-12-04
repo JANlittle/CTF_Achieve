@@ -1,0 +1,83 @@
+<layout name="Public/layout" />
+<div class="mwrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><span class="crumb-name">自定义菜单</span></div>
+    </div>
+    <div class="result-wrap">
+        <form name="myform" id="myform" method="post">
+            <div class="result-title">
+                <div class="result-list">
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/add",session("uid")) eq 1'>
+                        <a href='{:U("add")}'><i class="icon-font">&#xe026;</i>新增菜单</a>
+                    </if>
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/del",session("uid")) eq 1'>
+                        <a id="batchDel" href="javascript:void(0)" onclick="delall('{:U('del')}')"><i class="icon-font">&#xe037;</i>批量删除</a>
+                    </if>
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/sort",session("uid")) eq 1'>
+                        <a id="updateOrd" href="javascript:void(0)" onclick="sort('{:U('sort')}')"><i class="icon-font">&#xe00a;</i>更新排序</a>
+                    </if>
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/create",session("uid")) eq 1'>
+                        <a href="javascript:void(0)" onclick="postUrl('{:U('create')}')"><i class="icon-font">&#xe002;</i>生成自定义菜单</a>
+                    </if>
+                </div>
+            </div>
+            <div class="result-content table-responsive">
+                <table class="result-tab table table-hover" width="100%">
+                    <tr class='head-tr'>
+                        <th class="tc ids-td"><input class="allChoose" onchange="selectAll(this)" id="selectall" type="checkbox"></th>
+                        <th class="sort-td">排序</th>
+                        <th>ID</th>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th>跳转地址</th>
+                        <th>关联关键字</th>
+                        <th>操作</th>
+                    </tr>
+                    <volist name="data" id="datalist">
+                    <tr>
+                        <td class="tc ids-td"><input name="ids[]" class='select_ids' value="{$datalist.id}" type="checkbox" ></td>
+                        <td class="sort-td">
+                            <input class="common-input sort-input sort form-control" dataId="{$datalist.id}" name="sort[]" value="{$datalist.sort}" type="text">
+                        </td>
+                        <td>{$datalist.id}</td>
+                        <td>{$datalist.name}</td>
+                        <td>{$typedata[$datalist['type']]}</td>
+                        <td>{$datalist.url}</td>
+                        <td>{$datalist.key}</td>
+                        <td>
+                            <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/edit",session("uid")) eq 1'>
+                                <a class="link-update" href='{:U("edit",array("id"=>$datalist["id"]))}'>修改</a>
+                            </if>
+                            <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/del",session("uid")) eq 1'>
+                                <a class="link-del" href="javascript:;" onclick="del('{:U('del')}',{$datalist.id})">删除</a>
+                            </if>
+                        </td>
+                    </tr>
+                    <volist name="datalist.child" id="child">
+                    <tr>
+                        <td class="tc ids-td"><input name="ids[]" class='select_ids' value="{$child.id}" type="checkbox" ></td>
+                        <td class="sort-td">
+                            <input class="common-input sort-input sort form-control" style="margin-left: 30px;" dataId="{$child.id}" name="sort[]" value="{$child.sort}" type="text">
+                        </td>
+                        <td>{$child.id}</td>
+                        <td><strong class='green' style="padding-left: 15px;">├──── </strong>{$child.name}</td>
+                        <td>{$typedata[$child['type']]}</td>
+                        <td>{$child.url}</td>
+                        <td>{$child.key}</td>
+                        <td>
+                            <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/edit",session("uid")) eq 1'>
+                                <a class="link-update" href='{:U("edit",array("id"=>$child["id"]))}'>修改</a>
+                            </if>
+                            <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/del",session("uid")) eq 1'>
+                                <a class="link-del" href="javascript:;" onclick="del('{:U('del')}',{$child.id})">删除</a>
+                            </if>
+                        </td>
+                    </tr>
+                    </volist>
+                    </volist>
+
+                </table>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,457 @@
+/* 
+* Author: [ Copy Lian ]
+* Date: [ 2015.05.14 ]
+* Description [ 基础css ]
+*/
+.comments-inner {
+    width: auto;
+    font-size: 12px;
+    z-index: 3;
+    margin: 8px 0;
+    padding: 0 0 0 60px;
+    position: relative;
+    _zoom: 1;
+}
+
+.comments-head {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.comments-head img {
+    width: 50px;
+    height: 50px;;
+    visibility: visible;
+    margin: 0;
+}
+
+.comments-head .comments-avatar img {
+    display: block;
+    width: 50px;
+    height: 50px;
+    max-width: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.22);
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.comments_inner_box {
+    position: relative;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    background: #fff url(../images/comments/comments_bg_sprites.png) 0 -90px repeat-x;
+}
+
+.comments_inner_box {
+    -webkit-border-top-right-radius: 3px;
+    -webkit-border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+}
+
+.comments_inner_box textarea {
+    display: block;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 13px;
+    line-height: 20px;
+    border: none;
+    box-shadow: none;
+    -webkit-appearance: none;
+    overflow: auto;
+    padding: 10px;
+    height: 80px;
+    margin: 0;
+    resize: none;
+    color: #999;
+    width: 100%;
+    outline:none;
+}
+
+.comments_inner_box textarea:focus,.comments_inner_box textarea:active{
+    border:none
+}
+
+ .comments_inner_foot {
+    position: relative;
+    height: 30px;
+    border: 1px solid #ccc;
+    border-right: none;
+    border-bottom-color: #aaa;
+    border-bottom-left-radius: 3px;
+    -webkit-border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    -webkit-border-bottom-right-radius: 3px;
+    background: url(../images/comments/comments_bg_sprites.png) 0 -60px repeat-x;
+}
+
+.imgBtn {
+    float: left;
+    margin-top: 5px;
+    margin-left: 5px;
+    background-image: url(../images/comments/comments.png);
+    background-repeat: no-repeat;
+    background-position: 0 -13px;
+    height: 18px;
+    width: 20px;
+    cursor: pointer;
+}
+
+.imgBtn:active {
+    margin-top: 9px;
+}
+
+.imgBtn:hover {
+    background-position: 0 -31px;
+}
+
+.postBtn {
+    float: right;
+    font: 13px "微软雅黑", Arial, Helvetica, sans-serif;
+    color: #555;
+    padding: 6px 30px 6px 30px;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none
+}
+
+.postBtn:hover {
+    color: #333;
+    background-color: #efefef;
+    text-decoration: none
+}
+
+.postBtn:active,.postBtn:focus {
+    padding: 6px 30px 6px 30px;
+    text-decoration: none
+}
+
+.comments_inner_face {
+    max-width: 500px;
+    position: absolute;
+    background-color: #fff;
+    -moz-border-radius: 0 0 5px 5px;
+    -webkit-border-radius: 0 0 5px 5px;
+    border-radius: 0 0 5px 5px;
+    top: 109px;
+    left:-1px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    display:none;
+    z-index:3
+}
+
+.comments_inner_face>img {
+    float: left;
+    margin-left: -1px;
+    margin-top: -1px;
+    position: relative;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    margin:3px;
+}
+
+.comments_inner_face>img:hover {
+    background-color: #efefef;
+}
+
+.comments_inner_face>img:active {
+    padding: 4px 3px 2px 3px;
+}
+
+.ds-comments-info {
+    width: 100%;
+    font-size: 13px;
+    padding: 8px 0;
+    position: relative;
+}
+
+.ds-sort {
+    position: absolute;
+    right: 0;
+    top: 8px;
+}
+
+.ds-sort a {
+    color: #999;
+    padding: 0 4px;
+    margin: 0 2px;
+    cursor:pointer
+}
+
+.ds-sort a.ds-current,.ds-sort a:active {
+    color: #d32;
+}
+
+.ds-sort a {
+    color: #999;
+    padding: 0 4px;
+    margin: 0 2px;
+}
+
+li.ds-tab {
+    display: inline;
+    font-size: 13px;
+    margin: 0 5px 0 0;
+    padding: 0;
+}
+
+li.ds-tab a.ds-current {
+    text-shadow: 0 1px 0 #fff;
+    padding: 3px 5px;
+    display: inline;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: rgba(0,0,0,0.04);
+}
+
+.ds-comments {
+    width: 100%;
+    border-bottom: 1px solid rgba(0,0,0,0.13);
+    padding:0
+}
+
+li.ds-post {
+    width: 100%;
+    overflow: hidden;
+    clear: both;
+    border-top: 1px solid rgba(0,0,0,0.13);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ds-post-self {
+    position: relative;
+    padding: 10px;
+    border-top: 1px solid rgba(255,255,255,0.7);
+}
+
+.ds-avatar {
+    box-shadow: 0 1px 1px rgba(255,255,255,0.75);
+    position: relative;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    background-color: #fff;
+    float: left;
+}
+
+.ds-comment-body {
+    padding-left: 60px;
+}
+
+.ds-comment-header {
+    padding-top: -1px;
+    line-height:1
+}
+
+.ds-user-name {
+    color: #777;
+    font-size: 13px;
+    margin-right: 8px;
+}
+
+.ds-comment-body p {
+    font-size: 13px;
+    line-height: 1.5em;
+    margin: .5em 0;
+    word-wrap: break-word;
+}
+
+.ds-highlight {
+    color: #d32 !important;
+}
+
+.ds-comment-footer {
+    line-height: 1.5em;
+}
+
+.ds-time {
+    font-size: 12px;
+    margin-right: 8px;
+    color: #999;
+    _zoom: 1;
+}
+
+.ds-comment-actions a {
+    font-size: 12px;
+    color: #999;
+}
+
+.ds-comment-footer a {
+    margin: 0 6px 0 0;
+    padding: 0 6px 0 0;
+}
+
+.ds-comment-actions a .ds-icon {
+    position: relative;
+    top: -1px;
+}
+
+.ds-icon-reply {
+    width: 18px;
+    height: 13px;
+    background-position: 0 -105px;
+}
+
+.ds-icon {
+    vertical-align: middle;
+    display: inline-block;
+    overflow: hidden;
+    background: transparent url(../images/comments/sprites.png) no-repeat;
+}
+
+.ds-avatar img {
+    display: block;
+    width: 50px;
+    height: 50px;
+    max-width: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.22);
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.ds-comment-body #ds-ctx {
+    border-left: 3px solid #ccc;
+    background-color: rgba(0,0,0,0.03);
+    margin: 10px 0 0 0;
+    padding:0
+}
+
+.ds-ctx-entry {
+    padding: 6px;
+    margin: 0;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.ds-ctx-entry .ds-avatar {
+    margin: 0;
+    width: 30px;
+    height: 30px;
+}
+
+.ds-avatar {
+    box-shadow: 0 1px 1px rgba(255,255,255,0.75);
+    position: relative;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    background-color: #fff;
+    float: left;
+}
+
+.ds-ctx-entry .ds-avatar img {
+    width: 30px;
+    height: 30px;
+    box-shadow: none;
+}
+
+#ds-ctx .ds-ctx-entry .ds-ctx-body {
+    margin-left: 38px;
+}
+
+#ds-ctx .ds-ctx-entry .ds-ctx-head {
+    position: relative;
+    _zoom: 1;
+    line-height: 1em;
+    padding: 1px 0 0;
+    margin: 0 0 .25em;
+}
+
+ #ds-ctx .ds-ctx-entry .ds-ctx-head a {
+    color: #e77064;
+    font-size:13px;
+}
+
+#ds-ctx .ds-ctx-entry .ds-time {
+    font-size: 12px;
+    margin-left: 8px;
+    color: #999;
+    _zoom: 1;
+}
+
+#ds-ctx .ds-ctx-entry .ds-ctx-nth {
+    color: #999;
+    font-size: 12px;
+    position: absolute;
+    top: 2px;
+    right: 0;
+}
+
+#ds-ctx .ds-ctx-entry .ds-ctx-content {
+    position: relative;
+    _zoom: 1;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    line-height: 1.5em;
+    font-size:13px
+}
+
+#ds-ctx .ds-comment-actions {
+    bottom: 0;
+    right: 0;
+    line-height: 18px;
+    position: absolute;
+}
+
+.ds-comment-actions a {
+    font-size: 12px;
+    color: #999;
+}
+
+#ds-ctx .ds-comment-actions a {
+    margin: 0 0 0 6px;
+}
+
+.ds-icon-reply {
+    width: 18px;
+    height: 13px;
+    background-position: 0 -105px;
+}
+
+.ds-icon-like {
+    width: 14px;
+    height: 13px;
+    background-position: 0 -117px;
+}
+
+.ds-icon-report {
+    width: 12px;
+    height: 12px;
+    background-position: 0 -189px;
+}
+
+.ds-icon-delete {
+    width: 13px;
+    height: 13px;
+    background-position: 0 -176px;
+}
+
+li.ds-post-placeholder {
+    text-align: center;
+    color: #999;
+    padding: 1em 0;
+    font-size:13px;
+}
+
+.ds-post-liked .ds-icon-like {
+    background-position: 0 -130px;
+}
+
+.ds-comments-tabs{
+    padding:0;
+    margin:0
+}
+
+.ds-replay-strong{
+    color:#555;
+    padding-left: 5px
+}
+
+.ds-comments-tips{
+    color:#aaa
+}

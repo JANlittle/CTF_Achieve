@@ -1,0 +1,351 @@
+<include file="Public:htmlcommon" />
+	<title>忘记密码 - {:C('BASE_WEBNAME')}</title>
+	<meta name="keywords" content="忘记密码" />
+	<meta name="description" content="忘记密码" />
+<include file="Public:headcommon" />
+</head>
+<body>
+	<div class="container">
+		<include file="Public:demonav" />
+		<h3>找回密码</h3>
+		<div id="sflex04" class="stepflex ">
+            <dl class="first <if condition='$type eq "username"  || ($type neq "check" && $type neq "password" && $type neq "finish")'>doing<else/>done</if>">
+                <dt class="s-num">1</dt>
+                <dd class="s-text">填写账户名<s></s><b></b></dd>
+                <dd></dd>
+            </dl>
+            <dl class="normal <if condition='$type eq "check"'>doing<elseif condition='$type eq "password" || $type eq "finish"'/>done</if>">
+                <dt class="s-num">2</dt>
+                <dd class="s-text">验证身份<s></s><b></b></dd>
+            </dl>
+            <dl class="normal <if condition='$type eq "password"'>doing<elseif condition='$type eq "finish"'/>done</if>">
+                <dt class="s-num">3</dt>
+                <dd class="s-text">设置新密码<s></s><b></b></dd>
+            </dl>
+            <dl class="last <if condition='$type eq "finish"'>doing</if>">
+                <dt class="s-num">&nbsp;</dt>
+                <dd class="s-text">完成<s></s><b></b></dd>
+            </dl>
+        </div>
+        <if condition='$type eq "username" || ($type neq "check" && $type neq "password" && $type neq "finish")'>
+			<form action="" method="post" id="myform" onsubmit="return false">
+				<div class="form-group">
+					<label for="username">账号：</label>
+					<input type="text"  name="username"  value="" placeholder="请输入用户名/邮件/手机号" id="username" class='form-control'>
+				</div>
+				<div class="form-group">
+					<label for="guestbook_code">验证码：</label>
+					<input type="text" name="code" value="" placeholder="请输入验证码" id="guestbook_code" class='form-control'>
+				</div>
+				<div class="form-group">
+					<img style='vertical-align: middle;cursor: pointer' class="captcha" onclick="changeVerify('#guestbook_captcha')" title="点击刷新验证码" id="guestbook_captcha" src="{:U('Common/verify')}">
+				</div>
+				<div class="form-group">
+					<input type="submit" name="sub" value="提交" class="btn btn-default">
+					<!-- <input type="submit" name="sub" value="提交" id="sub" class="btn btn-default"> -->
+					<a href='javascript:;' id="resetBtn" class="btn btn-default">重置</a>
+					<a href='javascript:;' onclick="javascript:history.go(-1);" class="btn btn-default">返回</a>
+				</div>
+				<input type="hidden" name="type" value="{$type}" />
+			</form>
+			<script type="text/javascript">
+
+	                /**
+	                 * [changeVerify 刷新验证码]
+	                 * @param  {[object]} obj [传递的对象]
+	                 * @return {[void]}
+	                 */
+	                function changeVerify(obj){
+	                    $(obj).attr({
+	                        src:"{:U('Common/verify')}"+"?time="+Math.random()
+	                    });
+	                }
+
+	                //验证数据
+	                $(function(){
+	                	$('#myform').bootstrapValidator({
+					        feedbackIcons: {
+					            valid: 'glyphicon glyphicon-ok',
+					            invalid: 'glyphicon glyphicon-remove',
+					            validating: 'glyphicon glyphicon-refresh'
+					        },
+					        fields: {
+					            username: {
+					                validators: {
+					                    notEmpty: {
+					                    	'message':'账号不能为空'
+					                    },
+					                    stringLength: {
+					                        min: 5,
+					                        max: 30,
+					                        'message':'账号长度为 6 至 30 个字符'
+					                    },
+					                    regexp: {
+					                        regexp: /^[a-zA-Z0-9_\.\@]+$/,
+					                        'message':'账号格式不合法'
+					                    }
+					                }
+					            },
+					            code: {
+					                validators: {
+					                    notEmpty: {
+					                    	'message':'验证码不能为空'
+					                    },
+					                    stringLength: {
+					                        min: '{:C("VERIFY_NUMBER")}',
+					                        max: '{:C("VERIFY_NUMBER")}',
+					                        'message':'验证码长度为 {:C("VERIFY_NUMBER")} 个字符'
+					                    },
+					                    regexp: {
+					                        regexp: /^[a-zA-Z0-9_\.]+$/,
+					                        'message':'验证码格式不合法'
+					                    }
+					                }
+					            }
+					        }
+					    }).on('success.form.bv', function(e) {
+				            //禁止默认提交
+				            e.preventDefault();
+
+				            //提交数据
+				            submitForm_Redirect ('{:U("forget")}','#myform');
+				        });
+
+					    //按钮事件
+					    $('#sub').click(function() {
+					        $('#myform').bootstrapValidator('validate');
+					    });
+
+					    $('#resetBtn').click(function() {
+					        $('#myform').data('bootstrapValidator').resetForm(true);
+					    });
+	                });
+	        </script>
+        <elseif condition='$type eq "check"'/>
+        	<form action="" method="post" id="myform" onsubmit="return false">
+				<div class="form-group">
+					<label for="checktype">请选择验证的方式：</label>
+					<select name="checktype" class='form-control' id="checktype">
+						<option value="email">已验证邮件</option>
+						<option value="mobile">已验证手机</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label>找回密码账号：</label>
+					{$user}
+				</div>
+				<div class="form-group" id="email">
+					<label>已验证邮件：</label>
+					{:hiddenemail($userinfo['email'])}
+				</div>
+				<div class="form-group" id="mobile" style="display: none">
+					<label>已验证手机：</label>
+					{:substr_replace($userinfo['mobile'],'****',3,5)}
+				</div>
+				<div class="form-group">
+					<label for="guestbook_code">验证码：</label>
+					<input type="text" name="code" value="" placeholder="请输入验证码" id="guestbook_code" class='form-control'>
+				</div>
+				<div class="form-group">
+					<input type="button" name="getcode" id="getcode" value="获取验证码" class="btn btn-default">
+				</div>
+				<div class="form-group">
+					<input type="submit" name="sub" value="提交" class="btn btn-default">
+				</div>
+				<input type="hidden" name="type" value="{$type}" />
+				<input type="hidden" name="uid" value="{:encode($userinfo['uid'])}" id="uidval" />
+			</form>
+			<script type="text/javascript">
+	                var iTime = 59;
+					var Account;
+
+					//控制时间
+					function RemainTime(buttonDom){
+					    $(buttonDom).prop('disabled', true);
+					    var iSecond,sSecond="",sTime="";
+					    if (iTime >= 0){
+					        iSecond = parseInt(iTime%60);
+					        iMinute = parseInt(iTime/60)
+					        if (iSecond >= 0){
+					            if(iMinute>0){
+					                sSecond = iMinute + "分" + iSecond + "秒";
+					            }else{
+					                sSecond = iSecond + "秒";
+					            }
+					        }
+					        sTime=sSecond;
+					        if(iTime==0){
+					            clearTimeout(Account);
+					            sTime='获取验证码';
+					            iTime = 59;
+					            $(buttonDom).prop('disabled', true);
+					        }else{
+					            Account = setTimeout("RemainTime('"+buttonDom+"')",1000);
+					            iTime=iTime-1;
+					        }
+					    }else{
+					        sTime='没有倒计时';
+					    }
+					    $(buttonDom).val(sTime);
+					}
+
+	                //验证数据
+	                $(function(){
+	                	//切换方式
+	                	$('#checktype').change(function(){
+	                		if($(this).val() == 'email'){
+	                			$("#email").css('display','block');
+	                			$("#mobile").css('display','none');
+	                		} else {
+	                			$("#email").css('display','none');
+	                			$("#mobile").css('display','block');
+	                		}
+	                		$('#myform').data('bootstrapValidator').resetForm(true);
+	                	});
+
+	                	//获取验证码
+	                	$('#getcode').click(function(){
+	                		$.post("{:U('getcode')}", {'checktype':$("#checktype").val(),'uid':$('#uidval').val()}, function(data, textStatus, xhr) {
+
+						        //设置限制秒数
+                				RemainTime("#getcode");
+
+						        //弹出消息
+						        if(data.status){
+						            layer.msg(data.info,{icon:1,time:2000,shade: false},function(){
+						            	
+						            });
+						        } else {
+						            layer.open({
+						                content:data.info,
+						                yes:function(index){
+						                    if(data.url){
+						                        location.href = data.url;
+						                    } else {
+						                        layer.close(index);
+						                    }
+						                },
+						                icon:2
+						            });
+						        }
+						    });
+						    $('#myform').data('bootstrapValidator').resetForm(true);
+	                	});
+
+	                	//验证提交
+	                	$('#myform').bootstrapValidator({
+					        feedbackIcons: {
+					            valid: 'glyphicon glyphicon-ok',
+					            invalid: 'glyphicon glyphicon-remove',
+					            validating: 'glyphicon glyphicon-refresh'
+					        },
+					        fields: {
+					            code: {
+					                validators: {
+					                    notEmpty: {
+					                    	'message':'验证码不能为空'
+					                    },
+					                    regexp: {
+					                        regexp: /^[a-zA-Z0-9_\.]+$/,
+					                        'message':'验证码格式不合法'
+					                    }
+					                }
+					            }
+					        }
+					    }).on('success.form.bv', function(e) {
+				            //禁止默认提交
+				            e.preventDefault();
+
+				            //提交数据
+				            submitForm_Redirect ('{:U("forget")}','#myform');
+				        });
+	                });
+	        </script>
+	    <elseif condition='$type eq "password"'/>
+	    	<form action="" method="post" id="myform" onsubmit="return false">
+	    		<div class="form-group">
+					<label for="password">新密码：</label>
+					<input type="password"  name="password"  value="" placeholder="请输入新密码" id="password" class='form-control'>
+				</div>
+				<div class="form-group">
+					<label for="checkpassword">确认新密码：</label>
+					<input type="password"  name="checkpassword"  value="" placeholder="请确认新密码" id="checkpassword" class='form-control'>
+				</div>
+				<div class="form-group">
+					<input type="submit" name="sub" value="提交" class="btn btn-default">
+				</div>
+				<input type="hidden" name="type" value="{$type}" />
+				<input type="hidden" name="uid" value="{:encode($userinfo['uid'])}" />
+			</form>
+			<script type="text/javascript">
+	                //验证数据
+	                $(function(){
+	                	//验证提交
+	                	$('#myform').bootstrapValidator({
+					        feedbackIcons: {
+					            valid: 'glyphicon glyphicon-ok',
+					            invalid: 'glyphicon glyphicon-remove',
+					            validating: 'glyphicon glyphicon-refresh'
+					        },
+					        fields: {
+					            password: {
+					                validators: {
+					                    notEmpty: {
+					                        message: '新密码不能为空'
+					                    },
+					                    identical: {
+					                        field: 'checkpassword',
+					                        message: '两次输入的密码确不一致'
+					                    },
+					                    stringLength: {
+					                        min: 6,
+					                        max: 20,
+					                        'message':'密码长度为 6 至 20 个字符'
+					                    },
+					                    regexp: {
+					                        regexp: /^[a-zA-Z0-9_\.\@]+$/,
+					                        'message':'密码格式不合法'
+					                    }
+					                }
+					            },
+					            checkpassword: {
+					                validators: {
+					                    notEmpty: {
+					                        message: '确认新密码不能为空'
+					                    },
+					                    identical: {
+					                        field: 'password',
+					                        message: '两次输入的密码确不一致'
+					                    },
+					                    stringLength: {
+					                        min: 6,
+					                        max: 20,
+					                        'message':'密码长度为 6 至 20 个字符'
+					                    },
+					                    regexp: {
+					                        regexp: /^[a-zA-Z0-9_\.\@]+$/,
+					                        'message':'密码格式不合法'
+					                    }
+					                }
+					            },
+					        }
+					    }).on('success.form.bv', function(e) {
+				            //禁止默认提交
+				            e.preventDefault();
+
+				            //提交数据
+				            submitForm_Redirect ('{:U("forget")}','#myform');
+				        });
+	                });
+	        </script>
+	    <elseif condition='$type eq "finish"'/>
+	    	<div class="lead text-center">恭喜你，重置密码成功！</div>
+	    	<div class="form-group text-center">
+	    		<a href="{:U('login')}" class="btn btn-primary">登陆</a>
+	    		<a href="{:U('register')}" class="btn btn-primary">注册</a>
+			</div> 
+        </if>
+	</div>
+<include file="Public:foot" />	
+</body>
+</html>

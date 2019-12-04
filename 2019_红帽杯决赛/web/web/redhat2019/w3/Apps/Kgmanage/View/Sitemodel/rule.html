@@ -1,0 +1,262 @@
+<script type="text/javascript">
+    $(function(){
+        $("#data-type").change(function(event) {
+            var rule;
+            var val = $(this).val();
+            $(this).find('option').each(function(index, el) {
+                if($(el).attr('value') == val){
+                    rule = $(el).attr('rule');
+                }
+            });
+            $("#field_rule").val(rule);
+        });
+    });
+</script>
+<!--自动验证规则-->
+<div id="validate_canshu" class="table-responsive" style='display:none;padding:10px 15px;height:95%'>
+    <table style='width:100%;text-align:left' border="1px solid #ccc" class="table table-hover">
+        <caption style='text-align:left;padding:10px 0;font-weight:bold'>1、验证规则列表：<span class='green'>array(字段,验证规则,错误提示,[验证条件,附加规则,验证时间])<br>例如：array(array('field','require','标题必须填写！'),array('field','3,10','标题必须是3到10位！',0,'length',3)),...</span></caption>
+        <tr>
+            <th>附加规则</th>
+            <th>说明</th>
+        </tr>
+        <tr>
+            <th>regex</th>
+            <td>正则验证（<span class='green'>默认</span>），基本规则：<span class='green'>'/^(.*+)$/'、require、email、url、currency 货币、number</span></td>
+        </tr>
+        <tr>
+            <th>function</th>
+            <td>函数验证，格式：<span class="green">格式：myfunction</span></td>
+        </tr>
+        <tr>
+            <th>callback</th>
+            <td>回调函数验证，当前模型类的一个方法，<span class="green">格式：callbackfun</span></td>
+        </tr>
+        <tr>
+            <th>confirm</th>
+            <td>验证表单中的两个字段是否相同，<span class="green">格式：password</span></td>
+        </tr>
+        <tr>
+            <th>equal</th>
+            <td>验证是否等于某个值，<span class="green">格式：100</span></td>
+        </tr>
+        <tr>
+            <th>notequal</th>
+            <td>验证是否不等于某个值，<span class="green">格式：100</span></td>
+        </tr>
+        <tr>
+            <th>in</th>
+            <td>验证是否在某个范围内，<span class="green">格式：100,200或者array(100,200)</span></td>
+        </tr>
+        <tr>
+            <th>notin</th>
+            <td>验证是否不在某个范围内，<span class="green">格式：100,200或者array(100,200)</span></td>
+        </tr>
+        <tr>
+            <th>length</th>
+            <td>验证长度，<span class="green">格式：5或者5,10</span></td>
+        </tr>
+        <tr>
+            <th>between</th>
+            <td>验证范围，<span class="green">格式：1,31或者array(1,31)</span></td>
+        </tr>
+        <tr>
+            <th>notbetween</th>
+            <td>验证不在某个范围，<span class="green">格式：100,200或者array(100,200)</span></td>
+        </tr>
+        <tr>
+            <th>expire</th>
+            <td>验证是否在有效期，<span class="green">格式：2012-1-15,2013-1-15</span>，也可以使用时间戳定义</td>
+        </tr>
+        <tr>
+            <th>ip_allow</th>
+            <td>允许的IP地址列表，<span class="green">格式：201.12.2.5,201.12.2.6</span></td>
+        </tr>
+        <tr>
+            <th>ip_deny</th>
+            <td>禁止的ip地址列表，<span class="green">格式：201.12.2.5,201.12.2.6</span></td>
+        </tr>
+        <tr>
+            <th>unique</th>
+            <td>验证是否唯一，<span class="green">格式：array('name','','帐号名称已经存在！',0,'unique',1)</span></td>
+        </tr>
+    </table>
+    
+    <table style='width:100%;text-align:left' border="1px solid #ccc" class="table table-hover">
+        <caption style='text-align:left;padding:10px 0;font-weight:bold'>2、验证条件列表</caption>
+        <tr>
+            <th>条件</th>
+            <th>说明</th>
+        </tr>
+        <tr>
+            <th>self::EXISTS_VALIDATE 或者0 </th>
+            <td>存在字段就验证（<span class="green">默认</span>）</td>
+        </tr>
+        <tr>
+            <th>self::MUST_VALIDATE 或者1 </th>
+            <td>必须验证</td>
+        </tr>
+        <tr>
+            <th>self::VALUE_VALIDATE或者2</th>
+            <td>值不为空的时候验证</td>
+        </tr>
+    </table>
+
+    <table style='width:100%;text-align:left' border="1px solid #ccc" class="table table-hover">
+        <caption style='text-align:left;padding:10px 0;font-weight:bold'>3、验证时间列表</caption>
+        <tr>
+            <th>验证时间</th>
+            <th>说明</th>
+        </tr>
+        <tr>
+            <th>self::MODEL_BOTH或者3</th>
+            <td>全部情况下验证（<span class="green">默认</span>）</td>
+        </tr>
+        <tr>
+            <th>self::MODEL_INSERT或者1</th>
+            <td>新增数据时候验证</td>
+        </tr>
+        <tr>
+            <th>self::MODEL_UPDATE或者2</th>
+            <td>编辑数据时候验证</td>
+        </tr>
+    </table>
+    <div class="blank10"></div>
+</div>
+<!--end 自动验证规则-->
+
+<!--自动完成规则-->
+<div id="auto_canshu" class="table-responsive" style='display:none;padding:10px 15px;height:95%'>
+    <table style='width:100%;text-align:left' border="1px solid #ccc" class="table table-hover">
+        <caption style='text-align:left;padding:10px 0;font-weight:bold'>1、验证规则列表：<span class='green'>array(完成字段,完成规则,[完成时间,附加规则])<br>例如：array(array('field','md5',1,'function'),array('field','sha1',1,'function')),...</span></caption>
+        <tr>
+            <th>附加规则</th>
+            <th>说明</th>
+        </tr>
+        <tr>
+            <th>function</th>
+            <td>使用函数，表示填充的内容是一个函数名，<span class="green">格式：md5</span></td>
+        </tr>
+        <tr>
+            <th>callback</th>
+            <td>回调方法 ，当前模型类的一个方法，<span class="green">格式：callbackfun</span></td>
+        </tr>
+        <tr>
+            <th>field</th>
+            <td>用其它字段填充，表示填充的内容是一个其他字段的值，<span class="green">格式：email</span></td>
+        </tr>
+        <tr>
+            <th>ignore</th>
+            <td>为空则忽略</td>
+        </tr>
+    </table>
+    <table style='width:100%;text-align:left' border="1px solid #ccc" class="table table-hover">
+        <caption style='text-align:left;padding:10px 0;font-weight:bold'>2、完成时间</caption>
+        <tr>
+            <th>设置</th>
+            <th>说明</th>
+        </tr>
+        <tr>
+            <th>self::MODEL_INSERT或者1</th>
+            <td>新增数据的时候处理（<span class="green">默认</span>）</td>
+        </tr>
+        <tr>
+            <th>self::MODEL_UPDATE或者2</th>
+            <td>更新数据的时候处理</td>
+        </tr>
+        <tr>
+            <th>self::MODEL_BOTH或者3</th>
+            <td>所有情况都进行处理</td>
+        </tr>
+    </table>
+    <div class="blank10"></div>
+</div>
+<!--end 自动完成规则-->
+
+<!--额外参数规则-->
+<div id="canshu_fomart" class="table-responsive" style='display:none;padding:10px 15px;height:95%'>
+    <table style='width:100%;text-align:left' border="1px solid #ccc" class="table table-hover">
+        <caption style='text-align:left;padding:10px 0;font-weight:bold'>1、基础字段定义</caption>
+        <tr>
+            <th>字段类型</th>
+            <th>说明</th>
+        </tr>
+        <tr>
+            <th>TINYINT</th>
+            <td>有符号的表示范围是-128到127,无符号的表示范围是0到255</td>
+        </tr>
+        <tr>
+            <th>SMALLINT</th>
+            <td>有符号的表示范围是-32768到32767,无符号的表示范围是0到65535</td>
+        </tr>
+        <tr>
+            <th>MEDIUMINT</th>
+            <td>有符号的表示范围是-8388608到8388607,无符号的表示范围是0到16777215</td>
+        </tr>
+        <tr>
+            <th>INT</th>
+            <td>有符号的表示范围是-2147483648到2147483647,无符号的表示范围是0到4294967295。</td>
+        </tr>
+        <tr>
+            <th>FLOAT</th>
+            <td>小型浮点数</td>
+        </tr>
+        <tr>
+            <th>DOUBLE</th>
+            <td>双精度浮点数</td>
+        </tr>
+        <tr>
+            <th>VARCHAR</th>
+            <td>可变长（0-65,535）字符串，实际可用最长长度由最长字段长度定义</td>
+        </tr>
+        <tr>
+            <th>TEXT</th>
+            <td>一个最长65536字符的TEXT字段，采用一个前缀（两个字节）表示当前值的字节长度</td>
+        </tr>
+        <tr>
+            <th>TINYTEXT</th>
+            <td>一个最长255字符的TEXT字段，并采用一个前缀（一个字节长）来表示当前值的字节长度</td>
+        </tr>
+        <tr>
+            <th>MEDIUMTEXT</th>
+            <td>一个最长16777215字节的TEXT字段，在字节开始处用三个字节保存当前值的长度</td>
+        </tr>
+    </table>
+    <table style='width:100%;text-align:left' border="1px solid #ccc" class="table table-hover">
+        <caption style='text-align:left;padding:10px 0;font-weight:bold'>2、参数规则</caption>
+        <tr>
+            <th>规则名称</th>
+            <th>说明</th>
+        </tr>
+        <tr>
+            <th>布尔(bool)</th>
+            <td><span class="green">格式：开启:1|关闭:0，布尔值请保证值只有1跟0，1-是，0-否</span></td>
+        </tr>
+        <tr>
+            <th>密码(password)</th>
+            <td><span class="green">格式：check:1|0，1-开启(请<span class='red'>配置</span>自动验证规则：array(array('field','field_checkpassword','密码确认不正确！',0,'confirm',3))，请保证<span class='red'>field_checkpassword</span>保持不变，0-关闭(请<span class='red'>删除</span>自动验证规则)</span></td>
+        </tr>
+        <tr>
+            <th>枚举(select)</th>
+            <td><span class="green">格式：否:0|是:1</span></td>
+        </tr>
+        <tr>
+            <th>单选(radio)</th>
+            <td><span class="green">格式：画画:1|游泳:2|写作:3</span></td>
+        </tr>
+        <tr>
+            <th>多选(checkbox)</th>
+            <td><span class="green">格式：推荐:command|头条:header|幻灯:slide</span></td>
+        </tr>
+        <tr>
+            <th>联动菜单(linkagemenu)</th>
+            <td><span class="green">格式：array(1)</span>，其中1代表联动菜单的id</td>
+        </tr>
+        <tr>
+            <th>缩略图(thumb|picture|file)</th>
+            <td><span class="green">格式：array(200,150,3072,'single','uploadfile')</span>，宽度：200，高度：150，上传大小：单位KB，上传模式：single(单)|multiple(多)，文件保存目录：uploadfile，不填则取系统值</td>
+        </tr>
+    </table>
+    <div class="blank10"></div>
+</div>
+<!--end 额外参数规则-->

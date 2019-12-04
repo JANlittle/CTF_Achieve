@@ -1,0 +1,318 @@
+<!--多说评论插件-->
+<if condition="C('CONTENT_ALLOW_COMMENTS') eq 1 && C('CONTENT_DUOSHUO_COMMENTS') eq 1">
+	<div class="ds-thread" data-thread-key="{$data.id}" data-title="{$data.title}" data-url='{:U("/$data[catroute]/$data[catid]/$data[id]@$myurl",false,true,true)}'></div>
+	<script type="text/javascript">
+		var duoshuoQuery = {
+			short_name:"{:C('CONTENT_DUOSHUO_DOMAIN')}"};
+		(function() {
+			var ds = document.createElement('script');
+			ds.type = 'text/javascript';ds.async = true;
+			ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+			ds.charset = 'UTF-8';
+			(document.getElementsByTagName('head')[0] 
+			 || document.getElementsByTagName('body')[0]).appendChild(ds);
+		})();
+	</script>
+</if>
+<!--end 多说评论插件-->
+
+<!--系统自带评论插件-->
+<if condition="C('CONTENT_ALLOW_COMMENTS') eq 1 && C('CONTENT_DUOSHUO_COMMENTS') eq 0">
+	<link rel="stylesheet" href="__CSS__/comments.css">
+	<script src="__JS__/jquery.comments.js" type="text/javascript"></script>
+	<div id="comments">
+		<div class="comments-inner">
+			<form action="" method="post" id="commentsForm" onsubmit="return false">
+				<div class="comments-head">
+					<notempty name="userinfo">
+						<a class="comments-avatar" href="{:U('Members/index')}" target="_blank">
+							<if condition="$userinfo['type'] eq 'system'"><img src="{:C('UCENTER_DOMAIN')}{$userinfo[thumb][0][thumb]}" alt="{$userinfo.username}"><else/><img src="{$userinfo[thumb][0][thumb]}" alt="{$userinfo.name}"></if>
+						</a>
+					<else/>
+						<a class="comments-avatar" href="javascript:;">
+							<img src="{:C('UCENTER_DOMAIN')}/Public/Uploads/ucenteruser/images/head/2.gif" alt="游客">
+						</a>
+					</notempty>
+				</div>
+				<div class="comments_inner_box">
+					<textarea class="comments_inner_txt" name="comments" placeholder="说点什么吧..."></textarea>
+					<div class="comments_inner_face"></div>
+				</div>
+				<div class="comments_inner_foot">
+					<a class="imgBtn" href="javascript:void(0);"></a>
+					<a class="postBtn" href="javascript:;" onclick='subComments("{:U("subComments")}","#commentsForm")'>发布</a>
+				</div>
+				<input type="hidden" name="aid" value="{$data.id}">
+				<input type="hidden" name="modelid" value="{$cate.modelid}">
+			</form>
+		</div>
+		<div class="ds-comments-info">
+			<div class="ds-sort">
+				<p class="ds-comments-tips">文明上网理性发言，请遵守新闻评论服务协议</p>
+			</div>
+			<ul class="ds-comments-tabs">
+				<li class="ds-tab"><a class="ds-comments-tab-duoshuo ds-current" href="javascript:void(0);"><span class="ds-highlight">{$comments_count}</span>条评论</a></li>
+			</ul>
+		</div>
+		<ul class="ds-comments">
+			<notempty name="comments">
+				<volist name="comments" id="commentslist">
+					<li class="ds-post">
+						<div class="ds-post-self">
+							<div class="ds-avatar">
+								<notempty name="commentslist.ucmembers">
+									<a href="{:U('Members/index')}" target="_blank">
+										<if condition="$commentslist['ucmembers']['type'] eq 'system'">
+											<img src="{:C('UCENTER_DOMAIN')}{$commentslist[ucmembers][thumb][0][thumb]}" alt="{$commentslist.ucmembers.username}">
+										<else/>
+											<img src="{$commentslist[ucmembers][thumb][0][thumb]}" alt="{$commentslist.ucmembers.name}">
+										</if>
+									</a>
+								<else/>
+									<a class="comments-avatar" href="javascript:;">
+										<img src="{:C('UCENTER_DOMAIN')}/Public/Uploads/ucenteruser/images/head/2.gif" alt="游客">
+									</a>
+								</notempty>
+							</div>
+							
+							<div class="ds-comment-body">
+								<div class="ds-comment-header">
+									<notempty name="commentslist.ucmembers">
+										<a class="ds-user-name ds-highlight" href="{:U('Members/index')}" rel="nofollow" target="_blank">
+											<if condition="$commentslist['ucmembers']['type'] eq 'system'">
+												{$commentslist.ucmembers.username}
+											<else/>
+												{$commentslist.ucmembers.name}
+											</if>
+										</a>
+									<else/>
+										<a class="ds-user-name ds-highlight" href="javascript:;" rel="nofollow" target="_blank">游客</a>
+									</notempty>
+								</div>
+
+								<p>
+									<notempty name="commentslist.replayucmembers">
+										<strong class="ds-replay-strong"><if condition="$commentslist['replayucmembers']['type'] eq 'system'">
+												@{$commentslist.replayucmembers.username}
+											<else/>
+												@{$commentslist.replayucmembers.name}
+										</if>：</strong>
+									</notempty>{:resolve_comments($commentslist['comments'],"__PUBLIC__/images/comments/")}</p>
+								<div class="ds-comment-footer ds-comment-actions">
+									<span class="ds-time">{$commentslist.create_time|date='Y-m-d H:i:s',###}</span>
+									<if condition="$commentslist['ucmembers']['uid'] neq session('echouid')">
+										<if condition="C('CONTENT_COMMENTS_ALLOWREPLAY') eq 1">
+										<a class="ds-post-reply" href="javascript:void(0);" onclick="replayComments('{$commentslist.id}')">
+										<span class="ds-icon ds-icon-reply"></span>回复</a>
+										</if>
+									<elseif condition="session('echouid') gt 0"/>
+										<if condition="C('CONTENT_COMMENTS_ALLOWDEL') eq 1">
+										<a class="ds-post-delete" href="javascript:void(0);" onclick="delComments('{$commentslist.uniqid}')">
+										<span class="ds-icon ds-icon-delete"></span>删除</a>
+										</if>
+									</if>
+								</div>
+								<notempty name="commentslist.soncomments">
+									<ol id="ds-ctx">
+										<volist name="commentslist.soncomments" id="soncomments" key="sonkey">
+											<li class="ds-ctx-entry">
+												<div class="ds-avatar">
+													<notempty name="soncomments.ucmembers">
+														<a href="{:U('Members/index')}" target="_blank">
+															<if condition="$soncomments['ucmembers']['type'] eq 'system'">
+																<img src="{:C('UCENTER_DOMAIN')}{$soncomments[ucmembers][thumb][0][thumb]}" alt="{$soncomments.ucmembers.username}">
+															<else/>
+																<img src="{$soncomments[ucmembers][thumb][0][thumb]}" alt="{$soncomments.ucmembers.name}">
+															</if>
+														</a>
+													<else/>
+														<a class="comments-avatar" href="javascript:;">
+															<img src="{:C('UCENTER_DOMAIN')}/Public/Uploads/ucenteruser/images/head/2.gif" alt="游客">
+														</a>
+													</notempty>
+												</div>
+
+												<div class="ds-ctx-body">
+													<div class="ds-ctx-head">
+														<notempty name="soncomments.ucmembers">
+															<a href="{:U('Members/index')}" rel="nofollow" target="_blank">
+																<if condition="$soncomments['ucmembers']['type'] eq 'system'">
+																	{$soncomments.ucmembers.username}
+																<else/>
+																	{$soncomments.ucmembers.name}
+																</if>
+															</a>
+														<else/>
+															<a class="ds-user-name ds-highlight" href="javascript:;" rel="nofollow" target="_blank">游客</a>
+														</notempty>
+
+														<a href="javascript:;" rel="nofollow" class="ds-time">{$soncomments.create_time|date='Y-m-d H:i:s',###}</a>
+														<div class="ds-ctx-nth">{$sonkey}楼</div>
+													</div>
+													<div class="ds-ctx-content">{:resolve_comments($soncomments['comments'],"__PUBLIC__/images/comments/")}
+													<div class="ds-comment-actions">
+															<if condition="$soncomments['ucmembers']['uid'] neq session('echouid')">
+																<if condition="C('CONTENT_COMMENTS_ALLOWREPLAY') eq 1">
+																<a class="ds-post-reply" href="javascript:void(0);" onclick="replayComments('{$soncomments.id}')">
+																<span class="ds-icon ds-icon-reply"></span>回复</a>
+																</if>
+															<elseif condition="session('echouid') gt 0" />
+																<if condition="C('CONTENT_COMMENTS_ALLOWDEL') eq 1">
+																<a class="ds-post-delete" href="javascript:void(0);" onclick="delComments('{$soncomments.uniqid}')">
+																<span class="ds-icon ds-icon-delete"></span>删除</a>
+																</if>
+															</if>
+													</div>
+													</div>
+												</div>
+											</li>
+										</volist>
+									</ol>
+								</notempty>
+							</div>
+						</div>
+					</li>
+				</volist>
+			<else/>
+				<li class="ds-post ds-post-placeholder">还没有评论，沙发等你来抢</li>
+			</notempty>
+		</ul>
+		<notempty name="comments">
+			{$showpage}
+		</notempty>
+	</div>
+	<div id="commentsreplay" style="display: none;padding:20px">
+		<div class="comments-inner">
+			<form action="" method="post" id="commentsreplayForm" onsubmit="return false">
+				<div class="comments-head">
+					<notempty name="userinfo">
+						<a class="comments-avatar" href="{:U('Members/index')}" target="_blank">
+							<if condition="$userinfo['type'] eq 'system'"><img src="{:C('UCENTER_DOMAIN')}{$userinfo[thumb][0][thumb]}" alt="{$userinfo.username}"><else/><img src="{$userinfo[thumb][0][thumb]}" alt="{$userinfo.name}"></if>
+						</a>
+					<else/>
+						<a class="comments-avatar" href="javascript:;">
+							<img src="{:C('UCENTER_DOMAIN')}/Public/Uploads/ucenteruser/images/head/2.gif" alt="游客">
+						</a>
+					</notempty>
+				</div>
+				<div class="comments_inner_box">
+					<textarea class="comments_inner_txt" name="comments" placeholder="说点什么吧..."></textarea>
+					<div class="comments_inner_face"></div>
+				</div>
+				<div class="comments_inner_foot">
+					<a class="imgBtn" href="javascript:void(0);"></a>
+					<a class="postBtn" href="javascript:;" onclick='subComments("{:U("subComments")}","#commentsreplayForm")'>发布</a>
+				</div>
+				<input type="hidden" name="aid" value="{$data.id}">
+				<input type="hidden" name="modelid" value="{$cate.modelid}">
+			</form>
+		</div>
+	</div>
+	<include file="Public:login_layer" />
+	<script type="text/javascript">
+		/**
+		 * [replayComments 回复评论]
+		 * @param  {[type]} $commentsid [description]
+		 * @return {[type]}             [description]
+		 */
+		function replayComments($commentsid){
+			//评论框
+			var commentsreplayForm = $("#commentsreplayForm");
+
+			//插入pid
+			commentsreplayForm.append('<input type="hidden" name="pid" value="'+$commentsid+'">');
+
+			//初始化插入表情
+			commentsreplayForm.commentsInsertFace({faceImgPath:'__PUBLIC__/images/comments/'});
+
+			//打开回复框
+			layer.open({
+	          title:'回复',
+			  type: 1,
+			  area: ['600px', 'auto'],
+			  content: $('#commentsreplay')
+			});
+		}
+
+		/**
+		 * [delComments 删除评论] 提示：如果是作为正式项目不建议直接将$commentsid传递，而是需要将$commentsid加密之后再进行处理
+		 * @param  {[type]} $commentsid [description]
+		 * @return {[type]}             [description]
+		 */
+		function delComments($commentsid){
+
+	        //提交评论
+	    	$.post("{:U('delComments')}", {'commentsid':$commentsid}, function(data, textStatus, xhr) {
+		        //跳转登陆
+		        if(data.status == 1) {
+		        	if(data.url){
+	                    location.href = data.url;
+	                } else {
+	                    location.reload();
+	                }
+		        } else {
+		            layer.open({
+		                content:data.info,
+		                yes:function(index){
+		                    if(data.url){
+		                        location.href = data.url;
+		                    } else {
+		                        layer.close(index);
+		                    }
+		                },
+		                icon:2
+		            });
+		            //layer.msg(data.info,{icon:2});
+		        }
+		    });
+		}
+
+		/**
+		 * [subComments 提交评论表单]
+		 * @return {[type]} [description]
+		 */
+		function subComments(url, dom){
+			//评论框
+			var commentsForm = $(dom);
+	        //提交评论
+	    	$.post(url, commentsForm.serialize(), function(data, textStatus, xhr) {
+		        //跳转登陆
+		        if(data.status == -1){
+		            layer.open({
+		              title:'登录',
+					  type: 1,
+					  content: $('#login_layer')
+					});
+		        } else if(data.status == 1) {
+		        	layer.msg(data.info,{icon:1,time:2000,shade: [0.3,'#000']},function(){
+		                if(data.url){
+		                    location.href = data.url;
+		                } else {
+		                    location.reload();
+		                }
+		            });
+		        } else {
+		            layer.open({
+		                content:data.info,
+		                yes:function(index){
+		                    if(data.url){
+		                        location.href = data.url;
+		                    } else {
+		                        layer.close(index);
+		                    }
+		                },
+		                icon:2
+		            });
+		            //layer.msg(data.info,{icon:2});
+		        }
+		    });
+		}
+
+		//初始化
+		$(function(){
+			//评论框
+		    $("#commentsForm").commentsInsertFace({faceImgPath:'__PUBLIC__/images/comments/'});
+		});
+	</script>
+</if>
+<!--end 系统自带评论插件-->

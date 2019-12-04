@@ -1,0 +1,187 @@
+<include file="Public:htmlcommon" />
+<include file="Public:seolist" />
+<include file="Public:headcommon" />
+</head>
+<body>
+	<div class="container">
+		<include file="Public:demonav" />
+		<h3>4、在线报名</h3>
+		<form action="" method="post" id="baomingForm" onsubmit="return false">
+			<div class="form-group">
+				<label for="bm_name">用户姓名：</label>
+				<input type="text"  name="name"  value="" placeholder="请输入用户名" id="bm_name" class='form-control'>
+			</div>
+			<div class="form-group">
+				<label for="bm_tel">手机号码：</label>
+				<input type="number" name="tel" value="" placeholder="请输入手机号码" id="bm_tel" class='form-control'>
+			</div>
+			<div class="form-group">
+				<label for="bm_email">电子邮件：</label>
+				<input type="email" name="email" value="" placeholder="请输入邮箱" id="bm_email" class='form-control'>
+			</div>
+			<div class="form-group">
+				<label for="bm_qq">QQ号码：</label>
+				<input type="number" name="qq" value="" placeholder="请输入QQ号码" id="bm_qq" class='form-control'>
+			</div>
+			<div class="form-group">
+				<label for="bm_code">验证码：</label>
+				<input type="text" name="code" value="" placeholder="请输入验证码" id="bm_code" class='form-control'>
+			</div>
+			<div class="form-group">
+				<img style='vertical-align: middle;cursor: pointer' class="captcha" onclick="changeVerify('#bm_captcha')" title="点击刷新验证码" id="bm_captcha" src="{:U('Common/verify')}">
+			</div>
+			<div class="form-group">
+				<input type="submit" name="sub" value="提交" id="sub" class="btn btn-default" onclick="Baoming()">
+			</div>
+			<input type="hidden" name="source" value="在线报名">
+			<script type="text/javascript">
+
+                /**
+                 * [changeVerify 刷新验证码]
+                 * @param  {[object]} obj [传递的对象]
+                 * @return {[void]}
+                 */
+                function changeVerify(obj){
+                    $(obj).attr({
+                        src:"{:U('Common/verify')}"+"?time="+Math.random()
+                    });
+                }
+
+	            function Baoming(){
+	                //验证数据合法性
+	                //验证姓名
+	                if(!checkName($("#bm_name").val())){
+	                    layer.open({
+	                        content:'姓名格式不正确！',
+	                        yes:function(index){
+	                            layer.close(index);
+	                            $("#bm_name").focus();
+	                        },
+	                        icon:2
+	                    });
+	                    return false;
+	                }
+
+
+	                //验证联系电话
+	                if(!checkTel($("#bm_tel").val())){
+	                    layer.open({
+	                        content:'手机格式不正确！',
+	                        yes:function(index){
+	                            layer.close(index);
+	                            $("#bm_tel").focus();
+	                        },
+	                        icon:2
+	                    });
+	                    return false;
+	                }
+
+	                //验证电子邮件
+	                if(!checkEmail($("#bm_email").val())){
+	                    layer.open({
+	                        content:'电子邮件格式不正确！',
+	                        yes:function(index){
+	                            layer.close(index);
+	                            $("#bm_email").focus();
+	                        },
+	                        icon:2
+	                    });
+	                    return false;
+	                }
+
+	                //验证qq
+	                if(!checkQQ($("#bm_qq").val())){
+	                    layer.open({
+	                        content:'QQ号码格式不正确！',
+	                        yes:function(index){
+	                            layer.close(index);
+	                            $("#bm_qq").focus();
+	                        },
+	                        icon:2
+	                    });
+	                    return false;
+	                }
+
+	                //验证验证码
+	                if($("#bm_code").val().length == ''){
+	                    layer.open({
+	                        content:'验证码必须填写！',
+	                        yes:function(index){
+	                            layer.close(index);
+	                            $("#bm_code").focus();
+	                        },
+	                        icon:2
+	                    });
+	                    return false;
+	                }
+
+	                //执行写入
+	                submitForm("{:U('Common/baoming')}",'#baomingForm');
+	            }
+	        </script>
+		</form>
+<div class="blokc-help">PHP代码：</div>
+<pre class="prettyprint linenums">
+代码文件：CommonController.class.php、BaomingController.class.php
+
+/**
+ * [baoming 在线报名]
+ * @return [type] [description]
+ */
+public function baoming()
+{
+    if(IS_POST){
+        //验证ip是否被限制
+        $this->iplimit();
+
+        //验证标题敏感词汇
+        $this->sensitivewords(I('post.name'),L('_BAOMING_NAME_SENSITIVE_'));
+
+        //验证码
+        $code = I('post.code');
+        if(isset($code) && !empty($code)){
+            if(!check_verify($code)){
+                $this->error(L('_VERIFY_ERROR_'));
+            }
+        }
+
+        //创建数据
+        $baoming = D('Baoming');
+        if($baoming->create()){
+            //验证是否存在数据
+            $where['name'] = array('eq',$baoming->name);
+            $where['tel'] = array('eq',$baoming->tel);
+            if($one = $baoming->where($where)->find()){
+                $this->error(L('_BM_EXISTS_'));
+            }
+
+            //ip
+            $baoming->ip = get_client_ip();
+
+            //地区
+            $ip = new \Org\Net\IpLocation('UTFWry.dat');
+            $area = $ip->getlocation($baoming->ip);
+            $baoming->area = serialize($area);
+
+            //事件
+            $baoming->create_time = time();
+            $baoming->siteid = C('SITEID');
+
+            if($inserid = $baoming->add()){
+                $baoming->where("id = ".$inserid."")->setField("sort",$inserid);
+                $this->success(L('_BM_SUCCESS_'));
+            } else {
+                $this->error(L('_BM_ERROR_'));
+            }
+        } else {
+            $this->error($baoming->getError());
+        }
+    } else {
+        $this->error(L('_ACCESS_ERROR_'));
+    }
+}
+</pre>
+	</div>
+<include file="Public:foot" />	
+</body>
+</html>

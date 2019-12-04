@@ -1,0 +1,84 @@
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/jqueryui/easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/jqueryui/easyui/themes/icon.css">
+<script src="__PUBLIC__/jqueryui/easyui/jquery.easyui.min.js" type="text/javascript"></script>
+<div id="catemenu" class="side_catemenu">
+    <div class="catemenu" id="catemenutt">
+        <ul id="tt" class="easyui-tree" data-options="lines:true">
+            {$menulist_show}
+        </ul>
+    </div>
+</div>
+<style type='text/css'>
+#catemenu{
+    width:189px;
+    position: fixed;
+    top:90px;
+    z-index:1;
+    overflow-y: auto;
+    min-height: 400px;
+    border-right:1px solid #ccc;
+}
+
+.catemenu{
+    padding:15px;
+    padding-right:0;
+    overflow-x: hidden;
+}
+
+.tree-node{
+    height:28px;
+    padding-top: 5px;
+}
+
+#catemenutt ul#tt li span.tree-title{
+    color:#000;
+    font-size:12px;
+    width: 81%;
+}
+
+#catemenutt ul#tt li ul li span.tree-title{
+    color:#000;
+    font-size:12px;
+    width: 72%;
+}
+
+#catemenutt ul#tt li ul li ul li span.tree-title{
+    color:#000;
+    font-size:12px;
+    width: 62%;
+}
+
+#catemenutt ul#tt li ul li ul li ul li span.tree-title{
+    color:#000;
+    font-size:12px;
+    width: 52%;
+}
+
+#catemenutt ul#tt li ul li ul li ul li ul li span.tree-title{
+    color:#000;
+    font-size:12px;
+    width: 42%;
+}
+
+.tree-title a{
+    color:#000;
+    font-size:12px;
+    display: block;
+}
+</style>
+<script  type="text/javascript">
+    //设置左侧高度
+    $(function(){
+        $('#catemenu').height($(window).height() - $(".topbar-wrap").outerHeight() - $(".crumb-wrap").outerHeight() - $('.cont-ft').outerHeight());
+        $(window).resize(function() {
+            $('#catemenu').height($(window).height() - $(".topbar-wrap").outerHeight() - $(".crumb-wrap").outerHeight() - $('.cont-ft').outerHeight());
+        });
+
+        //5秒之后将左侧边栏隐藏
+        setTimeout(function(){
+            if($(".sidebar-wrap").css('display') == 'block'){
+                $("#control").trigger('click');
+            }
+        }, 3000);
+    })
+</script>

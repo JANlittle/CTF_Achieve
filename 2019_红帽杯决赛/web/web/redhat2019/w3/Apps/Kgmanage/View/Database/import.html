@@ -1,0 +1,56 @@
+<layout name="Public/layout" />
+<div class="mwrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><span class="crumb-name">备份信息</span></div>
+    </div>
+    <div class="result-wrap">
+        <form name="myform" id="myform" method="post">
+            <div class="result-content table-responsive">
+                <table class="result-tab table table-hover" width="100%">
+                    <tr class='head-tr'>
+                        <th class="tc ids-td"><input class="allChoose" onchange="selectAll(this)" id="selectall" type="checkbox"></th>
+                        <th>备份名称</th>
+                        <th>文件大小</th>
+                        <th>备份时间</th>
+                        <th>操作</th>
+                    </tr>
+                    <volist name="data" id="datalist">
+                    <tr>
+                        <td class="tc ids-td"><input name="tables[]" class='select_ids' value="{$datalist.name}" type="checkbox" ></td>
+                        <td>{$datalist.basename}</td>
+                        <td>{$datalist.size|format_bytes}</td>
+                        <td>{$datalist.create_time|date='Y-m-d H:i:s',###}</td>
+                        <td>
+                            <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/importsql",session("uid")) eq 1'>
+                                <a class="link-importsql" href="javascript:;"  onclick="importsql('{:U('importsql')}','{$datalist.basename}')">还原</a>
+                            </if>
+                            <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/downsql",session("uid")) eq 1'>
+                                <a class="link-downsql" href="{:C('SYSTEM_DBBACK_PATH')}{$datalist.basename}">下载</a>
+                            </if>
+                            <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/del",session("uid")) eq 1'>
+                                <a class="link-del" href="javascript:;" onclick="del('{:U('del')}','{$datalist.basename}')">删除</a>
+                            </if>
+                        </td>
+                    </tr>
+                    </volist>
+
+                </table>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+/**
+ * [importsql 删除函数]
+ * @param  {[string]} url [处理数据的url地址]
+ * @param  {[string]} ids [数据的id字符串]
+ * @return {[json]}       [返回json格式]
+ */
+function importsql(url,senddata){
+    layer.confirm('确定要还原数据？如果数据量大的话，花费的时间将会比较长，请耐心等待！',{icon:3},function(index){
+        layer.close(index);
+        postUrl(url,senddata);
+    });
+}
+</script>

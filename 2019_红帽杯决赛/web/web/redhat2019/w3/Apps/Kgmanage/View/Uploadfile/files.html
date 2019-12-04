@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>上传文件列表</title>
+<link rel = "shortcut icon" href="__PUBLIC__/images/favicon.ico" />
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/jqueryui/bootstrap/css/bootstrap.css">
+<script src="__PUBLIC__/jqueryui/jquery-1.11.1.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="__PUBLIC__/jqueryui/layer/layer.js"></script>
+</head>
+<style type="text/css">
+	*{
+		margin:0;
+		padding:0;
+	}
+
+	ul li{
+		width:100px;
+		height:110px;
+		display:inline-block;
+		margin:8px;
+		overflow:hidden;
+		text-align:center;
+		position:relative;
+	}
+
+	ul li.images .imgok{
+		background: url(__PUBLIC__/images/uploadfile/success.png) no-repeat;
+		width: 40px;
+		height: 40px;
+		position: absolute;
+		right:0px;
+		bottom:35px;
+	}
+
+	ul li.files .imgok{
+		background: url(__PUBLIC__/images/uploadfile/success.png) no-repeat;
+		width: 40px;
+		height: 40px;
+		position: absolute;
+		right:17px;
+		bottom:25px;
+	}
+
+	ul li.images img{
+		height:75px;
+		border-radius:5px;
+		width:100px;
+	}
+
+	ul li.dir img,ul li.files img{
+		height:90px;
+	}
+
+	ul li .name{
+		text-align:center;
+		font-weight:bold;
+	}
+	.clear{
+		clear:both;
+		overflow:hidden;
+		font-size:0;
+		line-height:0;
+	}
+</style>
+
+
+<script type="text/javascript">
+/**
+ * [changeImgok 改变文件的状态]
+ * @param  {[type]} obj [description]
+ * @return {[type]}     [description]
+ */
+function changeImgok (obj) {
+	if($(obj).find('.imgok').length == 1){
+		$(obj).find('.imgok').remove();
+	} else {
+		$(obj).append('<div class="imgok"></div>');
+	}
+}
+
+/**
+ * [closeIframe 关闭父级iframe]
+ */
+function closeIframe(){
+    var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+    parent.layer.close(index);
+}
+
+/**
+ * [returnData 返回数据]
+ * @param  {[type]} argument [description]
+ * @return {[type]}          [description]
+ */
+function returnData (type,iframe,myid,returntype) {
+	var imgok = $(".container").find('li.allfile').find('div.imgok');
+	var allfile = imgok.parent('li.allfile');
+	if(imgok.length <= 0){
+		parent.layer.msg("请选择文件！",{icon:2,time:2000,shade: [0.3,'#000']},function(){
+           return false;
+        });
+        return false;
+	}
+
+	//验证类型
+	$.each(allfile, function(index, val) {
+		var json = $.parseJSON($(val).attr('fileData'));
+		if(type == 'images'){
+			//过滤不是图片的文件
+			if(json.thumb == undefined){
+		        return false;
+			}
+			var appendstr = '<div class="img images" onclick="changeImgok(this)"><img src="__ROOT__'+json.thumb+'" fileData='+escape(JSON.stringify(json))+' title="'+json.name+'"><div class="imgok"></div><div class="imgdel" title="删除" onclick="delNoFiles(this,event)"></div></div>';
+		} else {
+			//处理图片文件
+			if(json.thumb != undefined){
+		        var appendstr = '<div class="img images" onclick="changeImgok(this)"><img src="__ROOT__'+json.thumb+'" fileData='+escape(JSON.stringify(json))+' title="'+json.name+'"><div class="imgok"></div><div class="imgdel" title="删除" onclick="delNoFiles(this,event)"></div></div>';
+			} else {
+				var appendstr = '<div class="img files" onclick="changeImgok(this)"><img src="__PUBLIC__/images/uploadfile/'+json.ext+'.png" fileData='+escape(JSON.stringify(json))+' title="'+json.name+'"><div class="imgok"></div><div class="imgdel" title="删除" onclick="delNoFiles(this,event)"></div></div>';
+			}
+		}
+
+		//获取数据放置页面id,这是暂时的一个解决方案
+		if(typeof parent.frames[iframe] == 'undefined'){
+			var parentId = $(parent.document).find(myid);
+		} else {
+			var parentId = $(parent.frames[iframe].document).find(myid);
+		}
+
+		//单个
+		if(returntype == 'single'){
+			parentId.html(appendstr);
+		} else {
+			parentId.append(appendstr);
+		}
+	});
+	closeIframe();
+}
+</script>
+
+<body>
+	<div class="container">
+	<ul style='padding-bottom: 30px;'>
+	    <h3><pre>当前目录：{$path}</pre></h3>
+	    <neq name="path" value="$oringi_path">
+	    <li class='dir'>
+    		<a href="{:U('files',array('dir'=>encode($prevpath),'type'=>$type,'iframe'=>$iframe,'myid'=>$origin_domid,'returntype'=>$returntype,'savedir'=>$savedir))}" title="上层目录"><img src="__ROOT__/Public/images/uploadfile/filesdir.png"></a>
+    		<div class="name" title="{$dirs.pathname}">上层目录</div>
+    	</li>
+    	</neq>
+	    <volist name="data.dirs" id="dirs">
+	    	<li class='dir'>
+	    		<a href="{:U('files',array('dir'=>encode($dirs['path']),'type'=>$type,'iframe'=>$iframe,'myid'=>$origin_domid,'returntype'=>$returntype,'savedir'=>$savedir))}" title="{$dirs.pathname}"><img src="__ROOT__/Public/images/uploadfile/filesdir.png"></a>
+	    		<div class="name" title="{$dirs.pathname}">{$dirs.pathname|msubstr=0, 8, 'utf-8', true}</div>
+	    	</li>
+	    </volist>
+	    <volist name="data.files" id="files">
+	    	<eq name="files.type" value="images">
+	    		<li class='images allfile' title="{$files.basename}" onclick="changeImgok(this)" fileData='{"oringinal_type":"images","status":1,"name":"<?php echo $files['basename'];?>","thumb":"<?php echo $files['filepath'];?>","photo":"<?php echo $files['filepath'];?>","savename":"<?php echo $files['basename'];?>","location":"local"}'>
+	    			<img src="{$files.filepath}">
+	    			<div class="name" title="{$files.basename}">{$files.basename|msubstr=0, 8, 'utf-8', true}</div>
+	    		</li>
+	    	<else/>
+	    		<li class='files allfile' title="{$files.basename}" onclick="changeImgok(this)" fileData='{"oringinal_type":"files","status":1,"name":"<?php echo $files['basename'];?>","savepathall":"<?php echo $files['filepath'];?>","ext":"<?php echo $files['extension'];?>","location":"local"}'>
+	    			<img src="__PUBLIC__/images/uploadfile/{$files.extension}.png">
+	    			<div class="name" title="{$files.basename}">{$files.basename|msubstr=0, 8, 'utf-8', true}</div>
+	    		</li>
+	    	</eq>
+	    </volist>
+	    <div class="clear"></div>
+	</ul>
+	</div>
+	<div style='position:fixed;bottom:0;padding:5px 10px;border-top:1px solid #ccc;width:100%;background:#f5f5f5'>
+		<div class="row">
+			<div class="col-sm-12">
+		   		<button type="button" class="btn btn-primary"  onclick="returnData('{$type}','{$iframe}','#{$origin_domid}','{$returntype}')" style='margin-right: 2px'>确定</button>
+		   		<button type="button" class="btn btn-default" onclick="closeIframe()">取消</button>
+		   </div>
+		</div>
+	</div>
+</body>
+</html>

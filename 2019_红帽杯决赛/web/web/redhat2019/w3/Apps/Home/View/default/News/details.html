@@ -1,0 +1,347 @@
+<include file="Public:htmlcommon" />
+<include file="Public:seodetails" />
+<include file="Public:headcommon" />
+</head>
+<body>
+	<div class="container">
+		<include file="Public:demonav" />
+		<h3>详细内容</h3>
+		<div class="content">
+			<div class="content-wrap">
+				<div id="main-content" class="content">
+					<header class="article-header">
+						<h1 class="article-title"><a <eq name="data.url" value="">href='{:U("/$data[catroute]/$data[catid]/$data[id]@$myurl","",true,true)}'<else/>href="{$data.url}"</eq>  title="{$data.title}" <neq name="data.titlecolor" value="">style="color:{$data.titlecolor}"</neq>>{$data.title}</a></h1>
+						<ul class="article-meta">
+							<li><eq name="data.edituser" value="">{$data.username}<else />{$data.edituser}</eq> 发布于 {$data.input_time|date="Y-m-d",###}</li>
+							<li>分类：<a <eq name="data.caturl" value="">href='{:U("/$data[catroute]/$data[catid]@$myurl","",true,true)}'<else/>href='{$data.caturl}' target="_blank"</eq> title="{$data.catname}" rel="category tag">{$data.catname}</a></li>
+							<li><span class="post-views">阅读({$data.count})</span></li>
+						</ul>
+					</header>
+					<notempty name="data.pictures">
+						<article data-am-widget="paragraph" class="am-paragraph am-paragraph-default" data-am-paragraph="{ tableScrollable: true, pureview: true }">
+					       <volist name="data.pictures" id="pictures">
+					        	<p style="text-align: center"><img src="__ROOT__{$pictures.photo}" alt="{$pictures.name}"></p>
+					            <p style="text-align: center">{$pictures.name}</p>
+					        </volist>
+					    </article>
+					</notempty>
+					<article data-am-widget="paragraph" class="article-content am-paragraph am-paragraph-default" data-am-paragraph="{ tableScrollable: true, pureview: true }">
+						{:ReplaceKeyworeds($relatedlinks,htmlspecialchars_decode($data["content"]),C('CONTENT_RELATEDLINKS_COUNT'))}
+					</article>
+					<div class="blank10"></div>
+					<div class="alert alert-warning mt25" role="alert">
+		              <p class="zhuanzai"><strong>转载请注明：</strong><a <eq name="data.url" value="">href='{:U("/$data[catroute]/$data[catid]/$data[id]@$myurl","",true,true)}'<else/>href="{$data.url}"</eq>  title="{$data.title}">{$data.title}</a></p>
+		            </div>
+					<div class="bottom-bar clearfix">
+						<div class="article-form"></div>
+						<if condition="!empty($data['tag'])">
+							<div class="article-tags">
+								标签：
+								<volist name="data.tag" id="tags">
+				   					<a href='{:U("/tag/$tags@$myurl","",true,true)}' target="_blank" rel="tag" title="{$tags}">{$tags}</a>&nbsp;&nbsp;
+				   				</volist>
+							</div>
+						</if>
+						<div class="bdsharebuttonbox bdshare-button-style1-32" style="float: right">
+							<a href="#" class="bds_more" data-cmd="more"></a>
+							<a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+							<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+							<a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a>
+							<a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a>
+							<a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+							<a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+						</div>
+						<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"1","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+					</div>
+					<div class="blank10"></div>
+
+					<if condition="C('CONTENT_ALLOW_COMMENTS')">
+						<div class="article-social" style="position: relative;">
+							<a href="#comments" class="action action-comment"><i class="glyphicon glyphicon-comment"></i><span id="pingnum">评论 ({$comments_count})</span></a>
+						</div>
+					</if>
+
+					<if condition="!empty($prev) || !empty($next)">
+						<div class="leaf-page-nav pt50  minh50 clearfix">
+			                <notempty name="prev">
+			                	<div class="prev">上一篇：<a <eq name="prev.url" value="">href='{:U("/$prev[catroute]/$prev[catid]/$prev[id]@$myurl","",true,true)}'<else/>href="{$prev.url}"</eq>  title="{$prev.title}" <neq name="prev.titlecolor" value="">style="color:{$prev.titlecolor}"</neq>>{$prev.title}</a></div>
+			            	</notempty>
+			            	<notempty name="next">
+			                	<div class="next">下一篇：<a <eq name="next.url" value="">href='{:U("/$next[catroute]/$next[catid]/$next[id]@$myurl","",true,true)}'<else/>href="{$next.url}"</eq>  title="{$next.title}" <neq name="next.titlecolor" value="">style="color:{$next.titlecolor}"</neq>>{$next.title}</a></div>
+			                </notempty>
+			            </div>
+		        	</if>
+		        	<div class="blank10"></div>
+					<notempty name="relation">
+						<div class="widget widget_postlist">
+							<h3 class="title"><strong>相关福利</strong></h3>
+							<ul class="relates">
+								<volist name="relation" id="relationlist">
+									<li>
+										<a target="_blank" class="fl" <eq name="relationlist.url" value="">href='{:U("/$relationlist[catroute]/$relationlist[catid]/$relationlist[id]@$myurl","",true,true)}'<else/>href="{$relationlist.url}"</eq> title="{$relationlist.title}">
+											<span class="thumbnail">
+												<img data-thumb="1"  data-original="__ROOT__{$relationlist.thumb}" class="thumb" alt="{$relationlist.title}" src="__PUBLIC__/images/loading.gif">
+											</span>
+											<span class="text">{$relationlist.title|msubstr=0,30,"utf-8"}</span>
+										</a>
+									</li>
+								</volist>
+							</ul>
+						</div>
+					</notempty>
+					<include file="Public:comments" />
+				</div>
+			</div>
+		</div>
+<div class="blokc-help">PHP代码：</div>
+<pre class="prettyprint linenums">
+代码文件：NewsController.class.php
+
+config.php中路由配置：
+
+'/^a\/(\d+)$/'        => 'News/index?cid=:1',
+'/^a\/(\d+)\_(\d+)$/'   => 'News/index?cid=:1&p=:2',
+'/^a\/(\d+)\/(\d+)$/'   => 'News/details?cid=:1&id=:2',
+'/^a\/(\d+)\/(\d+)\_c(\d+)$/'   => 'News/details?cid=:1&id=:2&p=:3',
+
+/**
+ * 文章详细页
+*/
+public function details(){
+    $cid = I('get.cid',0);
+    $id = I('get.id');
+    if(!is_numeric($cid) || empty($cid) || !is_numeric($id) || empty($id)){
+        $this->_404();
+    }
+
+    //获取数据
+    $Category = M('Category');
+    $where['status'] = array('eq',1);
+    $where['siteid'] = array('eq',C('SITEID'));
+    $where['id'] = array('eq',$cid);
+    $cate = $Category->where($where)->find();
+    $this->cate = $cate;
+
+    //获取列表数据
+    $Article = D('Article');
+    $Article_where['status'] = array('eq',1);
+    $Article_where['isdel'] = array('eq',0);
+    $Article_where['id'] = array('eq',$id);
+    $Article_where['catid'] = array('eq',$cid);
+
+    //验证是否存在文章
+    $one = $Article->field('id')->where($Article_where)->find();
+    if(!$one){
+        $this->_404();
+    }
+
+    //更新浏览量
+    $Article->where($Article_where)->setInc('count',mt_rand(2,10));
+
+    //文章内容
+    $data = $Article->where($Article_where)->relation(array('Category'))->find();
+
+    //pictures
+    if(!empty($data['pictures'])){
+       $data['pictures'] =  unserialize($data['pictures']);
+    }
+
+    //tag
+    if(!empty($data['tag'])){
+       $data['tag'] = explode("|",$data['tag']);
+    }
+    $this->data = $data;
+
+    //获取关联链接
+    $RelatedLinks_where['status'] = array('eq',1);
+    $RelatedLinks_where['siteid'] = array('eq',C('SITEID'));
+    $RelatedLinks = M('RelatedLinks');
+    $this->relatedlinks = $RelatedLinks->field('id,title,titlecolor,url')->where($RelatedLinks_where)->order('create_time DESC,sort ASC')->select();
+
+    //获取上一篇
+    $prev_where['status'] = array('eq',1);
+    $prev_where['isdel'] = array('eq',0);
+    $prev_where['id'] = array('lt',$id);
+    $previd = $Article->where($prev_where)->order('id ASC')->max('id');
+    $this->prev = $Article->where($prev_where)->relation(array('Category'))->find($previd);
+
+    //获取下一篇
+    $next_where['status'] = array('eq',1);
+    $next_where['isdel'] = array('eq',0);
+    $next_where['id'] = array('gt',$id);
+    $nextid = $Article->where($next_where)->order('id ASC')->min('id');
+    $this->next = $Article->where($next_where)->relation(array('Category'))->find($nextid);
+
+    //获取相关文章
+    $relation_data = array();
+
+    //通过tag标签来确定相关文章
+    $mytag = $data['tag'];
+    if(!empty($mytag)){
+        foreach ($mytag as $key => $value) {
+            $mytag[$key] = "%".$value."%";
+        }
+        $relation_where['status'] = array('eq',1);
+        $relation_where['isdel'] = array('eq',0);
+        $relation_where['id'] = array('neq',$id);
+        $relation_where['title|tag|introduction'] = array('like',$mytag);
+        $relation_data = $Article->field("id,catid,title,titlecolor,thumb,photo,url")->where($relation_where)->relation(array('Category'))->order('input_time DESC,sort ASC')->limit(8)->select();
+    }
+    $this->relation = $relation_data;
+
+
+/* 评论： 验证评论开启，并且判断是否是第三方多说插件*/
+    if(C('CONTENT_ALLOW_COMMENTS') == 1 && C('CONTENT_DUOSHUO_COMMENTS') == 0){
+
+        //评论跳转地址
+        $this->returnurl = encode(U(__SELF__."@$this->myurl",'',false,true));
+        cookie('login_return_url',$this->returnurl);
+
+        //获取评论
+        $comments = D('Comments');
+        $comments_where['status'] = array('eq',1);
+        $comments_where['siteid'] = array('eq',C('SITEID'));
+        $comments_where['aid'] = array('eq',$id);
+        $comments_where['modelid'] = array('eq',$cate['modelid']);
+        $this->comments_count = $comments->where($comments_where)->count();
+
+        $page = getPage($this->comments_count,C('CONTENT_COMMENTS_PAGENUM'),'',$cate['route'].'/'.$cid.'/'.$id.'/',"_c",1,"<span aria-hidden='true'>&laquo;</span>","<span aria-hidden='true'>&raquo;</span>",'');
+        $this->showpage = $page->show();
+
+        $comments = $comments->where($comments_where)->relation(array('ucmembers','soncomments','parentcomments'))->order('create_time DESC,sort ASC')->limit($page->firstRow,$page->listRows)->select();
+
+        //处理数据
+        $ucmembers = D('UcMembers');
+        if(!empty($comments)){
+            foreach ($comments as $key => $value) {
+                //处理回复列表
+                if(!empty($value['soncomments'])){
+                    foreach ($value['soncomments'] as $key_1 => $value_1) {
+                        $comments[$key]['soncomments'][$key_1]['ucmembers'] = $ucmembers->find($value_1['uid']);
+                    }
+                }
+
+                //处理回复了谁
+                if(!empty($value['parentcomments'])){
+                    $comments[$key]['replayucmembers'] = $ucmembers->find($value['parentcomments']['uid']);
+                }
+            }
+        }
+    
+        $this->comments = $comments;
+
+        //获取用户信息
+        $uid = session('echouid');
+        if($uid){    
+            $this->userinfo = M(C('UCENTER_DB_TABLE_MEMBERS'),C('UCENTER_DB_PREFIX'),C('UCENTER_DB_DSN'))->where("uid = {$uid}")->find();
+        }
+    } elseif (C('CONTENT_ALLOW_COMMENTS') == 1 && C('CONTENT_DUOSHUO_COMMENTS') == 1) {
+        //获取多说评论，并且写入数据库
+        $comments_url = "http://api.duoshuo.com/threads/counts.json";
+        $comments = gethttp($comments_url,array('short_name'=>C('CONTENT_DUOSHUO_DOMAIN'),'threads'=>$id));
+        $comments_arr = json_decode($comments,true);
+        if(!empty($comments_arr['response'])){
+            $this->comments_count = $comments_arr['response'][$id]['comments'];
+        }
+    }
+/* end 评论 */
+    $this->display();
+}
+</pre>
+
+<div class="blokc-help">HTML代码：</div>
+<pre class="prettyprinthtml prettyprint linenums">
+<literal>
+<div class="content">
+	<div class="content-wrap">
+		<div id="main-content" class="content">
+			<header class="article-header">
+				<h1 class="article-title"><a <eq name="data.url" value="">href='{:U("/$data[catroute]/$data[catid]/$data[id]@$myurl","",true,true)}'<else/>href="{$data.url}"</eq>  title="{$data.title}" <neq name="data.titlecolor" value="">style="color:{$data.titlecolor}"</neq>>{$data.title}</a></h1>
+				<ul class="article-meta">
+					<li><eq name="data.edituser" value="">{$data.username}<else />{$data.edituser}</eq> 发布于 {$data.input_time|date="Y-m-d",###}</li>
+					<li>分类：<a <eq name="data.caturl" value="">href='{:U("/$data[catroute]/$data[catid]@$myurl","",true,true)}'<else/>href='{$data.caturl}' target="_blank"</eq> title="{$data.catname}" rel="category tag">{$data.catname}</a></li>
+					<li><span class="post-views">阅读({$data.count})</span></li>
+				</ul>
+			</header>
+			<notempty name="data.pictures">
+				<article data-am-widget="paragraph" class="am-paragraph am-paragraph-default" data-am-paragraph="{ tableScrollable: true, pureview: true }">
+			       <volist name="data.pictures" id="pictures">
+			        	<p style="text-align: center"><img src="__ROOT__{$pictures.photo}" alt="{$pictures.name}"></p>
+			            <p style="text-align: center">{$pictures.name}</p>
+			        </volist>
+			    </article>
+			</notempty>
+			<article data-am-widget="paragraph" class="article-content am-paragraph am-paragraph-default" data-am-paragraph="{ tableScrollable: true, pureview: true }">
+				{:ReplaceKeyworeds($relatedlinks,htmlspecialchars_decode($data["content"]),C('CONTENT_RELATEDLINKS_COUNT'))}
+			</article>
+			<div class="blank10"></div>
+			<div class="alert alert-warning mt25" role="alert">
+              <p class="zhuanzai"><strong>转载请注明：</strong><a <eq name="data.url" value="">href='{:U("/$data[catroute]/$data[catid]/$data[id]@$myurl","",true,true)}'<else/>href="{$data.url}"</eq>  title="{$data.title}">{$data.title}</a></p>
+            </div>
+			<div class="bottom-bar clearfix">
+				<div class="article-form"></div>
+				<if condition="!empty($data['tag'])">
+					<div class="article-tags">
+						标签：
+						<volist name="data.tag" id="tags">
+		   					<a href='{:U("/tag/$tags@$myurl","",true,true)}' target="_blank" rel="tag" title="{$tags}">{$tags}</a>&nbsp;&nbsp;
+		   				</volist>
+					</div>
+				</if>
+				<div class="bdsharebuttonbox bdshare-button-style1-32" style="float: right">
+					<a href="#" class="bds_more" data-cmd="more"></a>
+					<a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+					<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+					<a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a>
+					<a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a>
+					<a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+					<a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+				</div>
+				<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"1","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+			</div>
+			<div class="blank10"></div>
+
+			<if condition="C('CONTENT_ALLOW_COMMENTS')">
+				<div class="article-social" style="position: relative;">
+					<a href="#comments" class="action action-comment"><i class="glyphicon glyphicon-comment"></i><span id="pingnum">评论 ({$comments_count})</span></a>
+				</div>
+			</if>
+
+			<if condition="!empty($prev) || !empty($next)">
+				<div class="leaf-page-nav pt50  minh50 clearfix">
+	                <notempty name="prev">
+	                	<div class="prev">上一篇：<a <eq name="prev.url" value="">href='{:U("/$prev[catroute]/$prev[catid]/$prev[id]@$myurl","",true,true)}'<else/>href="{$prev.url}"</eq>  title="{$prev.title}" <neq name="prev.titlecolor" value="">style="color:{$prev.titlecolor}"</neq>>{$prev.title}</a></div>
+	            	</notempty>
+	            	<notempty name="next">
+	                	<div class="next">下一篇：<a <eq name="next.url" value="">href='{:U("/$next[catroute]/$next[catid]/$next[id]@$myurl","",true,true)}'<else/>href="{$next.url}"</eq>  title="{$next.title}" <neq name="next.titlecolor" value="">style="color:{$next.titlecolor}"</neq>>{$next.title}</a></div>
+	                </notempty>
+	            </div>
+        	</if>
+        	<div class="blank10"></div>
+			<notempty name="relation">
+				<div class="widget widget_postlist">
+					<h3 class="title"><strong>相关福利</strong></h3>
+					<ul class="relates">
+						<volist name="relation" id="relationlist">
+							<li>
+								<a target="_blank" class="fl" <eq name="relationlist.url" value="">href='{:U("/$relationlist[catroute]/$relationlist[catid]/$relationlist[id]@$myurl","",true,true)}'<else/>href="{$relationlist.url}"</eq> title="{$relationlist.title}">
+									<span class="thumbnail">
+										<img data-thumb="1"  data-original="__ROOT__{$relationlist.thumb}" class="thumb" alt="{$relationlist.title}" src="__PUBLIC__/images/loading.gif">
+									</span>
+									<span class="text">{$relationlist.title|msubstr=0,30,"utf-8"}</span>
+								</a>
+							</li>
+						</volist>
+					</ul>
+				</div>
+			</notempty>
+			<include file="Public:comments" />
+		</div>
+	</div>
+</div>
+</literal>
+</pre>		
+	</div>
+<include file="Public:foot" />	
+</body>
+</html>

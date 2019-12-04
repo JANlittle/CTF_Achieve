@@ -1,0 +1,84 @@
+<layout name="Public/layout" />
+<div class="main-wrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><a class="crumb-name" href='{:U("wordindex",decode($parameter))}'>文本回复</a><span class="crumb-step">&gt;</span><span>编辑投票</span></div>
+    </div>
+    <div class="result-wrap">
+        <div class="result-content">
+            <form action="" method="post" id="myform" name="myform" onsubmit="return false" enctype="multipart/form-data">
+                <table class="insert-tab table table-hover" width="100%">
+                    <tbody>
+                        <tr>
+                            <th><i class="require-red">*</i>类型：</th>
+                            <td>
+                                <select name="votetype" id="votetype" class="form-control">
+                                <option value="1" <eq name="data.votetype" value='1'>selected="selected"</eq>>单选</option>
+                                    <option value="2" <eq name="data.votetype" value='2'>selected="selected"</eq>>多选</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>标题：</th>
+                            <td>
+                                <input class="common-text required form-control" id="title" name="title" size="50" value="{$data.title}" type="text" placeholder="请输入标题">
+                            </td>
+                        </tr>
+                        <style type="text/css">
+                            .laydate-icon{
+                                height: auto;
+                            }
+                        </style>
+                        <script type="text/javascript" src="__PUBLIC__/jqueryui/layer/extendplugin/laydate/laydate.js"></script>
+                        <script type="text/javascript" src="__PUBLIC__/js/date_select.js"></script>
+                        <tr>
+                            <th><i class="require-red">*</i>开始时间：</th>
+                            <td>
+                                <input class="common-text required laydate-icon form-control" id="starttime" name="start" size="18" value="{$data.start|date='Y/m/d H:i:s',###}" type="text" placeholder="请输入开始时间">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>结束时间：</th>
+                            <td>
+                                <input class="common-text required laydate-icon form-control" id="endtime" name="end" size="18" value="{$data.end|date='Y/m/d H:i:s',###}" type="text" placeholder="请输入结束时间">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>投票次数：</th>
+                            <td>
+                                <input class="common-text required form-control" id="number" name="number" size="50" value="{$data.number}" type="number"  min="1" placeholder="请输入投票次数">
+                                 <div class="help-block">限制每个用户的投票次数！</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style='width:120px'>简介：</th>
+                            <td>
+                                <!-- 加载编辑器的容器 -->
+                                <textarea name="content" id="container" style="width:100%;height:150px;line-height:20px">{$data.content}</textarea>
+                                <include file="Public:ueditor" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>状态：</th>
+                            <td>
+                                <select name="status" id="status" class="form-control">
+                                    <option value="1" <eq name="data.status" value='1'>selected="selected"</eq>>开启</option>
+                                    <option value="0" <eq name="data.status" value='0'>selected="selected"</eq>>关闭</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <td>
+                                <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitAjaxForm("{:U("wordedit")}","#myform")'>
+                                <input class="btn btn6" onclick="history.go(-1)" value="返回" type="button">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <input type="hidden" name="id" value="{$data.id}">
+                <input type="hidden" name="parameter" value="{$parameter}">
+            </form>
+        </div>
+    </div>
+
+</div>

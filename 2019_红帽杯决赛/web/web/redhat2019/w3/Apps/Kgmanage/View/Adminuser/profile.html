@@ -1,0 +1,64 @@
+<layout name="Public/layout" />
+<div class="main-wrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><span class="crumb-name">修改资料</span></div>
+    </div>
+    <div class="result-wrap table-responsive">
+        <div class="result-content">
+            <form action="" method="post" id="myform" name="myform" onsubmit="return false">
+                <table class="insert-tab table  table-hover" width="100%">
+                    <tbody>
+                        <tr>
+                            <th><i class="require-red">*</i>用户名：</th>
+                            <td>
+                                <input class="common-text required form-control" id="username" name="username" size="50" value="{$data.username}" readonly="readonly" type="text" placeholder="请输入用户名">
+                                <div class="help-block">例如：admin</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>原始密码：</th>
+                            <td>
+                                <input class="common-text required form-control" id="oldpassword" name="oldpassword" size="50" value="" type="password" placeholder="请输入原始密码">
+                                <div class="help-block">例如：admin123</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>新密码：</th>
+                            <td>
+                                <input class="common-text required form-control" id="password" name="password" size="50" value="" type="password" placeholder="请输入新密码">
+                                <div class="help-block">注意：不修改请留空</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>确认新密码：</th>
+                            <td>
+                                <input class="common-text required form-control" id="ckpassword" name="ckpassword" size="50" value="" type="password" placeholder="请输入确认密码">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>邮件：</th>
+                            <td>
+                                <input class="common-text required form-control" id="email" name="email" size="50" value="{$data.email}" type="email" placeholder="请输入邮件">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>手机：</th>
+                            <td>
+                                <input class="common-text required form-control" id="mobile" name="mobile" size="50" value="{$data.mobile}" type="tel" placeholder="请输入手机">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <td>
+                                <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitForm("{:U("profile")}","#myform")'>
+                                <input class="btn btn6" onclick="history.go(-1)" value="返回" type="button">
+                            </td>
+                        </tr>
+                    </tbody>
+                    </table>
+                    <input type="hidden" name="id" value="{:session('uid')}">
+            </form>
+        </div>
+    </div>
+
+</div>

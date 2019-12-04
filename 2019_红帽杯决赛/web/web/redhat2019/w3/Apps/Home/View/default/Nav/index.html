@@ -1,0 +1,72 @@
+<include file="Public:htmlcommon" />
+<include file="Public:seolist" />
+<include file="Public:headcommon" />
+</head>
+<body>
+	<div class="container">
+		<include file="Public:demonav" />
+		<h3>导航</h3>
+		<nav data-am-widget="menu" class="am-menu  am-menu-dropdown2"  data-am-menu-collapse> 
+			<a href="javascript: void(0)" class="am-menu-toggle">
+			    <i class="am-menu-toggle-icon am-icon-bars"></i>
+			</a>
+			<notempty name="menu">
+				<ul class="am-menu-nav am-avg-sm-4 am-collapse">
+					<volist name="menu" id="menulist">
+					    <li class="am-parent">
+				        	<a <neq name="menulist.url" value="">href="{$menulist.url}"<else />href='{:U("/$menulist[route]@$myurl","",true,true)}'</neq> <eq name="menulist.open" value="1">target="_blank"</eq> <neq name="menulist.other" value="">{$menulist.other}</neq>>{$menulist.name}</a>
+				            <notempty name="menulist.child">
+					            <ul class="am-menu-sub am-collapse  am-avg-sm-2 ">
+						            <volist name="menulist.child" id="menulist_one">
+							            <li><a <neq name="menulist_one.url" value="">href="{$menulist_one.url}"<else />href='{:U("/$menulist_one[route]@$myurl","",true,true)}'</neq> <eq name="menulist_one.open" value="1">target="_blank"</eq> <neq name="menulist_one.other" value="">{$menulist_one.other}</neq>>{$menulist_one.name}</a></li>
+						            </volist>
+					            </ul>
+				            </notempty>
+					    </li>
+				    </volist>
+				</ul>
+			</notempty>
+		</nav>
+
+<div class="blokc-help">PHP代码：</div>
+<pre class="prettyprint linenums">
+代码文件：CommonController.class.php、NavController.class.php
+
+//获取菜单分类
+$this->menu = S('menu');
+if(empty($this->menu)){
+    $this->menu = $this->getMenu();
+    S('menu',$this->menu);
+}
+</pre>
+
+<div class="blokc-help">HTML代码：</div>
+<pre class="prettyprinthtml prettyprint linenums">
+<literal>
+<nav data-am-widget="menu" class="am-menu  am-menu-dropdown2"  data-am-menu-collapse> 
+	<a href="javascript: void(0)" class="am-menu-toggle">
+	    <i class="am-menu-toggle-icon am-icon-bars"></i>
+	</a>
+	<notempty name="menu">
+		<ul class="am-menu-nav am-avg-sm-4 am-collapse">
+			<volist name="menu" id="menulist">
+			    <li class="am-parent">
+		        	<a <neq name="menulist.url" value="">href="{$menulist.url}"<else />href='{:U("/$menulist[route]@$myurl","",true,true)}'</neq> <eq name="menulist.open" value="1">target="_blank"</eq> <neq name="menulist.other" value="">{$menulist.other}</neq>>{$menulist.name}</a>
+		            <notempty name="menulist.child">
+			            <ul class="am-menu-sub am-collapse  am-avg-sm-2 ">
+				            <volist name="menulist.child" id="menulist_one">
+					            <li><a <neq name="menulist_one.url" value="">href="{$menulist_one.url}"<else />href='{:U("/$menulist_one[route]@$myurl","",true,true)}'</neq> <eq name="menulist_one.open" value="1">target="_blank"</eq> <neq name="menulist_one.other" value="">{$menulist_one.other}</neq>>{$menulist_one.name}</a></li>
+				            </volist>
+			            </ul>
+		            </notempty>
+			    </li>
+		    </volist>
+		</ul>
+	</notempty>
+</nav>
+</literal>
+</pre>
+	</div>
+<include file="Public:foot" />	
+</body>
+</html>

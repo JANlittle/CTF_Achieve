@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+    <meta content="application/xhtml+xml;charset=UTF-8" http-equiv="Content-Type">
+    <meta content="no-cache,must-revalidate" http-equiv="Cache-Control">
+    <meta content="no-cache" http-equiv="pragma">
+    <meta content="0" http-equiv="expires">
+    <meta content="telephone=no, address=no" name="format-detection">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>{$data.name}</title>
+    <link rel="stylesheet" type="text/css" href="__CSS__/font-awesome.css" media="all">
+    <link rel="stylesheet" type="text/css" href="__CSS__/mobile_module.css" media="all">
+    <script type="text/javascript" src="__JQUERY__/jquery-2.0.3.min.js"></script>
+    <script src="__PUBLIC__/jqueryui/layer/mobile/layer.m.js" type="text/javascript"></script>
+    <script src="__JS__/base.js" type="text/javascript"></script>
+    <script type="text/javascript" src="__JS__/prefixfree.min.js"></script>
+    <script type="text/javascript" src="__JS__/m/dialog.js"></script>
+    <script type="text/javascript" src="__JS__/m/flipsnap.min.js"></script>
+    <script type="text/javascript" src="__JS__/m/mobile_module.js"></script>
+    <script type="text/javascript" src="__JS__/admin_common.js"></script>
+    <link href="__IMG__/coupons/Coupon.css" rel="stylesheet" type="text/css">
+</head>
+<body id="scratch">
+	<div class="container body" style="position:relative">
+    	<div class="prev_get">
+        	<div class="top"></div>
+            <div class="mid">
+                <notempty name="sn">
+            	<div class="get_text">
+                	<h6>已获得的优惠券</h6>
+                    <volist name="sn" id="mysn">
+                    <p class="list">
+                        SN码&nbsp;&nbsp;：{$mysn.sn}<br/>
+                        状 态&nbsp;&nbsp;：<eq name="mysn.status" value="1">已使用<else />未使用</eq><br/>
+                        <if condition="!empty($data['start']) && !empty($data['end'])">
+                        有效期：{$data.start|date="Y-m-d H:i:s",###} 至 {$data.end|date="Y-m-d H:i:s",###}
+                        </if>
+                        <br/>
+                    </p>
+                    <br/>
+                    </volist>
+                </div>
+                </notempty>
+
+                <div class="get_text">
+                	<h6>{$data.name}</h6>
+                    <p>简介： {$data.use}</p>
+                </div>
+                <div class="get_text">
+                	<h6>领取条件</h6>
+                    <p class="list">
+                        <span class="num">1</span>必须是微信授权用户  <br/>
+                        <span class="num">2</span>每人最多可领取{$data.max}张  <br/>
+                    </p>
+                </div>
+                <if condition="time() gt $data['end'] || $data['status'] eq 0">
+                    <h3 class="get_error">
+                        您来晚啦
+                    </h3>
+                <elseif condition="time() lt $data['start']" />
+                    <h3 class="get_error">
+                        活动还未开始
+                    </h3>
+                <else />
+            		<div style='text-align: center'><a href="javascript:;" onclick="getCoupons('{:U('getCoupons')}',{$data.id})"><img class="get_btn" src="__IMG__/coupons/get_btn.jpg"/></a></div>
+                </if>
+            </div>
+            <div class="btm"></div>
+        </div>
+        <p class="copyright">{$WechatExtension.copyright}</p>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    $(function(){
+        var h=$(document).height();
+        $('.container').css("min-height",h);
+    });
+    function getCoupons (url,id) {
+        postUrl(url,{'id':id});
+    }
+</script>
+</html>

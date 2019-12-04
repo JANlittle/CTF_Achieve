@@ -1,0 +1,147 @@
+<layout name="Public/layout" />
+<div class="mwrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><span class="crumb-name">登录接口</span></div>
+    </div>
+    <div class="result-wrap">
+        <form name="myform" id="myform" method="post">
+            <div class="result-title">
+                <div class="result-list">
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/sort",session("uid")) eq 1'>
+                        <a id="updateOrd" href="javascript:void(0)" onclick="sort('{:U('sort')}')"><i class="icon-font">&#xe00a;</i>更新排序</a>
+                    </if>
+                </div>
+            </div>
+            <div class="result-content table-responsive">
+                <table class="result-tab table table-hover" width="100%">
+                    <tr class='head-tr'>
+                        <th class="tc ids-td"><input class="allChoose" onchange="selectAll(this)" id="selectall" type="checkbox" disabled="disabled"></th>
+                        <th class="sort-td">排序</th>
+                        <th>ID</th>
+                        <th>名称</th>
+                        <th>唯一类型名称</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                    <volist name="data" id="datalist">
+                    <tr>
+                        <td class="tc ids-td"><input name="ids[]" class='select_ids' value="{$datalist.id}" type="checkbox" disabled="disabled" ></td>
+                        <td class="sort-td">
+                            <input class="common-input sort-input sort form-control" dataId="{$datalist.id}" name="sort[]" value="{$datalist.sort}" type="text">
+                        </td>
+                        <td>{$datalist.id}</td>
+                        <td>{$datalist.payname}</td>
+                        <td>{$datalist.typename}</td>
+                        <td>
+                            <eq name="datalist.status" value="1">
+                                <img src="__IMG__/yes.gif" alt="开启">
+                            <else />
+                                <img src="__IMG__/no.gif" alt="关闭">
+                            </eq>
+                        </td>
+                        <td>
+                            <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/set",session("uid")) eq 1'>
+                                <a class="link-update" href='javascript:;' onclick="dialogContent('#{$datalist.typename}','{$datalist.typename} 配置','80%','70%')">配置</a>
+                            </if>
+                        </td>
+                    </tr>
+                    </volist>
+
+                </table>
+            </div>
+        </form>
+    </div>
+    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/setConfig",session("uid")) eq 1'>
+    <div class="blank10"></div>
+    <input class="btn btn-primary btn6 mr10 ml10" value="生成配置" type="button" onclick='submitForm("{:U("setConfig")}","#myform")'><div class="help-block inline">配置完接口后请生成配置文件，否则无法使用正常使用</div>
+    <div class="blank10"></div>
+    </if>
+</div>
+
+<!--支付宝-->
+<volist name="data" id="alipay">
+<if condition="strtolower($alipay['typename']) eq 'alipay'">
+<div id="Alipay" style='display:none;padding: 10px'>
+    <form action="" id="AlipayForm" onsubmit="return false">
+        <div class="form-group">
+            <label for="payname1" class="new_label"><i class="require-red">*</i>名称：</label>
+            <input class="common-text required form-control" id="payname1" name="payname" size="45" value="{$alipay.payname}" type="text" placeholder="请输入名称">
+        </div>
+        <div class="form-group">
+            <label for="accout1" class="new_label">帐户：</label>
+            <input class="common-text required form-control" id="accout1" name="config[accout]" size="45" value="{$alipay.configs.accout}" placeholder="支付宝账户"  type="text">
+        </div>
+        <div class="form-group">
+            <label for="key1" class="new_label">key：</label>
+            <input class="common-text required form-control" id="key1" name="config[key]" size="45" value="{$alipay.configs.key}" placeholder="交易安全校验码" type="text">
+        </div>
+        <div class="form-group">
+            <label for="parterid1" class="new_label">parterID：</label>
+            <input class="common-text required form-control" id="parterid1" name="config[parterid]" size="45" value="{$alipay.configs.parterid}" placeholder="合作者身份" type="text">
+        </div>
+        <div class="form-group">
+            <label for="description1" class="new_label">描述：</label>
+            <textarea name="description" id="description1" class="common-textarea form-control" cols="52"  rows="3" placeholder="请输入描述">{$alipay.description}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="status1" class="new_label">状态：</label>
+            <select name="status" id="status1" class="form-control">
+                <option value="1" <eq name="alipay.status" value="1">selected="selected"</eq>>开启</option>
+                <option value="0" <eq name="alipay.status" value="0">selected="selected"</eq>>关闭</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <input class="btn btn-primary btn6" value="提交" type="submit" onclick='submitForm("{:U("set")}","#AlipayForm")'>
+        </div>
+        <input type="hidden" name="id" value="{$alipay.id}">
+    </form>
+</div>
+</if>
+</volist>
+<!--end 支付宝-->
+
+<!--微信支付-->
+<volist name="data" id="wxpay">
+<if condition="strtolower($wxpay['typename']) eq 'wxpay'">
+<div id="Wxpay" style='display:none;padding: 10px'>
+    <form action="" id="wxpayForm" onsubmit="return false">
+        <div class="form-group">
+            <label for="payname2" class="new_label"><i class="require-red">*</i>名称：</label>
+            <input class="common-text required form-control" id="payname2" name="payname" size="45" value="{$wxpay.payname}" type="text" placeholder="请输入名称">
+        </div>
+        <div class="form-group">
+            <label for="appid" class="new_label">唯一标识（APPID）：</label>
+            <input class="common-text required form-control" id="appid" name="config[appid]" size="45" value="{$wxpay.configs.appid}" placeholder="微信公众号身份的唯一标识"  type="text">
+        </div>
+        <div class="form-group">
+            <label for="mchid" class="new_label">受理商ID（MCHID）：</label>
+            <input class="common-text required form-control" id="mchid" name="config[mchid]" size="45" value="{$wxpay.configs.mchid}" placeholder="受理商ID，身份标识"  type="text">
+        </div>
+        <div class="form-group">
+            <label for="key2" class="new_label">支付密钥（Key）：</label>
+            <input class="common-text required form-control" id="key2" name="config[key]" size="45" value="{$wxpay.configs.key}" placeholder="商户支付密钥Key" type="text">
+        </div>
+        <div class="form-group">
+            <label for="appsecret" class="new_label">JSAPI接口中获取openid（APPSECRET）：</label>
+            <input class="common-text required form-control" id="appsecret" name="config[appsecret]" size="45" value="{$wxpay.configs.appsecret}" placeholder="JSAPI接口中获取openid" type="text">
+        </div>
+        <div class="form-group">
+            <label for="description2" class="new_label">描述：</label>
+            <textarea name="description" id="description2" class="common-textarea form-control" cols="52"  rows="3" placeholder="请输入描述">{$wxpay.description}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="status2" class="new_label">状态：</label>
+            <select name="status" id="status2" class="form-control">
+                <option value="1" <eq name="wxpay.status" value="1">selected="selected"</eq>>开启</option>
+                <option value="0" <eq name="wxpay.status" value="0">selected="selected"</eq>>关闭</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <input class="btn btn-primary btn6" value="提交" type="submit" onclick='submitForm("{:U("set")}","#wxpayForm")'>
+        </div>
+        <input type="hidden" name="id" value="{$wxpay.id}">
+    </form>
+</div>
+</if>
+</volist>
+<!--end 微信支付-->

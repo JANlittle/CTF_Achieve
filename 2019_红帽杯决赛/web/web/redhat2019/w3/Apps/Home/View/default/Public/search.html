@@ -1,0 +1,96 @@
+<include file="Public:htmlcommon" />
+<include file="Public:seolist" />
+<include file="Public:headcommon" />
+</head>
+<body>
+	<include file="Public:head" />
+
+	<div class="content-wrap">
+		<div class="content">
+			<notempty name="list">
+			    <volist name="list" id="lists">
+			       <if condition="!empty($lists['pictures'])">
+					    <article class="excerpt excerpt-multi">
+					   		<header>
+					   			<a class="cat label label-important" <eq name="lists.caturl" value="">href='{:U("/$lists[catroute]@$myurl","",true,true)}'<else/>href='{$lists.caturl}' target="_blank"</eq> title="{$lists.catname}">{$lists.catname}<i class="label-arrow"></i></a>
+					   			<h2><a target="_blank" <eq name="lists.url" value="">href='{:U("/$lists[catroute]/$lists[id]@$myurl","",true,true)}'<else/>href="{$lists.url}"</eq> title="{$lists.title}" <neq name="lists.titlecolor" value="">style="color:{$lists.titlecolor}"</neq>>{$lists.title}</a></h2>
+					   		</header>
+					   		<p class="text-muted time"><eq name="lists.edituser" value="">{$lists.username}<else />{$lists.edituser}</eq> 发布于 {$lists.input_time|date="Y-m-d",###}</p>
+					   		<p class="focus">
+					   			<a target="_blank" <eq name="lists.url" value="">href='{:U("/$lists[catroute]/$lists[id]@$myurl","",true,true)}'<else/>href="{$lists.url}"</eq>  class="thumbnail">
+						   			<volist name="lists.pictures" id="pictures" key="pictureskey">
+							   			<lt name="pictureskey" value="9">
+								   			<span class="item">
+								   				<span class="thumb-span">
+								   					<img data-original="__ROOT__{$pictures.thumb}" alt="{$lists.title}"  class="thumb" style="display: inline;" src="__PUBLIC__/images/loading.gif">
+								   				</span>
+								   			</span>
+								   		</lt>	
+						   			</volist>
+						   		</a>
+						   	</p>
+						   	<p class="note">{$lists.introduction}</p>
+						   	<p class="text-muted views">
+						   		<span class="post-views">阅读({$lists.count})</span>
+						   		<span class="post-comments">评论({$lists.commentsnum})</span>
+						   		<a href='javascript:;' onclick='dianzan($(this),"{:U("/dianzan@$myurl","",true,true)}",{$lists.id})' class="post-like">
+						   			<i class="glyphicon glyphicon-thumbs-up"></i>赞 (<span class="zannum">{$lists.zan}</span>)
+						   		</a>
+						   		<if condition="!empty($lists['tag'])">
+						   			<span class="post-tags">标签：
+						   				<volist name="lists.tag" id="tags">
+						   					<a href='{:U("/tag/$tags@$myurl","",true,true)}' target="_blank" rel="tag" title="{$tags}">{$tags}</a>&nbsp;&nbsp;
+						   				</volist>
+						   			</span>
+						   		</if>
+						   	</p>
+						</article>
+
+					<else />
+
+					    <article class="excerpt excerpt-one">
+					   		<header>
+					   			<a class="cat label label-important" <eq name="lists.caturl" value="">href='{:U("/$lists[catroute]@$myurl","",true,true)}'<else/>href='{$lists.caturl}' target="_blank"</eq> title="{$lists.catname}">{$lists.catname}<i class="label-arrow"></i></a>
+					   			<h2><a target="_blank" <eq name="lists.url" value="">href='{:U("/$lists[catroute]/$lists[id]@$myurl","",true,true)}'<else/>href="{$lists.url}"</eq>  title="{$lists.title}" <neq name="lists.titlecolor" value="">style="color:{$lists.titlecolor}"</neq>>{$lists.title}</a></h2>
+					   		</header>
+					   		<p class="text-muted time"><eq name="lists.edituser" value="">{$lists.username}<else />{$lists.edituser}</eq> 发布于 {$lists.input_time|date="Y-m-d",###}</p>
+						    <p class="focus">
+						   		<a target="_blank" <eq name="lists.url" value="">href='{:U("/$lists[catroute]/$lists[id]@$myurl","",true,true)}'<else/>href="{$lists.url}"</eq>  class="thumbnail">
+						   			<span class="item">
+						   				<span class="thumb-span">
+						   					<img data-original="__ROOT__{$lists.thumb}" class="thumb" alt="{$lists.title}" style="display: inline;" src="__PUBLIC__/images/loading.gif">
+						   				</span>
+						   			</span>
+						   		</a>
+						    </p>
+						    <p class="note">{$lists.introduction}</p>
+						    <p class="text-muted views">
+						    	<span class="post-views">阅读({$lists.count})</span>
+						    	<span class="post-comments">评论({$lists.commentsnum})</span>
+						    	<a href='javascript:;' onclick='dianzan($(this),"{:U("/dianzan@$myurl","",true,true)}",{$lists.id})' class="post-like">
+						   			<i class="glyphicon glyphicon-thumbs-up"></i>赞 (<span class="zannum">{$lists.zan}</span>)
+						   		</a>
+						    	<if condition="!empty($lists['tag'])">
+						   			<span class="post-tags">标签：
+						   				<volist name="lists.tag" id="tags">
+						   					<a href='{:U("/tag/$tags@$myurl","",true,true)}' target="_blank" rel="tag" title="{$tags}">{$tags}</a>&nbsp;&nbsp;
+						   				</volist>
+						   			</span>
+						   		</if>
+						    </p>
+					    </article>
+					</if>
+				</volist>
+				<div class="pagination">
+					{$showpage}
+				</div>
+			<else />
+				<include file="Public:nodata" />
+			</notempty>
+		</div>
+	</div>
+
+	<include file="Public:aside" />
+	<include file="Public:foot" />
+</body>
+</html>

@@ -1,0 +1,74 @@
+<layout name="Public/layout" />
+<div class="main-wrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><a class="crumb-name" href='{:U("index",decode($parameter))}'>用户行为</a><span class="crumb-step">&gt;</span><span>编辑行为</span></div>
+    </div>
+    <div class="result-wrap table-responsive">
+        <div class="result-content">
+            <form action="" method="post" id="myform" name="myform" onsubmit="return false">
+                <table class="insert-tab table table-hover" width="100%">
+                    <tbody>
+                        <tr>
+                            <th><i class="require-red">*</i>行为类型：</th>
+                            <td>
+                                <select name="type" class="form-control">
+                                    <option value="1" <eq name="data.type" value="1">selected="selected"</eq>>系统</option>
+                                    <option value="2" <eq name="data.type" value="2">selected="selected"</eq>>会员</option>
+                                </select>
+                                <div class="help-block">用于区分行为的类型</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>名称标识：</th>
+                            <td>
+                                <input class="common-text required form-control" id="name" name="name" size="50" value="{$data.name}" type="text" placeholder="请输入名称标识">
+                                 <div class="help-block">例如：adminuser_login</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>显示标题：</th>
+                            <td>
+                                <input class="common-text required form-control" id="title" name="title" size="50" value="{$data.title}" type="text" placeholder="请输入显示标题">
+                                <div class="help-block">例如：管理员登陆</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>状态：</th>
+                            <td>
+                                <select name="status" class="form-control">
+                                    <option value="1" <eq name="data.status" value="1">selected="selected"</eq>>开启</option>
+                                    <option value="0" <eq name="data.status" value="0">selected="selected"</eq>>关闭</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>描述：</th>
+                            <td><textarea name="remark" class="common-textarea form-control" id="remark" cols="30"  rows="3" placeholder="请输入描述">{$data.remark}</textarea></td>
+                        </tr>
+                        <tr>
+                            <th>行为规则：</th>
+                            <td><textarea name="rule" data-toggle="popover" data-trigger="hover" data-html="true" data-placement='top' title="说明" data-content="<strong>规则：</strong><br/>table:adminuser|field:score|condition:id=&#123;$uid&#125; AND siteid=&#123;$siteid&#125;|rule:score+10|cycle:0|max:1<br/><strong>解释：</strong><br/>table - 表名<br/>field - 字段<br/>condition - where条件<br/>rule - 执行规则<br/>cycle - 周期(单位小时)<br/>max - 当前周期最大的执行次数" placeholder="行为规则语法：table:adminuser|field:score|condition:id=&#123;$uid&#125; AND siteid=&#123;$siteid&#125;|rule:score+10|cycle:0|max:1；解释：table-表名,field-字段,condition-where条件,rule-执行规则,cycle-周期(单位小时),max-当前周期最大的执行次数" class="common-textarea form-control" id="rule" cols="30" rows="3">{$data.rule}</textarea>
+                            <div class="help-block">用户的行为产生某些操作，如：登陆积分+10</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>日志规则：</th>
+                            <td><textarea name="log" class="common-textarea form-control" id="log" cols="30"  rows="3" placeholder="请输入日志规则">{$data.log}</textarea>
+                            <div class="help-block">例如：[user] 于 [date] 登陆后台系统，支持[user]、[date])</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <td>
+                                <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitForm("{:U("edit")}","#myform")'>
+                                <input class="btn btn6" onclick="history.go(-1)" value="返回" type="button">
+                            </td>
+                        </tr>
+                    </tbody></table>
+                    <input type="hidden" name="id" value="{$data.id}">
+                    <input type="hidden" name="parameter" value="{$parameter}">
+            </form>
+        </div>
+    </div>
+
+</div>

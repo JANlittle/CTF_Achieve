@@ -1,0 +1,222 @@
+<layout name="Public/layout" />
+<div class="main-wrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><a class="crumb-name" href='{:U("index",decode($parameter))}'>订单管理</a><span class="crumb-step">&gt;</span><span>发货管理</span></div>
+    </div>
+    <div class="result-wrap  table-responsive">
+        <div class="result-content">
+            <form method="post" id="myform" name="myform" <if condition="$data[fahuo] eq 3">action="{:U('refundmoney')}" target="_blank"<else/>action="" onsubmit="return false"</if>>
+                <table class="insert-tab table table-hover" width="100%">
+                    <tbody>
+                        <tr>
+                            <th>订单号：</th>
+                            <td>{$data.sn}</td>
+                        </tr>
+                        <tr>
+                            <th>订单名称：</th>
+                            <td>{$data.name}</td>
+                        </tr>
+                        <tr>
+                            <th>购买用户：</th>
+                            <td>
+                                <eq name="data.ucmembers.type" value="system">
+                                    {$data.ucmembers.username}
+                                <else/>
+                                    {$data.ucmembers.name}
+                                </eq>({$data.ucmembers.type})
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>支付方式：</th>
+                            <td>{$data.paytype}</td>
+                        </tr>
+                        <tr>
+                            <th>单价：</th>
+                            <td>￥{$data.price}</td>
+                        </tr>
+                        <tr>
+                            <th>数量：</th>
+                            <td>{$data.quantity}</td>
+                        </tr>
+                        <tr>
+                            <th>总金额：</th>
+                            <td><strong class='red'>￥{$data.money}</strong></td>
+                        </tr>
+                        <tr>
+                            <th>说明：</th>
+                            <td>{$data.description}</td>
+                        </tr>
+                        <tr>
+                            <th>留言：</th>
+                            <td>{$data.message}</td>
+                        </tr>
+                        <tr>
+                            <th>地区：</th>
+                            <td>{$data.area.area} {$data.area.country}</td>
+                        </tr>
+                        <tr>
+                            <th>下单时间：</th>
+                            <td>{$data.create_time|date='Y-m-d H:i:s',###}</td>
+                        </tr>
+                        <tr>
+                            <th>支付状态：</th>
+                            <td>
+                                <eq name="data.status" value="1">
+                                    <div data-toggle="popover" data-trigger="hover" data-html="true" data-placement='top' data-container="body" title="支付说明" data-content="支付时间：{$data.payoktime|date='Y-m-d H:i:s',###}"><span class="green">已支付</span></div>
+                                <else />
+                                    <span class="red">未支付</span>
+                                </eq>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>收货信息：</th>
+                            <td>
+                                {$data.address.city}
+                                {$data.address.area}
+                                {$data.address.street}
+                                <strong>{$data.address.code}</strong>
+                                <strong>{$data.address.name}</strong>
+                                <strong>{$data.address.tel}</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>发货状态：</th>
+                            <td>
+                                <if condition="$data['fahuo'] eq 0">
+                                    <span class="red">未发货</span>
+                                <elseif condition="$data['fahuo'] eq 1" />
+                                    <div data-toggle="popover" data-trigger="hover" data-html="true" data-placement='top' data-container="body" title="发货说明" data-content="快递物流：{$data.express}<br/>物流单号：{$data.expressnum}<br/>发货时间：{$data.fahuotime|date='Y-m-d H:i:s',###}<br/>发货说明：{$data.fahuodesc}"><span class="green">已发货</span><a href="http://m.kuaidi100.com/result.jsp?nu={$data.expressnum}" target="_blank" class='btn btn-default ml10'>快递查询</a></div>
+                                <elseif condition="$data['fahuo'] eq 2" />
+                                    <div data-toggle="popover" data-trigger="hover" data-html="true" data-placement='top' data-container="body" title="发货说明" data-content="快递物流：{$data.express}<br/>物流单号：{$data.expressnum}<br/>发货时间：{$data.fahuotime|date='Y-m-d H:i:s',###}<br/>发货说明：{$data.fahuodesc}<br/><strong class='green'>收货时间：</strong>{$data.shouhuotime|date='Y-m-d H:i:s',###}"><strong class="green">已收货</strong><a href="http://m.kuaidi100.com/result.jsp?nu={$data.expressnum}" target="_blank" class='btn btn-default ml10'>快递查询</a></div>
+                                <elseif condition="$data['fahuo'] eq 3" />
+                                    <div data-toggle="popover" data-trigger="hover" data-html="true" data-placement='top' data-container="body" title="发货说明" data-content="快递物流：{$data.express}<br/>物流单号：{$data.expressnum}<br/>发货时间：{$data.fahuotime|date='Y-m-d H:i:s',###}<br/>发货说明：{$data.fahuodesc}<br/><strong class='green'>收货时间：</strong>{$data.shouhuotime|date='Y-m-d H:i:s',###}<br/><strong class='green'>退货时间：</strong>{$data.tuihuotime|date='Y-m-d H:i:s',###}<br/><strong class='green'>退货说明：{$data.tuihuodesc}"><strong class="green">已退货</strong></div>    
+                                </if>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>退款状态：</th>
+                            <td>
+                                <if condition="$data['refund'] eq 0">
+                                    <span>未申请</span>
+                                <elseif condition="$data['refund'] eq 1" />
+                                    <div data-toggle="popover" data-trigger="hover" data-html="true" data-placement='top' data-container="body" title="退款/退货说明" data-content="方式：{$data.returntype}<br/>说明：{$data.refunddesc}<br/>时间：{$data.refundtime|date='Y-m-d H:i:s',###}"><span class="red">申请退款</span></div>
+                                <elseif condition="$data['refund'] eq 2" />
+                                    <div data-toggle="popover" data-trigger="hover" data-html="true" data-placement='top' data-container="body" title="退款/退货说明" data-content="申请方式：{$data.returntype}<br/>申请说明：{$data.refunddesc}<br/>申请时间：{$data.refundtime|date='Y-m-d H:i:s',###}<br/><strong class='green'>退款时间：</strong>{$data.refundoktime|date='Y-m-d H:i:s',###}<br/><strong class='green'>退款备注：</strong>{$data.refundsm}"><strong class="green">退款成功</strong></div>
+                                </if>
+                            </td>
+                        </tr>
+                            <if condition="$data['status'] eq 1 && $data['fahuo'] neq 1">
+                            <neq name="data.refund" value="2">
+                                <tr>
+                                    <th><span class='red'>退款操作：</span></th>
+                                    <td>
+                                        <select name="refund" class="form-control">
+                                            <eq name="data.refund" value="1">
+                                                <if condition="$data['fahuo'] neq 3">
+                                                    <option value="0" <eq name="data.refund" value="0">selected="selected"</eq>>取消退款</option>
+                                                </if>
+                                            </eq>    
+                                            <eq name="data.refund" value="0">
+                                                <option value="1" <eq name="data.refund" value="1">selected="selected"</eq>>申请退款</option>
+                                            </eq>
+                                            <eq name="data.refund" value="1">
+                                                <if condition="$data['fahuo'] eq 0 || $data['fahuo'] eq 3">
+                                                    <option value="2" <eq name="data.refund" value="2">selected="selected"</eq>>确认退款</option>
+                                                </eq>
+                                            </if>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </neq>
+                            <eq name="data.refund" value="0">
+                                <tr>
+                                    <th>快递物流：</th>
+                                    <td>
+                                        <select name="returntype" id="returntype" class="form-control">
+                                            <option value="还没发货，直接退款">还没发货，直接退款</option>
+                                            <option value="已经发货，退货退款">已经发货，退货退款</option>
+                                            <option value="已收到货，退货换货">已收到货，退货换货</option>
+                                            <option value="已收到货，退货退款">已收到货，退货退款</option>
+                                            <option value="其他">其他</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>发货说明：</th>
+                                    <td>
+                                        <textarea name="refunddesc" class="common-textarea form-control" id="refunddesc" cols="30" rows="3" placeholder="请在这里输入申请退款/退货说明"><notempty name="data.refunddesc">{$data.refunddesc}<else/>不想买了，申请退款</notempty></textarea>
+                                    </td>
+                                </tr>
+                            </eq>
+                            <eq name="data.refund" value="1">
+                                <script type="text/javascript">
+                                    $(function(){
+                                        $('select[name="refund"]').change(function(event) {
+                                            if($(this).val() == 2){
+                                                $("#refundsmid").show();
+                                                $('#myform').attr({action:"{:U('refundmoney')}",target:"_blank"}).removeAttr('onsubmit');
+                                                $('#refundidsub').attr({onclick:'checkRefund()'});
+                                            } else {
+                                                $("#refundsmid").hide();
+                                                $('#myform').attr({action:"",onsubmit:"return false"}).removeAttr('target');
+                                                $('#refundidsub').attr({onclick:'submitForm("{:U("refund")}","#myform")'});
+                                            }
+                                        });
+                                    })
+                                </script>
+                                <tr id="refundsmid" <neq name="data.fahuo" value="3">style="display: none;"</neq>>
+                                    <th>退款备注：</th>
+                                    <td>
+                                        <textarea name="refundsm" class="common-textarea form-control" id="refundsm" cols="30" rows="3" placeholder="确认退款订单，确认退货物流订单号，完成退货，进行退款！"><notempty name="data.refundsm">{$data.refundsm}<else/>确认退款订单，确认退货物流订单号，完成退货，进行退款！</notempty></textarea>
+                                    </td>
+                                </tr>
+                            </eq>
+                            <tr>
+                                <th></th>
+                                <td>
+                                    <neq name="data.refund" value='2'>
+                                        <input class="btn btn-primary btn6 mr10" type="submit" value="提交" <if condition="$data[fahuo] neq 3">onclick='submitForm("{:U("refund")}","#myform")'<else/>onclick='checkRefund()'</if> <eq name="data.fahuo" value="1">disabled="disabled"</eq> id="refundidsub">
+                                        <input class="btn btn6" onclick="history.go(-1)" value="返回" type="button">
+                                    <else/>
+                                        <input class="btn btn-primary btn6" onclick="history.go(-1)" value="返回" type="button">
+                                    </neq>
+                                </td>
+                            </tr> 
+                        <else/>
+                            <tr>
+                                <th></th>
+                                <td>
+                                    <input class="btn btn-primary btn6" onclick="history.go(-1)" value="返回" type="button">
+                                </td>
+                            </tr>
+                        </if>
+                    </tbody></table>
+                    <input type="hidden" name="siteid" value="{$data.siteid}">
+                    <input type="hidden" name="id" value="{$data.id}">
+                    <input type="hidden" name="parameter" value="{$parameter}">
+                    <if condition="$data[fahuo] eq 3 || ($data[fahuo] eq 0 && $data[refund] eq 1)">
+                        <script type="text/javascript">
+                            function checkRefund() {
+                                layer.open({
+                                    title      : '提示',
+                                    content    : '请确认订单是否正确退款了？',
+                                    btn        : ['退款成功', '退款失败'],
+                                    icon       : 3,
+                                    yes        : function(index, layero){
+                                        //直接跳转到完成订单
+                                        location.reload();
+                                    },
+                                    btn2       : function(index, layero){
+                                        //直接跳转到完成订单
+                                        location.reload();
+                                    },
+                                    closeBtn    : 0
+                                });
+                            }
+                        </script>
+                    </if>
+            </form>
+        </div>
+    </div>
+
+</div>

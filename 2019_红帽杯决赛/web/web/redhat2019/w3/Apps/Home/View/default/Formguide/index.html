@@ -1,0 +1,17 @@
+<include file="Public:htmlcommon" />
+<include file="Public:seolist" />
+<include file="Public:headcommon" />
+</head>
+<body>
+	<div class="container">
+		<include file="Public:demonav" />
+		<h3>表单向导</h3>
+		<notempty name="data">
+			<volist name="data" id="datalist">
+				<div class="help-block"><a href="{:U('guide',array('id'=>$datalist['id']))}">{$i}、{$datalist.name}</a></div>
+			</volist>	
+		</notempty>
+	</div>
+<include file="Public:foot" />	
+</body>
+</html>

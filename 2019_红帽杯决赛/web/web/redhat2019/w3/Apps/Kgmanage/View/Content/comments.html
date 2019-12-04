@@ -1,0 +1,61 @@
+<include file="Public:head" />
+<div style="padding-right: 17px;padding-left: 5px">
+    <form name="myform" id="myform" method="post">
+        <div class="result-title">
+            <div class="result-list">
+                <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/commentsdel",session("uid")) eq 1'>
+                    <a id="batchDel" href="javascript:void(0)" onclick="delall('{:U('commentsdel')}')"><i class="icon-font">&#xe037;</i>批量删除</a>
+                </if>
+                <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/commentssearch",session("uid")) eq 1'>
+                    <a id="searchId" href="javascript:void(0)" onclick="dialogIframe('{:U('commentssearch',array('aid'=>$aid,'cid'=>$cid,'modelid'=>$modelid))}','搜索','80%','54%')" class="fr"><i class="icon-font">&#xe05b;</i>搜索</a>
+                </if>
+            </div>
+        </div>
+        <div class="result-content table-responsive">
+            <table class="result-tab table table-hover" width="100%">
+                <tr class='head-tr'>
+                    <th class="tc ids-td"><input class="allChoose" onchange="selectAll(this)" id="selectall" type="checkbox"></th>
+                    <th>ID</th>
+                    <th>评论用户</th>
+                    <th>用户类型</th>
+                    <th>评论类型</th>
+                    <th>评论内容</th>
+                    <th>评论时间</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+                <volist name="data" id="datalist">
+                <tr>
+                    <td class="tc ids-td"><input name="ids[]" class='select_ids' value="{$datalist.uniqid}" type="checkbox" ></td>
+                    <td>{$datalist.id}</td>
+                    <td><notempty name="datalist.ucmembers"><if condition="$datalist['ucmembers']['type'] eq 'system'">{$datalist.ucmembers.username}<else/>{$datalist.ucmembers.name}</if><else/>游客</notempty></td>
+                    <td><notempty name="datalist.ucmembers">{$datalist.ucmembers.type}<else/>游客</notempty></td>
+                    <td><neq name="datalist.pid" value="0"><span class='red'>回复</span><else/><span class='green'>自评</span></neq></td>
+                    <td data-toggle="popover" data-trigger="hover" data-html="true" data-container="body" data-placement='top' title="评论内容" data-content="{:resolve_comments($datalist['comments'])}">
+                        {:resolve_comments(msubstr($datalist['comments'],0,20,'utf-8'))}
+                    </td>
+                    <td>{$datalist.create_time|date='Y-m-d H:i:s',###}</td>
+                    <td>
+                        <eq name="datalist.status" value="1">
+                            <img src="__IMG__/yes.gif" alt="开启">
+                        <else />
+                            <img src="__IMG__/no.gif" alt="关闭">
+                        </eq>
+                    </td>
+                    <td>
+                        <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/commentscheck",session("uid")) eq 1'>
+                            <a class="link-commentscheck" href="javascript:;" onclick="postUrl('{:U('commentscheck')}','{$datalist.uniqid}')"><if condition="$datalist['status'] eq 0"><span class="green">通过</span><else/><span class="red">禁用</span></if></a>
+                        </if>
+                        <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/commentsdel",session("uid")) eq 1'>
+                            <a class="link-del" href="javascript:;" onclick="del('{:U('commentsdel')}','{$datalist.uniqid}')">删除</a>
+                        </if>
+                    </td>
+                </tr>
+                </volist>
+
+            </table>
+            <div class="list-page">{$pagelist}</div>
+        </div>
+    </form>
+</div>
+<include file="Public:foot" />

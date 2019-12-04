@@ -1,0 +1,193 @@
+<layout name="Public/layout" />
+<div class="mwrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><a class="crumb-name" href='{:U("index",decode($parameter))}'>表单向导</a><span class="crumb-step">&gt;</span><span>表单数据</span></div>
+    </div>
+    <div class="result-wrap">
+        <form name="myform" id="myform" method="post">
+            <div class="result-title">
+                <div class="result-list">
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/datasdel",session("uid")) eq 1'>
+                        <a id="batchDel" href="javascript:void(0)" onclick="delall('{:U('datasdel')}',{$modelid})"><i class="icon-font">&#xe037;</i>批量删除</a>
+                    </if>
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/datassort",session("uid")) eq 1'>
+                        <a id="updateOrd" href="javascript:void(0)" onclick="sort('{:U('datassort')}',{$modelid})"><i class="icon-font">&#xe00a;</i>更新排序</a>
+                    </if>
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/export",session("uid")) eq 1'>
+                        <a id="exportData" href="{:U('export',array('modelid'=>$modelid))}" ><i class="icon-font">&#xe03e;</i>导出数据</a>
+                    </if>
+                </div>
+            </div>
+            <div class="result-content table-responsive">
+                <table class="result-tab table table-hover" width="100%">
+                    <tr class='head-tr'>
+                        <th class="tc ids-td"><input class="allChoose" onchange="selectAll(this)" id="selectall" type="checkbox"></th>
+                        <th class="sort-td">排序</th>
+                        <volist name="fields" id="field">
+                            <if condition="$field['type'] neq 'editor'">
+                                <th>{$field.name}</th>
+                            </if>
+                        </volist>
+                        <th>操作</th>
+                    </tr>
+                    <volist name="data" id="datalist">
+                    <tr>
+                        <td class="tc ids-td"><input name="ids[]" class='select_ids' value="{$datalist.uniqid}" type="checkbox" <eq name="datalist.type" value="1">disabled="disabled"</eq>></td>
+                        <td class="sort-td">
+                            <input class="common-input sort-input sort form-control" dataId="{$datalist.id}" name="sort[]" value="{$datalist.sort}" type="text">
+                        </td>
+                        <volist name="fields" id="field">
+                            <if condition="$field['type'] neq 'editor'">
+                            <td>
+                                <switch name="field.type">
+                                    <case value="num">
+                                        {$datalist[$field['field']]}
+                                    </case>
+                                    <case value="string">
+                                        <if condition="$field['field'] eq 'title'">
+                                            <div data-toggle="popover" data-trigger="hover" data-html="true" data-container="body" data-placement='top' title="{$field['name']}" data-content="{$datalist[$field['field']]}"><neq name="datalist.url" value=""><a href='{$datalist.url}' target="_blank">{$datalist[$field['field']]|msubstr=0,20,'utf-8'}</a><else/>{$datalist[$field['field']]|msubstr=0,20,'utf-8'}</neq></div>
+                                        <elseif condition="$field['field'] eq 'url'"/>
+                                            <div data-toggle="popover" data-trigger="hover" data-html="true" data-container="body" data-placement='top' title="{$field['name']}" data-content="{$datalist[$field['field']]}"><neq name="datalist.url" value=""><a href='{$datalist.url}' target="_blank">跳转</a><else/>{$datalist[$field['field']]|msubstr=0,20,'utf-8'}</neq></div>
+                                        <elseif condition="$field['field'] eq 'guide_ip'"/>
+                                            <?php
+                                                $ip_area = unserialize($datalist['ip_area']);
+                                            ?>
+                                             <div data-toggle="popover" data-trigger="hover" data-html="true" data-placement='top' data-container="body" title="说明" data-content="地区：{$ip_area.area} {$ip_area.country}">{$datalist[$field['field']]}</div>
+                                        <else/>
+                                            <div data-toggle="popover" data-trigger="hover" data-html="true" data-container="body" data-placement='top' title="{$field['name']}" data-content="{$datalist[$field['field']]}">{$datalist[$field['field']]|msubstr=0,20,'utf-8'}</div>
+                                        </if>
+                                    </case>
+                                    <case value="color">
+                                        <if condition="!empty($datalist[$field['field']])">
+                                            <span style="color:{$datalist[$field['field']]}">{$datalist[$field['field']]}</span>
+                                        </if>   
+                                    </case>
+                                    <case value="password">
+                                        {$datalist[$field['field']]}
+                                    </case>
+                                    <case value="textarea">
+                                        <div data-toggle="popover" data-trigger="hover" data-html="true" data-container="body" data-placement='top' title="{$field['name']}" data-content="{$datalist[$field['field']]}">{$datalist[$field['field']]|msubstr=0,20,'utf-8'}</div>
+                                    </case>
+                                    <case value="datetime">
+                                        <if condition="!empty($datalist[$field['field']])">
+                                            {$datalist[$field['field']]|date='Y-m-d H:i:s',###}
+                                        </if>
+                                    </case>
+                                    <case value="rangetime">
+                                        <?php
+                                            $rangetime = unserialize($datalist[$field['field']]);
+                                        ?>
+                                        <div data-toggle="popover" data-trigger="hover" data-html="true" data-container="body" data-placement='top' title="{$field['name']}" data-content="开始时间：<if condition="!empty($rangetime[0])">{$rangetime[0]|date='Y-m-d H:i:s',###}</if><br>结束时间：<if condition="!empty($rangetime[1])">{$rangetime[1]|date='Y-m-d H:i:s',###}</if>"><if condition="!empty($rangetime[0])">{$rangetime[0]|date='Y-m-d H:i:s',###} </if><if condition="!empty($rangetime[1]) && !empty($rangetime[0])"> ~ </if><if condition="!empty($rangetime[1])">{$rangetime[1]|date='Y-m-d H:i:s',###}</if></div>
+                                    </case>
+                                    <case value="bool">
+                                        <?php
+                                            if(!empty($field['extra'])){
+                                                foreach($field['extra'] as $bool_key => $value){
+                                                    if($datalist[$field['field']] == 1){
+                                                        echo '<img src="__IMG__/yes.gif" alt="'.$bool_key.'">';
+                                                        break;
+                                                    } else {
+                                                        echo '<img src="__IMG__/no.gif" alt="'.$bool_key.'">';
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        ?>
+                                    </case>
+                                    <case value="select">
+                                        <?php
+                                            if(!empty($field['extra'])){
+                                                foreach($field['extra'] as $select_key => $value){
+                                                    if($datalist[$field['field']] == $value){
+                                                        echo $select_key;
+                                                    }
+                                                }
+                                            }
+                                        ?>
+                                    </case>
+                                    <case value="radio">
+                                        <?php
+                                            if(!empty($field['extra'])){
+                                                foreach($field['extra'] as $radio_key => $value){
+                                                    if($datalist[$field['field']] == $value){
+                                                        echo $radio_key;
+                                                    }
+                                                }
+                                            }
+                                        ?>
+                                    </case>
+                                    <case value="checkbox">
+                                        <?php
+                                            $arr_checkbox = array();
+                                            $checkbox = unserialize($datalist[$field['field']]);
+                                            if(!empty($checkbox)){
+                                                foreach($checkbox as $key => $value){
+                                                    foreach($field['extra'] as $key_1 => $value_1){
+                                                        if($value_1 == $value){
+                                                            $arr_checkbox[] = $key_1;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            echo implode(',',$arr_checkbox);
+                                        ?>
+                                    </case>
+                                    <case value="linkagemenu">
+                                        <?php
+                                            $contentlist_linkage = M('Linkagemenu')->find($datalist[$field['field']]);
+                                            echo $contentlist_linkage['name']."(".$contentlist_linkage['lettername'].")";
+                                        ?>
+                                    </case>
+                                    <case value="picture">
+                                        <?php
+                                            $contentlist_picture = unserialize($datalist[$field['field']]);
+                                            $picture_count = count($contentlist_picture);
+                                            if(!empty($contentlist_picture) && $picture_count == 1){
+                                                echo "<div data-toggle='popover' data-trigger='hover' data-html='true' data-container='body' data-placement='top' title='说明' data-content='".$picture_count." 张图片'><a href='__ROOT__".$contentlist_picture[0]["photo"]."' target='_blank'><img src='__ROOT__".$contentlist_picture[0]["thumb"]."' style='height: 25px' /></a></div>";
+                                            } else {
+                                                echo "<div data-toggle='popover' data-trigger='hover' data-html='true' data-container='body' data-placement='top' title='说明' data-content='".$picture_count." 张图片'>".$picture_count." 张图片</div>";
+                                            }
+                                        ?>
+                                    </case>
+                                    <case value="file">
+                                        <?php
+                                            $contentlist_file = unserialize($datalist[$field['field']]);
+                                            $file_count = count($contentlist_file);
+                                            echo "<div data-toggle='popover' data-trigger='hover' data-html='true' data-container='body' data-placement='top' title='说明' data-content='".$file_count." 个文件'>".$file_count." 个文件</div>";
+                                        ?>
+                                    </case>
+                                    <case value="uid">
+                                        <?php
+                                            if($datalist[$field['field']] == 0){
+                                                echo "游客";
+                                            } else {
+                                                //获取ucente中心的用户信息
+                                                $userinfo = M(C('UCENTER_DB_TABLE_MEMBERS'),C('UCENTER_DB_PREFIX'),C('UCENTER_DB_DSN'))->where("uid = " . $datalist[$field['field']])->find();
+                                                if($userinfo['type'] != 'system'){
+                                                    $userinfo['username'] = $userinfo['name'];
+                                                }
+                                                echo $userinfo['username']."(".$userinfo['type'].")";
+                                            }
+                                        ?>
+                                    </case>
+                                </switch>
+                            </td>
+                            </if>
+                        </volist>
+                        <td>
+                            <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/datasdetails",session("uid")) eq 1'>
+                                <a class="link-update" href='{:U("datasdetails",array("id"=>$datalist["id"],"modelid"=>$modelid,"linkcate_parameter"=>encode($linkcate_parameter)))}'>详情</a>
+                            </if>
+                            <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/datasdel",session("uid")) eq 1'>
+                                <a class="link-del" href="javascript:;" onclick="del('{:U('datasdel')}','{$datalist.uniqid}',{$modelid})">删除</a>
+                            </if>
+                        </td>
+                    </tr>
+                    </volist>
+
+                </table>
+                <div class="list-page">{$pagelist}</div>
+            </div>
+        </form>
+    </div>
+</div>

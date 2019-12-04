@@ -1,0 +1,110 @@
+<style type="text/css">
+    .weixin-muti-preview{ width:320px; margin:0 auto; border:1px solid #ccc; background-color:#fff; box-shadow:0 0 2px #ddd; border-radius:10px;}
+    .weixin-muti-preview li{ border-bottom:1px solid #ccc; padding:10px; list-style:none; height:60px; position:relative;}
+    .weixin-muti-preview li:hover{background: RGBA(0,0,0,.2);}
+    .weixin-muti-preview p{ z-index:1;/* height:60px;  */line-height:30px; padding:0 70px 0 0;overflow:hidden;}
+    .weixin-muti-preview img{ width:60px; /* height:60px; */position:absolute; top:10px; right:10px;}
+    .weixin-muti-preview .del{position:absolute; right:5px; top:5px;  background:url(__IMG__/no.gif) no-repeat center center; text-align:center; line-height:80px; color:#C00; display:block; width: 14px;height: 14px}
+    .weixin-muti-preview li:first-child{ height:170px;}
+    .weixin-muti-preview li:first-child p{ position:absolute; bottom:0; left:-2px; right:0;  background-color:RGBA(0,0,0,.6); color:#fff; line-height:30px; height:30px; margin:0 10px 10px 10px; padding:0 5px; white-space:nowrap; overflow:hidden;}
+    .weixin-muti-preview li:first-child img{ width:300px; height:150px;}
+    .weixin-muti-preview li:first-child .del{ line-height:160px;}
+    .weixin-muti-preview li:last-child{border:none;}
+    .form-item-div{ width:320px; margin:20px auto;}
+    .form-item-div input{width:300px;}
+</style>
+<script type="text/javascript" src="__PUBLIC__/jqueryui/jquery.dragsort.js"></script>
+<script type="text/javascript">
+/**
+ * [showhide_select_news 显示隐藏容器]
+ * @return {[type]} [description]
+ */
+function showhide_select_news () {
+    var abc_select = $('#select_news');
+    if(abc_select.find("li.select-item").length > 0){
+        abc_select.show();
+    } else {
+        abc_select.hide();
+    }
+    abc_select.find('li.select-item').css("borderBottom",'1px solid #ccc');
+    abc_select.find('li.select-item:last').css("borderBottom",'none');
+}
+/**
+ * [select_news 添加到列表]
+ * @param  {[type]} id [description]
+ * @return {[type]}    [description]
+ */
+function select_news(id){
+    var count = 0;
+    var isExist = false;
+    $('.sltr').each(function() { 
+       if( $(this).attr('rel')==id )  {
+           isExist = true;
+       }
+       count +=1;
+    });
+    if(isExist){
+        return false;
+    }   
+    if(count>=9){
+        layer.open({
+            content:"同时最多不能超过9个！",
+            yes:function(index){
+                layer.close(index);
+            },
+            icon:2
+        });
+        return false;
+    }
+    
+    var title = $('#news_'+id).parent().find('.title').html();
+    title += '<input type="hidden" value="'+id+'" name="ids[]">';
+    var cover = $('#news_'+id).parent().find('.cover').html();
+    html = '<li class="sltr select-item" rel="'+id+'" id="select_tr_'+id+'" onmouseenter="select_item(this)" onmouseleave="select_item(this)">'+
+            '<p>'+title+'</p>'+
+                    '<div class="cover">'+cover+'</div>'+
+                    '<a class="del" onclick="del_news('+id+')" href="javascript:void(0);" title="删除" style="display: none;"> </a>'+
+                    '</li>';
+    
+    $('#select_news').append(html);
+    //显示容器
+    showhide_select_news();
+}
+
+/**
+ * [del_news 删除]
+ * @param  {[type]} id [description]
+ * @return {[type]}    [description]
+ */
+function del_news(id){
+    var html = $('#select_tr_'+id).remove();
+    //显示容器
+    showhide_select_news();
+}
+
+/**
+ * [select_item 显示删除]
+ * @return {[type]} [description]
+ */
+function select_item(obj){
+    var del = $(obj).find('.del');
+    if(del.css('display') == 'none'){
+        del.show();
+    } else {
+        del.hide();
+    }
+}
+
+$(function(){
+    /**
+     * [dragsort 开始拖拽]
+     */
+    $("#select_news").dragsort({
+        dragSelector: "li",
+        dragEnd: function() {showhide_select_news(); },
+        dragBetween: false,
+        placeHolderTemplate: "<li></li>"
+     });
+})
+
+</script>

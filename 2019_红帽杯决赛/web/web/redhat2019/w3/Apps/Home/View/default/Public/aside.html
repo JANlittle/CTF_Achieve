@@ -1,0 +1,59 @@
+<aside class="sidebar" id="sidebar">
+	<div class="blank5"></div>
+	<notempty name="zanlist">
+		<div class="widget widget_postlist zanlist" id="dianzanfuli">
+			<h3 class="title"><strong>点赞福利</strong></h3>
+			<ul>
+				<volist name="zanlist" id="zan">
+					<li>
+						<a target="_blank" class="fl" <eq name="zan.url" value="">href='{:U("/$zan[catroute]/$zan[id]@$myurl","",true,true)}'<else/>href="{$zan.url}"</eq> title="{$zan.title}">
+							<span class="thumbnail">
+								<span>
+									<img data-thumb="1"  data-original="__ROOT__{$zan.thumb}" class="thumb" alt="{$zan.title}" src="__PUBLIC__/images/loading.gif">
+								</span>
+							</span>
+						</a>
+						<div class="fr" style="width:200px">
+							<a target="_blank" <eq name="zan.url" value="">href='{:U("/$zan[catroute]/$zan[id]@$myurl","",true,true)}'<else/>href="{$zan.url}"</eq> title="{$zan.title}"><span class="text" <neq name="zan.titlecolor" value="">style="color:{$zan.titlecolor}"</neq>>{$zan.title|msubstr=0,26,"utf-8"}</span></a>
+							<span class="text-muted post-views">阅读({$zan.count})</span>
+						</div>
+						<div class="clear"></div>
+					</li>
+				</volist>
+			</ul>
+		</div>
+		<div class="blank5"></div>
+	</notempty>
+	<notempty name="tujilist">
+		<div class="widget widget_postlist tujilist" id="fulituji">
+			<h3 class="title"><strong>福利图集</strong></h3>
+			<ul class="items-02">
+				<volist name="tujilist" id="tuji">
+					<li>
+						<a target="_blank" class="fl" <eq name="tuji.url" value="">href='{:U("/$tuji[catroute]/$tuji[id]@$myurl","",true,true)}'<else/>href="{$tuji.url}"</eq> title="{$tuji.title}">
+							<span class="thumbnail">
+								<img data-thumb="1"  data-original="__ROOT__{$tuji.thumb}" class="thumb" alt="{$tuji.title}" src="__PUBLIC__/images/loading.gif">
+							</span>
+							<span class="text">{$tuji.title|msubstr=0,23,"utf-8"}</span>
+						</a>
+					</li>
+				</volist>
+			</ul>
+		</div>
+		<div class="blank5"></div>
+	</notempty>
+	<notempty name="taglist">
+		<div class="widget widget_tags" id="fulibiaoqian">
+			<h3 class="title"><strong>福利标签</strong></h3>
+			<div class="labe d_tags">
+	        	<volist name="taglist" id="listtag" key="key" mod="2">
+	        		<li <eq name="mod" value="0">style="margin-right:0"</eq>><a href='{:U("/tag/$listtag[tag]@$myurl","",true,true)}' data-original-title="{$listtag.num}个福利"  <if condition="$key lt 4">data-placement="left"</if>>{$listtag.tag}</a></li>
+	        	</volist>
+	        </div>
+	        <div>
+	        	<a href="http://s.click.taobao.com/t?e=m%3D2%26s%3D%2ByA9R6DSNDccQipKwQzePCperVdZeJviEViQ0P1Vf2kguMN8XjClAtZ9xr6ZUzgd%2BHKgmPGwIJXXBzhZ%2BY1ho36%2BwB6qSCF9b0wBzKAbfyqnLcWvjkCANzDVuRn8ddiDsEVVC24eqozcHtRpEUy6RHVyxRO0gvF4QxJtmCgOmCLXl8Q7TEjBF%2BX11FSyvDCnQiv%2BJKjlPObGDmntuH4VtA%3D%3D" target="_blank"><img src="__PUBLIC__/images/ad/300-100.gif" alt="云服务器，28.8元起。140万企业与开发者的信赖"></a>
+	        </div>
+		</div>
+		<div class="blank5"></div>
+	</notempty>
+</aside>

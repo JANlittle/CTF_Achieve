@@ -1,0 +1,62 @@
+<layout name="Public/layout" />
+<div class="mwrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><a href='{:U("index",decode($parameter))}'>联动菜单</a><span class="crumb-step">&gt;</span><span class="crumb-name">联动类型</span></div>
+    </div>
+    <div class="result-wrap">
+        <form name="myform" id="myform" method="post">
+            <div class="result-title">
+                <div class="result-list">
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/menutypeadd",session("uid")) eq 1'>
+                        <a href='{:U("menutypeadd","linkcate_parameter=".encode($linkcate_parameter))}'><i class="icon-font">&#xe026;</i>新增类型</a>
+                    </if>
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/menutypedel",session("uid")) eq 1'>
+                        <a id="batchDel" href="javascript:void(0)" onclick="delall('{:U('menutypedel')}')"><i class="icon-font">&#xe037;</i>批量删除</a>
+                    </if>
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/menutypesort",session("uid")) eq 1'>
+                        <a id="updateOrd" href="javascript:void(0)" onclick="sort('{:U('menutypesort')}')"><i class="icon-font">&#xe00a;</i>更新排序</a>
+                    </if>
+                </div>
+            </div>
+            <div class="result-content table-responsive">
+                <table class="result-tab table table-hover" width="100%">
+                    <tr class='head-tr'>
+                        <th class="tc ids-td"><input class="allChoose" onchange="selectAll(this)" id="selectall" type="checkbox"></th>
+                        <th class="sort-td">排序</th>
+                        <th>ID</th>
+                        <th>名称</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                    <volist name="data" id="datalist">
+                    <tr>
+                        <td class="tc ids-td"><input name="ids[]" class='select_ids' value="{$datalist.id}" type="checkbox" ></td>
+                        <td class="sort-td">
+                            <input class="common-input sort-input sort form-control" dataId="{$datalist.id}" name="sort[]" value="{$datalist.sort}" type="text">
+                        </td>
+                        <td>{$datalist.id}</td>
+                        <td>{$datalist.name}</td>
+                        <td>
+                            <eq name="datalist.status" value="1">
+                                <img src="__IMG__/yes.gif" alt="开启">
+                            <else />
+                                <img src="__IMG__/no.gif" alt="关闭">
+                            </eq>
+                        </td>
+                        <td>
+                            <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/menutypeedit",session("uid")) eq 1'>
+                                <a class="link-update" href='{:U("menutypeedit","id=".$datalist["id"]."&linkcate_parameter=".encode($linkcate_parameter))}'>修改</a>
+                            </if>
+                            <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/menutypedel",session("uid")) eq 1'>
+                                <a class="link-del" href="javascript:;" onclick="del('{:U('menutypedel')}',{$datalist.id})">删除</a>
+                            </if>
+                        </td>
+                    </tr>
+                    </volist>
+
+                </table>
+                <div class="list-page">{$pagelist}</div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,235 @@
+<layout name="Public/layout" />
+<div class="main-wrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><a class="crumb-name" href='{:U("datas",decode($linkcate_parameter))}'>表单数据</a><span class="crumb-step">&gt;</span><span>详细内容</span></div>
+    </div>
+    <div class="result-wrap  table-responsive">
+        <div class="result-content">
+            <form action="" method="post" id="myform" name="myform" onsubmit="return false">
+                <table class="insert-tab table table-hover" width="100%">
+                    <tbody>
+                        <volist name="fields" id="field">
+                            <tr>
+                                <th>{$field['name']}：</th>
+                                <td>
+                                <switch name="field.type">
+                                    <case value="num">
+                                        {$data[$field['field']]}
+                                    </case>
+                                    <case value="string">
+                                        <if condition="$field['field'] eq 'title'">
+                                            <div><neq name="data.url" value=""><a href='{$data.url}' target="_blank">{$data[$field['field']]}</a><else/>{$data[$field['field']]}</neq></div>
+                                        <elseif condition="$field['field'] eq 'url'"/>
+                                            <div data-toggle="popover" data-trigger="hover" data-html="true" data-container="body" data-placement='top' title="{$field['name']}" data-content="{$data[$field['field']]}"><neq name="data.url" value=""><a href='{$data.url}' target="_blank">跳转</a><else/>{$data[$field['field']]}</neq></div>
+                                        <elseif condition="$field['field'] eq 'guide_ip'"/>
+                                            <?php
+                                                $ip_area = unserialize($data['ip_area']);
+                                            ?>
+                                             <div>{$data[$field['field']]}&nbsp;&nbsp;地区：{$ip_area.area} {$ip_area.country}</div>
+                                        <else/>
+                                            <div>{$data[$field['field']]}</div>
+                                        </if>
+                                    </case>
+                                    <case value="color">
+                                        <if condition="!empty($data[$field['field']])">
+                                            <span style="color:{$data[$field['field']]}">{$data[$field['field']]}</span>
+                                        </if>   
+                                    </case>
+                                    <case value="password">
+                                        {$data[$field['field']]}
+                                    </case>
+                                    <case value="textarea">
+                                        <div>{$data[$field['field']]}</div>
+                                    </case>
+                                    <case value="datetime">
+                                        <if condition="!empty($data[$field['field']])">
+                                            {$data[$field['field']]|date='Y-m-d H:i:s',###}
+                                        </if>
+                                    </case>
+                                    <case value="rangetime">
+                                        <?php
+                                            $rangetime = unserialize($data[$field['field']]);
+                                        ?>
+                                        <div><if condition="!empty($rangetime[0])">{$rangetime[0]|date='Y-m-d H:i:s',###} </if><if condition="!empty($rangetime[1]) && !empty($rangetime[0])"> ~ </if><if condition="!empty($rangetime[1])">{$rangetime[1]|date='Y-m-d H:i:s',###}</if></div>
+                                    </case>
+                                    <case value="bool">
+                                        <?php
+                                            if(!empty($field['extra'])){
+                                                foreach($field['extra'] as $bool_key => $value){
+                                                    if($data[$field['field']] == 1){
+                                                        echo '<img src="__IMG__/yes.gif" alt="'.$bool_key.'">';
+                                                        break;
+                                                    } else {
+                                                        echo '<img src="__IMG__/no.gif" alt="'.$bool_key.'">';
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        ?>
+                                    </case>
+                                    <case value="select">
+                                        <?php
+                                            if(!empty($field['extra'])){
+                                                foreach($field['extra'] as $select_key => $value){
+                                                    if($data[$field['field']] == $value){
+                                                        echo $select_key;
+                                                    }
+                                                }
+                                            }
+                                        ?>
+                                    </case>
+                                    <case value="radio">
+                                        <?php
+                                            if(!empty($field['extra'])){
+                                                foreach($field['extra'] as $radio_key => $value){
+                                                    if($data[$field['field']] == $value){
+                                                        echo $radio_key;
+                                                    }
+                                                }
+                                            }
+                                        ?>
+                                    </case>
+                                    <case value="checkbox">
+                                        <?php
+                                            $arr_checkbox = array();
+                                            $checkbox = unserialize($data[$field['field']]);
+                                            if(!empty($checkbox)){
+                                                foreach($checkbox as $key => $value){
+                                                    foreach($field['extra'] as $key_1 => $value_1){
+                                                        if($value_1 == $value){
+                                                            $arr_checkbox[] = $key_1;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            echo implode(',',$arr_checkbox);
+                                        ?>
+                                    </case>
+                                    <case value="editor">
+                                        <!-- 加载编辑器的容器 -->
+                                        <textarea name="{$field.field}" id="{$field.field}" style="width:100%;height:150px;line-height:20px">{$data[$field['field']]}</textarea>
+                                        <!-- 实例化编辑器 -->
+                                        <!-- 配置文件 -->
+                                        <script type="text/javascript" src="__UEDITOR_PATH__/ueditor.config.js"></script>
+                                        <!-- 编辑器源码文件 -->
+                                        <script type="text/javascript" src="__UEDITOR_PATH__/ueditor.all.js"></script>
+                                        <script type="text/javascript">
+                                            var ue_{$field.field} = UE.getEditor('{$field.field}',{
+                                                autoHeightEnabled:false,
+                                                zIndex:0,
+                                                maximumWords:3000,
+                                                serverUrl:'{:U("Uploadfile/editorUploadfile")}',
+                                                toolbars: [
+                                                [
+                                                    'undo', //撤销
+                                                    'redo', //重做
+                                                    'bold', //加粗
+                                                    'indent', //首行缩进
+                                                    'italic', //斜体
+                                                    'underline', //下划线
+                                                    'strikethrough', //删除线
+                                                    'subscript', //下标
+                                                    'fontborder', //字符边框
+                                                    'superscript', //上标
+                                                    'formatmatch', //格式刷
+                                                    'blockquote', //引用
+                                                    'pasteplain', //纯文本粘贴模式
+                                                    'selectall', //全选
+                                                    'horizontal', //分隔线
+                                                    'removeformat', //清除格式
+                                                    'time', //时间
+                                                    'date', //日期
+                                                    'unlink', //取消链接
+                                                    'cleardoc', //清空文档
+                                                    'fontfamily', //字体
+                                                    'fontsize', //字号
+                                                    'paragraph', //段落格式
+                                                    'link', //超链接
+                                                    'emotion', //表情
+                                                    'spechars', //特殊字符
+                                                    'searchreplace', //查询替换
+                                                    'justifyleft', //居左对齐
+                                                    'justifyright', //居右对齐
+                                                    'justifycenter', //居中对齐
+                                                    'justifyjustify', //两端对齐
+                                                    'forecolor', //字体颜色
+                                                    'backcolor', //背景色
+                                                    'insertorderedlist', //有序列表
+                                                    'insertunorderedlist', //无序列表
+                                                    'fullscreen', //全屏
+                                                    'directionalityltr', //从左向右输入
+                                                    'directionalityrtl', //从右向左输入
+                                                    'rowspacingtop', //段前距
+                                                    'rowspacingbottom', //段后距
+                                                    'imageleft', //左浮动
+                                                    'imageright', //右浮动
+                                                    'imagecenter', //居中
+                                                    'lineheight', //行间距
+                                                    'edittip ', //编辑提示
+                                                    'touppercase', //字母大写
+                                                    'tolowercase', //字母小写
+                                                ]
+                                            ]
+                                            });
+                                        </script>
+                                    </case>
+                                    <case value="linkagemenu">
+                                        <?php
+                                            $contentlist_linkage = M('Linkagemenu')->find($data[$field['field']]);
+                                            echo $contentlist_linkage['name']."(".$contentlist_linkage['lettername'].")";
+                                        ?>
+                                    </case>
+                                    <case value="picture">
+                                        <?php
+                                            $contentlist_picture = unserialize($data[$field['field']]);
+                                            if(!empty($contentlist_picture)){
+                                                foreach($contentlist_picture as $key_pic => $val_pic){
+                                                    echo "<a data-toggle='popover' data-trigger='hover' data-html='true' data-container='body' data-placement='top' title='说明' data-content='".$val_pic["name"]."' href='__ROOT__".$val_pic["photo"]."' target='_blank' style='margin-right: 5px'><img src='__ROOT__".$val_pic["thumb"]."' style='max-width:120px;' /></a>";
+                                                }
+                                            }
+                                        ?>
+                                    </case>
+                                    <case value="file">
+                                        <?php
+                                            $contentlist_file = unserialize($data[$field['field']]);
+                                            if(!empty($contentlist_file)){
+                                                foreach($contentlist_file as $key_file => $val_file){
+                                                    if($val_file['type'] == 'images'){
+                                                        echo "<a data-toggle='popover' data-trigger='hover' data-html='true' data-container='body' data-placement='top' title='说明' data-content='".$val_file["name"]."' href='__ROOT__".$val_file["photo"]."' target='_blank' style='margin-right: 5px'><img src='__ROOT__".$val_file["thumb"]."' style='max-width:120px;' /></a>";
+                                                    } else{
+                                                        echo "<a data-toggle='popover' data-trigger='hover' data-html='true' data-container='body' data-placement='top' title='说明' data-content='".$val_file["name"]."' href='__ROOT__".$val_file["filepath"]."' target='_blank' style='margin-right: 5px'><img src='__PUBLIC__/images/uploadfile/readme.png' style='max-width:120px;' /></a>";
+                                                    }
+                                                }
+                                            }
+                                        ?>
+                                    </case>
+                                    <case value="uid">
+                                        <?php
+                                            if($data[$field['field']] == 0){
+                                                echo "游客";
+                                            } else {
+                                                //获取ucente中心的用户信息
+                                                $userinfo = M(C('UCENTER_DB_TABLE_MEMBERS'),C('UCENTER_DB_PREFIX'),C('UCENTER_DB_DSN'))->where("uid = " . $data[$field['field']])->find();
+                                                if($userinfo['type'] != 'system'){
+                                                    $userinfo['username'] = $userinfo['name'];
+                                                }
+                                                echo $userinfo['username']."(".$userinfo['type'].")";
+                                            }
+                                        ?>
+                                    </case>
+                                </switch>
+                                </td>
+                            </tr>
+                        </volist>
+                        <tr>
+                            <th></th>
+                            <td>
+                                <input class="btn btn-primary btn6 mr10" onclick="history.go(-1)" value="返回" type="button">
+                            </td>
+                        </tr>
+                    </tbody></table>
+            </form>
+        </div>
+    </div>
+
+</div>

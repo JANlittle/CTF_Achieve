@@ -1,0 +1,135 @@
+<include file="Public:htmlcommon" />
+<include file="Public:seolist" />
+<include file="Public:headcommon" />
+</head>
+<body>
+	<div class="container">
+		<include file="Public:demonav" />
+		<input type="button" class='btn btn-primary' name="Notification" id="Notification" value="Notification通知">
+		<input type="button" class='btn btn-default' name="webkitNotifications" id="webkitNotifications" value="webkitNotifications通知">
+		<div class="help-block">目前notification的实现有两种：一种是之前草案中的形式：webkitNotifications对象, 另一种就是未来标准化的形式:Notification对象。根据某些博客的说法，这个Notification会是 webkitNotifications的标准化形态（传说中的进化），这种方式的实现相对于webkitNotifications的实现更简洁，更面 向对象一些。</div>
+		<script type="text/javascript">
+			$(function(){
+				$('#Notification').click(function(){
+					if(window.Notification && Notification.permission !== "denied") {
+						Notification.requestPermission(function(status) {
+							if(status === 'granted') {
+								var n = new Notification('通知', {
+									dir  : 'auto', //文字方向
+									lang : 'zh-CN',//语言
+									body : '明天要放假了啊，哈哈哈哈。。。', //通知内容
+									icon : '__IMG__/notification.png', //通知图标
+									tag  : 1, //通知框id
+								});
+
+								//设置关闭
+								setTimeout(function() {
+									n.close(); //关闭
+								}, 3000);
+							}
+						});
+					}
+				});
+
+				$("#webkitNotifications").click(function() {
+				    //判断浏览器是否支持notification
+				    if(window.webkitNotifications){
+				    	//请求页面权限
+						window.webkitNotifications.requestPermission();
+
+						if(window.webkitNotifications.checkPermission() == 0){
+							var icon = '__IMG__/notification.png';
+				            var title = '通知';
+				            var body = '明天要放假了啊，哈哈哈哈。。。';
+
+							var WebkitNotification = window.webkitNotifications.createNotification(icon,title,body);
+					        WebkitNotification.tag = 1;
+						    WebkitNotification.show();
+
+						    //显示调用事件
+							WebkitNotification.onshow=function  () {
+							
+							}
+
+							//点击事件
+							WebkitNotification.onclick=function  () {
+								 alert("我点击了");
+						    }
+					    }
+					} else {
+						layer.open({
+						    title   : '提示',
+						    type    : 0,
+						    content : "您的浏览器不支持桌面通知特性，请下载谷歌浏览器试用该功能！"
+						});
+					}
+				});
+			});
+		</script>
+<div class="blokc-help">HTML代码：</div>
+<pre class="prettyprinthtml prettyprint linenums">
+<literal>
+<script type="text/javascript">
+$(function(){
+	/*$('#Notification').click(function(){
+		if(window.Notification && Notification.permission !== "denied") {
+			Notification.requestPermission(function(status) {
+				if(status === 'granted') {
+					var notificationInstance = new Notification('通知', {
+						dir  : 'auto', //文字方向
+						lang : 'zh-CN',//语言
+						body : '明天要放假了啊，哈哈哈哈。。。', //通知内容
+						icon : '__IMG__/notification.png', //通知图标
+						tag  : 1, //通知框id
+					});
+
+					//设置关闭
+					setTimeout(function() {
+						notificationInstance.close(); //关闭
+					}, 3000);
+				}
+			});
+		}
+	});*/
+
+	/*$("#webkitNotifications").click(function() {
+	    //判断浏览器是否支持notification
+	    if(window.webkitNotifications){
+	    	//请求页面权限
+			window.webkitNotifications.requestPermission();
+
+			if(window.webkitNotifications.checkPermission() == 0){
+				var icon = '__IMG__/notification.png';
+	            var title = '通知';
+	            var body = '明天要放假了啊，哈哈哈哈。。。';
+
+				var WebkitNotification = window.webkitNotifications.createNotification(icon,title,body);
+		        WebkitNotification.tag = 1;
+			    WebkitNotification.show();
+
+			    //显示调用事件
+				WebkitNotification.onshow=function  () {
+				
+				}
+
+				//点击事件
+				WebkitNotification.onclick=function  () {
+					 alert("我点击了");
+			    }
+		    }
+		} else {
+			layer.open({
+			    title   : '提示',
+			    type    : 0,
+			    content : "您的浏览器不支持桌面通知特性，请下载谷歌浏览器试用该功能！"
+			});
+		}
+	});*/
+});
+</script>
+</literal>
+</pre>			
+	</div>
+<include file="Public:foot" />
+</body>
+</html>

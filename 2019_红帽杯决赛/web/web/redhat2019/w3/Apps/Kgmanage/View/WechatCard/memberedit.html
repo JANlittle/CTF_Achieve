@@ -1,0 +1,50 @@
+<layout name="Public/layout" />
+<div class="main-wrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><a class="crumb-name" href='{:U("member",decode($parameter))}'>会员管理</a><span class="crumb-step">&gt;</span><span>编辑会员卡</span></div>
+    </div>
+    <div class="result-wrap table-responsive">
+        <div class="result-content">
+            <form action="" method="post" id="myform" name="myform" onsubmit="return false">
+                <table class="insert-tab table table-hover" width="100%">
+                    <tbody>
+                        <tr>
+                            <th><i class="require-red">*</i>openid：</th>
+                            <td>
+                                <input class="common-text required form-control" id="openid" name="openid" size="50" value="{$data.openid}" type="text" placeholder="用户openid：openid">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>姓名：</th>
+                            <td>
+                                <input class="common-text required form-control" id="name" name="name" size="50" value="{$data.name}" type="text" placeholder="请输入姓名">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>电话：</th>
+                            <td>
+                                <input class="common-text required form-control" id="tel" name="tel" size="50" value="{$data.tel}" type="text" placeholder="请输入电话">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>卡号：</th>
+                            <td>
+                                <input class="common-text required form-control" id="number" name="number" size="50" value="{$data.number}" type="text" placeholder="请输入卡号">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <td>
+                                <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitForm("{:U("memberedit")}","#myform")'>
+                                <input class="btn btn6" onclick="history.go(-1)" value="返回" type="button">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <input type="hidden" name="id" value="{$data.id}">
+                <input type="hidden" name="parameter" value="{$parameter}">
+            </form>
+        </div>
+    </div>
+
+</div>

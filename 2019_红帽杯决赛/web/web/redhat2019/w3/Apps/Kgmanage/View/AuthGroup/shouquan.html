@@ -1,0 +1,37 @@
+<layout name="Public/layout" />
+<div class="mwrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><a class="crumb-name" href='{:U("index",decode($parameter))}'>角色管理</a><span class="crumb-step">&gt;</span><span>角色授权</span></div>
+    </div>
+    <div class="result-wrap">
+        <form name="myform" id="myform" action='' method="post" onsubmit="return false">
+            <div class="result-content">
+                <div class="groupname">给：【 <span style='color:red'>{$authinfo.title}</span> 】 授权</div>
+                {$rulemodle}
+            </div>
+            <input type="hidden" name="gid" value="{$authinfo.id}">
+            <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitForm("{:U("shouquan")}","#myform")'>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        //选中节点:获取规则节点1：这种方式太过于零散所以不推荐使用
+        /*$(".modlelist").find('input').change(function(){
+            if($(this).is(':checked')){
+                $(this).parents(".modlelist").next('.rulelist').find('input').prop('checked',true);
+            } else {
+                $(this).parents(".modlelist").next('.rulelist').find('input').prop('checked',false);
+            }
+        });*/
+
+        $("#myform ul h2").find('input').change(function(){
+            if($(this).is(':checked')){
+                $(this).parents('h2').siblings('li').find('input').prop('checked',true);
+            } else {
+                $(this).parents('h2').siblings('li').find('input').prop('checked',false);
+            }
+        });
+    });
+</script>

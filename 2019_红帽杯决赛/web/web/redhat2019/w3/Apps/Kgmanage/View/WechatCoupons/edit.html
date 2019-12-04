@@ -1,0 +1,105 @@
+<layout name="Public/layout" />
+<div class="mwrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><a href='{:U("index",decode($parameter))}'>优惠券</a><span class="crumb-step">&gt;</span><span class="crumb-name">编辑优惠券</span></div>
+    </div>
+    <div class="result-wrap table-responsive">
+        <form name="myform" id="myform" method="post" onsubmit="return false">
+            <div class="result-content">
+               <table class="insert-tab table table-hover" width="100%">
+                    <tbody>
+                        <tr>
+                            <th><i class="require-red">*</i>名称：</th>
+                            <td>
+                                <input class="common-text required form-control" id="name" name="name" size="50" value="{$data.name}" type="text" placeholder="请输入名称">
+                            </td>
+                        </tr>
+                        <style type="text/css" media="screen">
+                            .laydate-icon{
+                                height: auto;
+                            }
+                        </style>
+                        <script type="text/javascript" src="__PUBLIC__/jqueryui/layer/extendplugin/laydate/laydate.js"></script>
+                        <script type="text/javascript" src="__PUBLIC__/js/date_select.js"></script>
+                        <tr>
+                            <th><i class="require-red">*</i>开始时间：</th>
+                            <td>
+                                <input class="common-text required laydate-icon form-control" id="starttime" name="start" size="18" value="{$data.start|date='Y/m/d H:i:s',###}" type="text" placeholder="请输入开始时间">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>结束时间：</th>
+                            <td>
+                                <input class="common-text required laydate-icon form-control" id="endtime" name="end" size="18" value="{$data.end|date='Y/m/d H:i:s',###}" type="text" placeholder="请输入结束时间">
+                            </td>
+                        </tr>
+                        <script type="text/javascript">
+                            $(function(){
+                                var prizeendtime = {
+                                    elem: '#prizeendtime',
+                                    format: 'YYYY/MM/DD hh:mm:ss',
+                                    min: laydate.now(),
+                                    max: '2099-06-16 23:59:59',
+                                    istime: true,
+                                    //istoday: true,
+                                    choose: function(datas){
+                                        
+                                    }
+                                };
+                                laydate(prizeendtime);
+                            });
+                        </script>
+                        <tr>
+                            <th><i class="require-red">*</i>过期截止时间：</th>
+                            <td>
+                                <input class="common-text required laydate-icon form-control" id="prizeendtime" name="prizeendtime" size="18" value="{$data.prizeendtime|date='Y/m/d H:i:s',###}" type="text" placeholder="请输入过期截至时间">
+                                <div class="help-block">当前时间超过过期截止时间优惠券不可用！</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>数量：</th>
+                            <td>
+                                <input class="common-text required form-control" id="number" name="number" size="50" value="{$data.number}" type="number" placeholder="请输入数量" onkeyup="value=value.replace(/[^\d]/ig,'')">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>可获取次数：</th>
+                            <td>
+                                <input class="common-text required form-control" id="max" name="max" size="50" value="{$data.max}" type="number" placeholder="请输入可获取次数" onkeyup="value=value.replace(/[^\d]/ig,'')">
+                                <div class="help-block">每人最多允许获取次数！</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style='width:120px'>使用说明：</th>
+                            <td>
+                                <!-- 加载编辑器的容器 -->
+                                <textarea name="use" id="container" style="width:100%;height:200px;line-height:20px">
+                                    {$data.use}
+                                </textarea>
+                                <include file="Public:ueditor" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>状态：</th>
+                            <td>
+                                <select name="status" class="form-control">
+                                    <option value="1" <eq name="data.status" value="1">selected="selected"</eq>>开启</option>
+                                    <option value="0" <eq name="data.status" value="0">selected="selected"</eq>>关闭</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <td>
+                                 <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitForm("{:U("edit")}","#myform")'>
+                                <input class="btn btn6" onclick="history.go(-1)" value="返回" type="button">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <input type="hidden" name="id" value="{$data.id}">
+            <input type="hidden" name="parameter" value="{$parameter}">
+        </form>
+    </div>
+</div>

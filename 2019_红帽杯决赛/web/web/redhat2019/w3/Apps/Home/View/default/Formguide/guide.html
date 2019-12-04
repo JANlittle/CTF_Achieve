@@ -1,0 +1,583 @@
+<include file="Public:htmlcommon" />
+<include file="Public:seolist" />
+<include file="Public:headcommon" />
+</head>
+<body>
+	<div class="container">
+		<include file="Public:demonav" />
+		<h3>表单向导</h3>
+		<if condition="!empty($fields)">
+			<form action="" method="post" id="formguideform" onsubmit="return false" enctype="multipart/form-data">
+				<volist name="fields" id="jiben">
+					<switch name="jiben.type">
+						<case value="num">
+							<div class="form-group">
+								<label for="{$jiben.field}"><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</label>
+								<input id="{$jiben.field}" name="{$jiben.field}" value="" type="number" placeholder="{$jiben.tips}" onkeyup="value=value.replace(/[^\d\.]/ig,'')" class='form-control <neq name="jiben.css" value="">{$jiben.css}</neq>' <neq name="jiben.additional" value=''>{$jiben.additional}</neq>>
+							</div>
+						</case>
+						<case value="string">
+							<div class="form-group">
+								<label for="{$jiben.field}"><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</label>
+								<input class='form-control <neq name="jiben.css" value="">{$jiben.css}</neq>' id="{$jiben.field}" name="{$jiben.field}" value="" type="text" placeholder="{$jiben.tips}" <neq name="jiben.additional" value=''>{$jiben.additional}</neq>>
+							</div>
+						</case>
+						<case value="password">
+							<div class="form-group">
+								<label for="{$jiben.field}"><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</label>
+								<input class='form-control <neq name="jiben.css" value="">{$jiben.css}</neq>' id="{$jiben.field}" name="{$jiben.field}" value="" type="password" placeholder="{$jiben.tips}" <neq name="jiben.additional" value=''>{$jiben.additional}</neq>>
+							</div>
+							<if condition="$jiben[extra]['check'] eq 1">
+								<div class="form-group">
+									<label for="{$jiben.field}"><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>确认{$jiben.name}：</label>
+									<input class='form-control <neq name="jiben.css" value="">{$jiben.css}</neq>' id="{$jiben.field}" name="{$jiben.field}_checkpassword" value="" type="password" placeholder="{$jiben.tips}" <neq name="jiben.additional" value=''>{$jiben.additional}</neq>>
+								</div>
+							</if>
+						</case>
+						<case value="textarea">
+							<div class="form-group">
+								<label for="{$jiben.field}"><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</label>
+								<textarea name="{$jiben.field}" class='form-control <neq name="jiben.css" value="">{$jiben.css}</neq>' id="{$jiben.field}" cols="30" rows="5" placeholder="{$jiben.tips}" <neq name="jiben.additional" value=''>{$jiben.additional}</neq>></textarea>
+							</div>
+						</case>
+						<case value="datetime">
+							<style type="text/css">
+                                .laydate-icon{
+                                    height: auto;
+                                }
+                            </style>
+                            <script type="text/javascript" src="__PUBLIC__/jqueryui/layer/extendplugin/laydate/laydate.js"></script>
+                            <script  type="text/javascript">
+                                $(function(){
+                                    var start = {
+                                        elem: '#{$jiben.field}',
+                                        format: 'YYYY/MM/DD hh:mm:ss',
+                                        //min: laydate.now(), //设定最小日期为当前日期
+                                        max: '2099-06-16 23:59:59', //最大日期
+                                        istime: true,
+                                        //istoday: true,
+                                        choose: function(datas){
+                                             $('#{$jiben.field}').trigger('blur');
+                                        }
+                                    };
+                                    laydate(start);
+                                });
+                            </script>
+							<div class="form-group">
+								<label for="{$jiben.field}"><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</label>
+								<input class='laydate-icon form-control <neq name="jiben.css" value="">{$jiben.css}</neq>' id="{$jiben.field}" name="{$jiben.field}" value="" type="text" placeholder="{$jiben.tips}" <neq name="jiben.additional" value=''>{$jiben.additional}</neq>>
+							</div>
+						</case>
+						<case value="rangetime">
+							<style type="text/css">
+                                .laydate-icon{
+                                    height: auto;
+                                }
+                            </style>
+                            <script type="text/javascript" src="__PUBLIC__/jqueryui/layer/extendplugin/laydate/laydate.js"></script>
+                            <script  type="text/javascript">
+                                $(function(){
+                                    var start1 = {
+                                        elem: '#{$jiben.field}_start',
+                                        format: 'YYYY/MM/DD hh:mm:ss',
+                                        //min: laydate.now(), //设定最小日期为当前日期
+                                        max: '2099-06-16 23:59:59', //最大日期
+                                        istime: true,
+                                        //istoday: true,
+                                        choose: function(datas){
+                                             end1.min = datas; //开始日选好后，重置结束日的最小日期
+                                             end1.start = datas //将结束日的初始值设定为开始日
+                                             $('#{$jiben.field}_start').trigger('blur');
+                                        }
+                                    };
+                                    var end1 = {
+                                        elem: '#{$jiben.field}_end',
+                                        format: 'YYYY/MM/DD hh:mm:ss',
+                                        min: laydate.now(),
+                                        max: '2099-06-16 23:59:59',
+                                        istime: true,
+                                        //istoday: true,
+                                        choose: function(datas){
+                                            start1.max = datas; //结束日选好后，重置开始日的最大日期
+                                            $('#{$jiben.field}_end').trigger('blur');
+                                        }
+                                    };
+                                    laydate(start1);
+                                    laydate(end1);
+                                });
+                            </script>
+							<div class="form-group">
+								<label for="{$jiben.field}"><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</label>
+								<div class="form-inline">
+                                    <input class='laydate-icon form-control <neq name="jiben.css" value="">{$jiben.css}</neq>' id="{$jiben.field}_start" name="{$jiben.field}[0]" value="" type="text" style="width:49%" placeholder="开始时间" <neq name="jiben.additional" value=''>{$jiben.additional}</neq>>
+                                    <span> ~ </span>
+                                    <input class='laydate-icon form-control <neq name="jiben.css" value="">{$jiben.css}</neq>' id="{$jiben.field}_end" name="{$jiben.field}[1]" value="" type="text" style="width:49%" placeholder="结束时间" <neq name="jiben.additional" value=''>{$jiben.additional}</neq>>
+                                </div>
+								 <neq name="jiben.tips" value=""> <div class="help-block">{$jiben.tips}</div></neq>
+							</div>
+						</case>
+						<case value="bool">
+							<div class="form-group">
+								<label for="{$jiben.field}"><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</label>
+								<select name="{$jiben.field}" id="{$jiben.field}" class='form-control <neq name="jiben.css" value="">{$jiben.css}</neq>' <neq name="jiben.additional" value=''>{$jiben.additional}</neq>>
+                                    <volist name="jiben.extra" id="bool">
+                                    <option value="{$bool}">{$key}</option>
+                                    </volist>
+                                </select>
+                                <neq name="jiben.tips" value=""> <div class="help-block">{$jiben.tips}</div></neq>
+							</div>
+						</case>
+						<case value="select">
+							<div class="form-group">
+								<label for="{$jiben.field}"><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</label>
+								<select name="{$jiben.field}" id="{$jiben.field}" class='form-control <neq name="jiben.css" value="">{$jiben.css}</neq>' <neq name="jiben.additional" value=''>{$jiben.additional}</neq>>
+                                    <volist name="jiben.extra" id="select">
+                                    <option value="{$select}" <eq name="i" value="1">selected="selected"</eq>>{$key}</option>
+                                    </volist>
+                                </select>
+                                <neq name="jiben.tips" value=""> <div class="help-block">{$jiben.tips}</div></neq>
+							</div>
+						</case>
+						<case value="radio">
+							<div class="form-group">
+								<label for="{$jiben.field}"><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</label>
+								<br>
+								<volist name="jiben.extra" id="radio">
+                                    <label for="{$jiben.field}_{$radio}" class="label"><input type="radio" name="{$jiben.field}" id="{$jiben.field}_{$radio}" value="{$radio}" class='<neq name="jiben.css" value="">{$jiben.css}</neq>' <eq name="i" value="1">checked="checked"</eq> <neq name="jiben.additional" value=''>{$jiben.additional}</neq>><span>{$key}</span></label>
+                                </volist>
+                                <neq name="jiben.tips" value=""> <div class="help-block">{$jiben.tips}</div></neq>
+							</div>
+						</case>
+						<case value="checkbox">
+							<div class="form-group">
+								<label for="{$jiben.field}"><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</label>
+								<br>
+								<volist name="jiben.extra" id="checkbox">
+                                    <label for="{$jiben.field}_{$checkbox}" class="label"><input type="checkbox" name="{$jiben.field}[]" id="{$jiben.field}_{$checkbox}" value="{$checkbox}" class='<neq name="jiben.css" value="">{$jiben.css}</neq>' <neq name="jiben.additional" value=''>{$jiben.additional}</neq>><span>{$key}</span></label>
+                                </volist>
+                                <neq name="jiben.tips" value=""> <div class="help-block">{$jiben.tips}</div></neq>
+							</div>
+						</case>
+						<case value="editor">
+							<div class="form-group">
+								<label for="{$jiben.field}"><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</label>
+								<!-- 加载编辑器的容器 -->
+                                <textarea name="{$jiben.field}" id="{$jiben.field}" style="width:100%;height:150px;line-height:20px" class='<neq name="jiben.css" value="">{$jiben.css}</neq>' <neq name="jiben.additional" value=''>{$jiben.additional}</neq>></textarea>
+                                <!-- 实例化编辑器 -->
+                                <!-- 配置文件 -->
+								<script type="text/javascript" src="__PUBLIC__/ueditor/ueditor.config.js"></script>
+								<!-- 编辑器源码文件 -->
+								<script type="text/javascript" src="__PUBLIC__/ueditor/ueditor.all.js"></script>
+                                <script type="text/javascript">
+                                    var ue_{$jiben.field} = UE.getEditor('{$jiben.field}',{
+                                        autoHeightEnabled:false,
+                                        zIndex:0,
+                                        maximumWords:3000,
+                                        toolbars: [
+                                        [
+                                            'undo', //撤销
+                                            'redo', //重做
+                                            'bold', //加粗
+                                            'indent', //首行缩进
+                                            'italic', //斜体
+                                            'underline', //下划线
+                                            'strikethrough', //删除线
+                                            'subscript', //下标
+                                            'fontborder', //字符边框
+                                            'superscript', //上标
+                                            'formatmatch', //格式刷
+                                            'blockquote', //引用
+                                            'pasteplain', //纯文本粘贴模式
+                                            'selectall', //全选
+                                            'horizontal', //分隔线
+                                            'removeformat', //清除格式
+                                            'time', //时间
+                                            'date', //日期
+                                            'unlink', //取消链接
+                                            'cleardoc', //清空文档
+                                            'fontfamily', //字体
+                                            'fontsize', //字号
+                                            'paragraph', //段落格式
+                                            'link', //超链接
+                                            'emotion', //表情
+                                            'spechars', //特殊字符
+                                            'searchreplace', //查询替换
+                                            'justifyleft', //居左对齐
+                                            'justifyright', //居右对齐
+                                            'justifycenter', //居中对齐
+                                            'justifyjustify', //两端对齐
+                                            'forecolor', //字体颜色
+                                            'backcolor', //背景色
+                                            'insertorderedlist', //有序列表
+                                            'insertunorderedlist', //无序列表
+                                            'fullscreen', //全屏
+                                            'directionalityltr', //从左向右输入
+                                            'directionalityrtl', //从右向左输入
+                                            'rowspacingtop', //段前距
+                                            'rowspacingbottom', //段后距
+                                            'imageleft', //左浮动
+                                            'imageright', //右浮动
+                                            'imagecenter', //居中
+                                            'lineheight', //行间距
+                                            'edittip ', //编辑提示
+                                            'touppercase', //字母大写
+                                            'tolowercase', //字母小写
+                                        ]
+                                    ]
+                                    });
+
+                                    //验证编辑器
+                                    ue_{$jiben.field}.addListener('selectionchange', function( editor ) {
+                                        $('[name="{$jiben.field}"]').css({display:'block',height:0,border:'none'}).trigger('change');
+                                    });
+                                </script>
+                                <neq name="jiben.tips" value=""> <div id="eeee" class="help-block">{$jiben.tips}</div></neq>
+							</div>
+						</case>
+						<case value="linkagemenu">
+							<div class="form-group">
+								<label for="{$jiben.field}"><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</label>
+								<?php
+                                    //获取菜单列表
+                                    $Linkagemenu = M('Linkagemenu');
+                                    $menulist = $Linkagemenu->field('id,name,pid')->where('status = 1')->order('sort ASC,id DESC')->select();
+                                    //组装select下拉菜单
+                                    $menulist = getSelectedOption($menulist, $jiben['extra'][0], 0);
+                                ?>
+                                <select name="{$jiben.field}" id="{$jiben.field}" class='form-control <neq name="jiben.css" value="">{$jiben.css}</neq>' <neq name="jiben.additional" value=''>{$jiben.additional}</neq>>
+                                    <?php echo $menulist;?>
+                                </select>
+                                <neq name="jiben.tips" value=""> <div class="help-block">{$jiben.tips}</div></neq>
+							</div>
+						</case>
+						<case value="picture">
+							<div class="form-group">
+								<label for="{$jiben.field}"><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</label>
+								<?php
+                                    if(!empty($jiben['extra'])){
+                                        $thumbW = intval($jiben['extra'][0]);
+                                        $thumbH = intval($jiben['extra'][1]);
+                                        $filesize = intval($jiben['extra'][2]);
+                                        $returntype = $jiben['extra'][3];
+                                        $savedir = $jiben['extra'][4];
+                                    } else {
+                                        //缩略图配置
+                                        $site_thumbw = C('SITE_SYSTEM_THUMB_WIDTH');
+                                        $site_thumbh = C('SITE_SYSTEM_THUMB_HEIGHT');
+                                        $thumbW = isset($site_thumbw) && !empty($site_thumbw) ? C('SITE_SYSTEM_THUMB_WIDTH') : C('SYSTEM_THUMB_WIDTH');
+                                        $thumbH = isset($site_thumbh) && !empty($site_thumbh) ? C('SITE_SYSTEM_THUMB_HEIGHT') : C('SYSTEM_THUMB_HEIGHT');
+                                    }
+                                ?>
+                                <div id="{$jiben.field}-layer-images" class="layer-images-demo"></div>
+                                <if condition="$returntype neq 'single'"><div class="clear"></div></if>
+                                <span class='imgupload' title="点击上传图片" onclick="dialogIframe('{:U('Uploadfile/index',array('type'=>'images','thumbw'=>$thumbW,'thumbh'=>$thumbH,'field'=>$jiben[field],'myid'=>$jiben[field].'-layer-images','returntype'=>$returntype,'savedir'=>$savedir,'filesize'=>$filesize))}','上传图片','80%','70%')"></span>
+                                <div class="help-block">图片规格:以宽度{$thumbW}*{$thumbH}以上这个值或者是它的倍数为佳！</div>
+                                <script type="text/javascript" src="__PUBLIC__/jqueryui/fancyBox/lib/jquery.mousewheel.pack.js?v=3.1.3"></script>
+                                <script type="text/javascript" src="__PUBLIC__/jqueryui/fancyBox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+                                <link rel="stylesheet" type="text/css" href="__PUBLIC__/jqueryui/fancyBox/source/jquery.fancybox.css?v=2.1.5" media="screen" />
+                                <script type="text/javascript">
+                                    $(function(){
+                                        $('#{$jiben.field}-layer-images .fancybox').fancybox();
+                                    });
+                                    /**
+                                     * [delFiles 删除文件]
+                                     * @param  {[type]} obj [description]
+                                     * @return {[type]}     [description]
+                                     */
+                                    if(typeof delFiles != 'function'){
+                                        function delFiles (obj,event) {
+                                            //禁止冒泡
+                                            event.stopPropagation();
+                                            //删除上传的图片或者文件
+                                            var json = $.parseJSON(unescape($(obj).attr('fileData')));
+                                            $.post('{:U("Uploadfile/del")}', json, function(data, textStatus, xhr) {
+                                                if(data.status){
+                                                    $(obj).parent('.img').remove();
+                                                } else {
+                                                    parent.layer.msg(data.info,{icon:2,time:2000,shade: [0.3,'#000']});
+                                                }
+                                            });
+
+                                            //移除节点
+                                            $(obj).parent(".images_list,.files_list").remove();
+                                        }
+                                    }
+                                </script>
+                                <div class="clear"></div>
+							</div>
+						</case>
+						<case value="file">
+							<?php
+                                if(!empty($jiben['extra'])){
+                                    $thumbW = intval($jiben['extra'][0]);
+                                    $thumbH = intval($jiben['extra'][1]);
+                                    $filesize = intval($jiben['extra'][2]);
+                                    $returntype = $jiben['extra'][3];
+                                    $savedir = $jiben['extra'][4];
+                                } else {
+                                    //缩略图配置
+                                    $site_thumbw = C('SITE_SYSTEM_THUMB_WIDTH');
+                                    $site_thumbh = C('SITE_SYSTEM_THUMB_HEIGHT');
+                                    $thumbW = isset($site_thumbw) && !empty($site_thumbw) ? C('SITE_SYSTEM_THUMB_WIDTH') : C('SYSTEM_THUMB_WIDTH');
+                                    $thumbH = isset($site_thumbh) && !empty($site_thumbh) ? C('SITE_SYSTEM_THUMB_HEIGHT') : C('SYSTEM_THUMB_HEIGHT');
+                                }
+                            ?>
+                            <div class="form-group">
+								<label for="{$jiben.field}"><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</label>
+                                <div id="{$jiben.field}-layer-files" class="layer-files-demo"></div>
+                                <if condition="$returntype neq 'single'"><div class="clear"></div></if>
+                                <span class='imgupload' title="点击上传文件" onclick="dialogIframe('{:U('Uploadfile/index',array('type'=>'files','thumbw'=>$thumbW,'thumbh'=>$thumbH,'field'=>$jiben[field],'myid'=>$jiben[field].'-layer-files','returntype'=>$returntype,'savedir'=>$savedir,'filesize'=>$filesize))}','上传文件','80%','70%')"></span>
+                                <neq name="jiben.tips" value=""> <div class="help-block">{$jiben.tips}</div></neq>
+                                <script type="text/javascript" src="__PUBLIC__/jqueryui/fancyBox/lib/jquery.mousewheel.pack.js?v=3.1.3"></script>
+                                <script type="text/javascript" src="__PUBLIC__/jqueryui/fancyBox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+                                <link rel="stylesheet" type="text/css" href="__PUBLIC__/jqueryui/fancyBox/source/jquery.fancybox.css?v=2.1.5" media="screen" />
+                                <script type="text/javascript">
+                                    $(function(){
+                                        $('#{$jiben.field}-layer-files .fancybox').fancybox();
+                                    });
+                                    /**
+                                     * [delFiles 删除文件]
+                                     * @param  {[type]} obj [description]
+                                     * @return {[type]}     [description]
+                                     */
+                                    if(typeof delFiles != 'function'){
+                                        function delFiles (obj,event) {
+                                            //禁止冒泡
+                                            event.stopPropagation();
+                                            //删除上传的图片或者文件
+                                            var json = $.parseJSON(unescape($(obj).attr('fileData')));
+                                            $.post('{:U("Uploadfile/del")}', json, function(data, textStatus, xhr) {
+                                                if(data.status){
+                                                    $(obj).parent('.img').remove();
+                                                } else {
+                                                    parent.layer.msg(data.info,{icon:2,time:2000,shade: [0.3,'#000']});
+                                                }
+                                            });
+
+                                            //移除节点
+                                            $(obj).parent(".images_list,.files_list").remove();
+                                        }
+                                    }
+                                </script>
+                                <div class="clear"></div>
+							</div>
+						</case>
+					</switch>
+				</volist>
+				<div class="form-group">
+					<input type="hidden" name="modelid" value="{$model.id}">
+					<input class="btn btn-primary" value="提交" type="button" id="sub">
+					<input class="btn btn-default" value="重置" type="reset" id="resetBtn">
+				</div>
+			</form>
+			<script type="text/javascript">
+                //验证数据
+                $(function(){
+                	$('#formguideform').bootstrapValidator({
+				        feedbackIcons: {
+				            valid: 'glyphicon glyphicon-ok',
+				            invalid: 'glyphicon glyphicon-remove',
+				            validating: 'glyphicon glyphicon-refresh'
+				        },
+				        fields: {
+				        	<volist name="fields" id="validatefields">
+					            <if condition="$validatefields['type'] neq 'checkbox' && $validatefields['type'] neq 'rangetime' && $validatefields['type'] neq 'datetime' && $validatefields['type'] neq 'editor'">
+					            {$validatefields.field}: {
+					                validators: {
+					                	<if condition="$validatefields['is_must'] eq 1">
+					                    notEmpty: {
+					                    	'message':'{$validatefields.name}必须填写！'
+					                    },
+					                    </if>
+					                    <if condition="$validatefields['min'] gt 0 && $validatefields['max'] gt 0 && $validatefields['max'] egt $validatefields['min']">
+					                    stringLength: {
+					                        min: {$validatefields.min},
+					                        max: {$validatefields.max},
+					                        <if condition="$validatefields['max'] eq $validatefields['min']">
+					                        'message':'{$validatefields.name}长度为 {$validatefields.min} 个字符'
+					                        <else/>
+					                        'message':'{$validatefields.name}长度为 {$validatefields.min} 至 {$validatefields.max} 个字符'
+					                        </if>
+					                    },
+					                    <elseif condition="$validatefields['min'] gt 0 && $validatefields['max'] gt 0 && $validatefields['max'] lt $validatefields['min']" />
+					                    stringLength: {
+					                        min: {$validatefields.max},
+					                        max: {$validatefields.min},
+					                        'message':'{$validatefields.name}长度为 {$validatefields.max} 至 {$validatefields.min} 个字符'
+					                    },
+					                    </if>
+					                    <if condition="!empty($validatefields['regex'])">
+					                    regexp: {
+					                        regexp: {$validatefields.regex},
+					                        'message':'{$validatefields.regexinfo}'
+					                    }
+					                    </if>
+					                }
+					            },
+					            </if>
+					            <if condition="$validatefields['type'] eq 'password'">
+					            {$validatefields.field}_checkpassword: {
+					                validators: {
+					                    <if condition="$validatefields['is_must'] eq 1">
+					                    notEmpty: {
+					                    	'message':'确认{$validatefields.name}必须填写！'
+					                    },
+					                    </if>
+					                    identical: {
+					                        field: '{$validatefields.field}',
+					                        message: '两次密码不一致！'
+					                    }
+					                }
+					            },
+					            </if>
+					            <if condition="$validatefields['type'] eq 'checkbox'">
+						            <if condition="$validatefields['is_must'] eq 1">
+				                    '{$validatefields.field}[]': {
+						                validators: {
+						                    choice: {
+						                        min: 1,
+						                        max: {:count($validatefields['extra'])},
+						                        message: '{$validatefields.name}必须填写！'
+						                    }
+						                }
+						            },
+						            </if>
+			                    </if>
+                                <if condition="$validatefields['type'] eq 'editor'">
+                                    <if condition="$validatefields['is_must'] eq 1">
+                                    '{$validatefields.field}': {
+                                        trigger: 'change',
+                                        validators: {
+                                            notEmpty: {
+                                                'message':'{$validatefields.name}必须填写！'
+                                            },
+                                            <if condition="$validatefields['min'] gt 0 && $validatefields['max'] gt 0 && $validatefields['max'] egt $validatefields['min']">
+                                                stringLength: {
+                                                    min: {$validatefields.min},
+                                                    max: {$validatefields.max},
+                                                    'message':'{$validatefields.name}长度为 {$validatefields.min} 至 {$validatefields.max} 个字符'
+                
+                                                },
+                                                <elseif condition="$validatefields['min'] gt 0 && $validatefields['max'] gt 0 && $validatefields['max'] lt $validatefields['min']" />
+                                                stringLength: {
+                                                    min: {$validatefields.max},
+                                                    max: {$validatefields.min},
+                                                    'message':'{$validatefields.name}长度为 {$validatefields.max} 至 {$validatefields.min} 个字符'
+                                                },
+                                            </if>
+                                        }
+                                    },
+                                    </if>
+                                </if>
+                                <if condition="$validatefields['type'] eq 'datetime'">
+                                    <if condition="$validatefields['is_must'] eq 1">
+                                    '{$validatefields.field}': {
+                                        trigger: 'blur',
+                                        validators: {
+                                            notEmpty: {
+                                                'message':'{$validatefields.name}必须填写！'
+                                            },
+                                            date: {
+                                                format: 'YYYY/MM/DD hh:mm:ss',
+                                                'message':'{$validatefields.name}格式不正确！'
+                                            }
+                                        }
+                                    },
+                                    </if>
+                                </if>
+                                <if condition="$validatefields['type'] eq 'rangetime'">
+                                    <if condition="$validatefields['is_must'] eq 1">
+                                    '{$validatefields.field}[0]': {
+                                        trigger: 'blur',
+                                        validators: {
+                                            notEmpty: {
+                                                'message':'开始时间必须填写！'
+                                            },
+                                            date: {
+                                                format: 'YYYY/MM/DD hh:mm:ss',
+                                                'message':'{$validatefields.name}格式不正确！'
+                                            }
+                                        }
+                                    },
+                                    '{$validatefields.field}[1]': {
+                                        trigger: 'blur',
+                                        validators: {
+                                            notEmpty: {
+                                                'message':'结束时间必须填写！'
+                                            },
+                                            date: {
+                                                format: 'YYYY/MM/DD hh:mm:ss',
+                                                'message':'{$validatefields.name}格式不正确！'
+                                            }
+                                        }
+                                    },
+                                    </if>
+                                </if>
+				            </volist>
+				        }
+				    }).on('success.form.bv', function(e) {
+			            //禁止默认提交
+			            e.preventDefault();
+
+			            //提交数据
+                        $("#formguideform").ajaxSubmit({
+                            type:'post',
+                            url:'{:U("guide")}',
+                            data:$("#myform").fixedsSerializeArray(),
+                            success:function(data, textStatus, jqXHR){
+                                //跳转登陆
+                                if(data.status == -1){
+                                    layer.open({
+                                      title:'登录',
+                                      type: 1,
+                                      content: $('#login_layer')
+                                    });
+                                } else if(data.status == 1) {
+                                    layer.msg(data.info,{icon:1,time:2000,shade: [0.3,'#000']},function(){
+                                        if(data.url){
+                                            location.href = data.url;
+                                        } else {
+                                            location.reload();
+                                        }
+                                    });
+                                } else {
+                                    layer.open({
+                                        content:data.info,
+                                        yes:function(index){
+                                            if(data.url){
+                                                location.href = data.url;
+                                            } else {
+                                                layer.close(index);
+                                            }
+                                        },
+                                        icon:2
+                                    });
+                                    //layer.msg(data.info,{icon:2});
+                                }
+                            }
+                       });
+			        });
+
+				    //按钮事件
+				    $('#sub').click(function() {
+                        //验证编辑器
+                        <volist name="fields" id="validatefields">
+                            <if condition="$validatefields['type'] eq 'editor'">
+                                ue_{$validatefields[field]}.sync();
+                                $('[name="{$validatefields[field]}"]').css({display:'block',height:0,border:'none'}).trigger('change');
+                            </if>
+                        </volist>
+				        $('#formguideform').bootstrapValidator('validate');
+				    });
+
+				    $('#resetBtn').click(function() {
+				        $('#formguideform').data('bootstrapValidator').resetForm(true);
+				    });
+                });
+	        </script>
+        </if>    
+	</div>
+    <include file="Public:login_layer" />
+<include file="Public:foot" />
+</body>
+</html>

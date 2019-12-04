@@ -1,0 +1,141 @@
+<layout name="Public/layout" />
+<div class="mwrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><span class="crumb-name">广告管理</span></div>
+    </div>
+    <div class="result-wrap">
+        <form name="myform" id="myform" method="post">
+            <div class="result-title">
+                <div class="result-list">
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/add",session("uid")) eq 1'>
+                        <a href='javascript:;' onclick="dialogIframe('{:U('add',$parameter.'&parameter='.encode($parameter))}','新增广告位','80%','65%')"><i class="icon-font">&#xe026;</i>新增广告位</a>
+                    </if>
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/del",session("uid")) eq 1'>
+                        <a id="batchDel" href="javascript:void(0)" onclick="delall('{:U('del')}')"><i class="icon-font">&#xe037;</i>批量删除</a>
+                    </if>
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/sort",session("uid")) eq 1'>
+                        <a id="updateOrd" href="javascript:void(0)" onclick="sort('{:U('sort')}')"><i class="icon-font">&#xe00a;</i>更新排序</a>
+                    </if>
+                </div>
+            </div>
+            <div class="result-content table-responsive">
+                <table class="result-tab table table-hover" width="100%">
+                    <tr class='head-tr'>
+                        <th class="tc ids-td"><input class="allChoose" onchange="selectAll(this)" id="selectall" type="checkbox"></th>
+                        <th class="sort-td">排序</th>
+                        <th>ID</th>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th>尺寸</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                    <volist name="data" id="datalist">
+                    <tr>
+                        <td class="tc ids-td"><input name="ids[]" class='select_ids' value="{$datalist.uniqid}" type="checkbox"></td>
+                        <td class="sort-td">
+                            <input class="common-input sort-input sort form-control" dataId="{$datalist.id}" name="sort[]" value="{$datalist.sort}" type="text">
+                        </td>
+                        <td>{$datalist.id}</td>
+                        <td>
+                            <div data-toggle="popover" data-trigger="hover" data-html="true" data-container="body" data-placement="top" title="名称" data-content="{$datalist.name}">{$datalist.name|msubstr=0,25,'utf-8'}</div>
+                        </td>
+                        <td>
+                            <if condition="$datalist['type'] eq 1">
+                                <span class="green">图片</span>
+                            <elseif condition="$datalist['type'] eq 2" />
+                                <span class="red">文字</span>
+                            <elseif condition="$datalist['type'] eq 3" />
+                                代码 
+                            </if>
+                        </td>
+                        <td>{$datalist.width} × {$datalist.height}</td>
+                        <td>
+                            <eq name="datalist.status" value="1">
+                                <img src="__IMG__/yes.gif" alt="开启">
+                            <else />
+                                <img src="__IMG__/no.gif" alt="关闭">
+                            </eq>
+                        </td>
+                        <td>
+                            <a href="javascript:;" onclick="dialogContent('#getcode_{$datalist.id}','获取代码','80%','56%')">获取代码</a>
+                            <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/ads",session("uid")) eq 1'>
+                                <a class="link-update" href='{:U("ads","id=".$datalist["id"]."&parameter=".encode($parameter))}'>广告列表（<strong class='red'>{:count($datalist['ads'])}</strong>）</a>
+                            </if>
+                            <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/edit",session("uid")) eq 1'>
+                                <a class="link-update" href='javascript:;' onclick="dialogIframe('{:U('edit',$parameter.'&uniqid='.$datalist['uniqid'].'&parameter='.encode($parameter))}','修改广告位','80%','65%')">修改</a>
+                            </if>
+                            <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/del",session("uid")) eq 1'>
+                                <a class="link-del" href="javascript:;" onclick="del('{:U('del')}','{$datalist.uniqid}')">删除</a>
+                            </if>
+                        </td>
+                    </tr>
+                    </volist>
+
+                </table>
+                <div class="list-page">{$pagelist}</div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<volist name="data" id="datalist">
+<div id="getcode_{$datalist.id}" style="display: none;padding:15px 20px;">
+    <style type="text/css">
+        fieldset{
+            border:1px solid #ccc;
+            border-radius:5px;
+            padding: 10px;
+        }
+
+        legend{
+            border-radius:5px;
+            padding:3px 10px;
+            font-weight:bold;
+            background:#1e64c8;
+            color:#fff;
+        }
+
+        legend {
+            display: inherit;
+            width: auto;
+            margin-bottom: 0px;
+            font-size: inherit;
+            border-bottom: none 
+        }
+    </style>
+    <div class="form">
+        <fieldset>
+            <legend>JS调用代码</legend>
+            <div class="form-group">
+                <input type="text" name="jscode_js_{$datalist.id}" id="jscode_js_{$datalist.id}" value='<script src="{:U("Plugins/Adverts/index@$domain",array("adspaceid"=>$datalist["id"],"siteid"=>$datalist["siteid"]),true,true)}" type="text/javascript"></script>' class="form-control">
+            </div>
+            <div class="input-group">
+                <input type="button" onclick="$('#jscode_js_{$datalist.id}').select();document.execCommand('Copy');" value="复制代码至剪贴板" class="btn btn-primary">
+            </div>
+        </fieldset>
+        <div class="blank5"></div>
+        <fieldset>
+            <legend>函数调用代码</legend>
+            <div class="form-group">
+                <input type="text" name="jscode_function_{$datalist.id}" id="jscode_function_{$datalist.id}" value=":aikehou_ad('',{$datalist['siteid']},{$datalist['id']})" class="form-control">
+            </div>
+            <div class="input-group">
+                <input type="button" onclick="$('#jscode_function_{$datalist.id}').select();document.execCommand('Copy');" value="复制代码至剪贴板" class="btn btn-primary">
+            </div>
+        </fieldset>
+    </div>
+    <div class="blank5"></div>
+    <div class="help-block">
+        1、JS调用代码：使用javascript方式调用广告，程序开启SHOW_PAGE调试模式时会报错<br/>
+        2、函数调用代码：使用PHP原生代码调用广告，速度相对比js方式快<br/>
+        3、调用说明：根据自身实际情况，把调用代码复制粘贴到需要显示广告的模板再更新相关网页即可
+    </div>
+</div>
+<script type="text/javascript">
+    $(function(){
+        var jscode_function = $("#jscode_function_{$datalist.id}");
+        jscode_function.val("\{"+ jscode_function.val() +"\}");
+    });
+</script>
+</volist>

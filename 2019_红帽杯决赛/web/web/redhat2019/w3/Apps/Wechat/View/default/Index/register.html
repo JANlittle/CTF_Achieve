@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>UC测试：用户注册</title>
+	<link rel = "shortcut icon" href="__PUBLIC__/images/favicon.ico" />
+	<link rel="stylesheet" href="__PUBLIC__/jqueryui/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="__CSS__/base.css">
+	<script src="__PUBLIC__/jqueryui/jquery-1.11.1.min.js"></script>
+	<script src="__PUBLIC__/jqueryui/bootstrap/js/bootstrap.min.js"></script>
+	<script src="__PUBLIC__/jqueryui/layer/layer.js"></script>
+	<script src="__PUBLIC__/jqueryui/layer/extend/layer.ext.js"></script>
+	<script type="text/javascript">
+		layer.config({
+			extend: ['skin/moon/style.css'],
+    		skin: 'layer-ext-moon'
+		});
+	</script>
+	<script src="__JS__/base.js"></script>
+</head>
+<body>
+	<div class="container">
+		<form action="" method="post" id="myform" onsubmit="return false">
+			<div class="form-group">
+				<label for="username">用户名：</label>
+				<input type="text"  name="username"  value="" placeholder="请输入用户名" id="username" class='form-control'>
+			</div>
+			<div class="form-group">
+				<label for="password">密码：</label>
+				<input type="password" name="password" value="" placeholder="请输入密码" id="password" class='form-control'>
+			</div>
+			<div class="form-group">
+				<label for="email">电子邮件：</label>
+				<input type="email" name="email" value="" placeholder="请输入邮箱" id="email" class='form-control'>
+			</div>
+			<div class="form-group">
+				<label for="mobile">联系手机：</label>
+				<input type="tel" name="mobile" value="" placeholder="请输入手机" id="mobile" class='form-control'>
+			</div>
+			<div class="form-group">
+				<input type="submit" name="sub" value="注册" id="sub" class="btn btn-default" onclick='submitForm("{:U("register")}","#myform")'>
+			</div>
+		</form>
+	</div>
+</body>
+</html>

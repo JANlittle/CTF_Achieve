@@ -1,0 +1,88 @@
+<header class="header">
+	<h1 class="logo"><a href='{:U("/@$myurl","",true,true)}' title="{:C('BASE_WEBNAME')}">格优图</a></h1>
+	<ul class="nav">
+	    <!-- current-menu-item -->
+		<li class="menu-item"><a href='{:U("/command@$myurl","",true,true)}'><span class="glyphicon glyphicon-thumbs-up"></span>福利推荐</a>
+		</li>
+		<li class="menu-item"><a href='{:U("/love@$myurl","",true,true)}'><span class="glyphicon glyphicon-heart"></span>猜你喜欢</a></li>
+		<li class="menu-item"><a href='{:U("/hot@$myurl","",true,true)}'><span class="glyphicon glyphicon-fire"></span>热门福利</a></li>
+		<li class="menu-item"><a href='{:U("/link@$myurl","",true,true)}'><span class="glyphicon glyphicon-globe"></span>友情链接</a></li>
+		<li class="menu-item"><a href='{:U("/zanzhu@$myurl","",true,true)}'><span class="glyphicon glyphicon-phone"></span>赞助名单</a></li>
+		<li class="menu-item"><a href='{:U("/about@$myurl","",true,true)}'><span class="glyphicon glyphicon-user"></span>关于我们</a></li>
+		<li class="menu-item"><a href='{:U("/sitemap@$myurl","",true,true)}' target="_blank"><span class="glyphicon am-icon-sitemap"></span>网站地图</a></li>
+	</ul>
+	<div class="feeds">
+		<a class="feed feed-qqun" href="http://shang.qq.com/wpa/qunwpa?idkey=9677083c1918956b55713b07c4b48adc828042e2ac9ddacb8d68f73528cb6657" rel="external nofollow" href="javascript:;" title="" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='__IMG__/qqqun.png'>" data-original-title="加入格优图QQ群">QQ群</a>
+		<a class="feed feed-weibo" rel="external nofollow" href="http://weibo.com/geyoutu" target="_blank" data-original-title="关注格优图微博">微博</a>
+		<a class="feed feed-weixin" rel="external nofollow" href="javascript:;" title="" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='__IMG__/weixin.jpg'>" data-original-title="关注格优图微信">微信</a>
+	</div>
+	<div class="slinks slinks_zhifubao" data-toggle="popover"  data-html="true" data-trigger="hover" data-content="<img src='__IMG__/zhifubao_1.jpg'>" data-original-title="扫一扫支付宝捐助">
+		<form action="https://shenghuo.alipay.com/send/payment/fill.htm" method="POST" target="_blank" accept-charset="GBK">    <input name="optEmail" type="hidden" value="lianlincheng@126.com">
+		    <input name="payAmount" type="hidden" value="15">
+			<input id="title" name="title" type="hidden" value="感谢您对格优图的捐助">
+			<input name="memo" type="hidden" value="您捐助的款项将全部用于我们格优图的运营">
+			<input name="pay" type="image" value="转账" src="__IMG__/zhifubao.jpg">
+		</form>
+	</div>
+	<div class="blank10"></div>
+	<div class="slinks slinks_weixin" data-toggle="popover"  data-html="true" data-trigger="hover" data-content="<img src='__IMG__/weixin_1.png'>" data-original-title="扫一扫微信赞助">
+		<img src="__IMG__/weixin_2.jpg" alt="微信赞助">
+	</div>
+</header>
+<div class="headernav headernav-normal animated slideDown" id="headernav">
+    <div class="inner">
+        <nav class="main-nav left">
+            <ul>
+            <li><a class="main-nav__item external" href='{:U("/@$myurl","",true,true)}'>首页</a></li>
+	        	<notempty name="menu">
+		        	<volist name="menu" id="menulist">
+			        	<li class="drop"><a class="hasdropdown main-nav__item" <neq name="menulist.url" value="">href="{$menulist.url}"<else />href='{:U("/$menulist[route]@$myurl","",true,true)}'</neq> <eq name="menulist.open" value="1">target="_blank"</eq> <neq name="menulist.other" value="">{$menulist.other}</neq>>{$menulist.name}</a>
+						    <notempty name="menulist.child">
+							    <div class="dropdown">
+								    <div class="dropdown-list dropdown__list">
+									    <section>
+									       <ul class="dropdown__category cf">
+											    <volist name="menulist.child" id="menulist_one">
+											    <li><a <neq name="menulist_one.url" value="">href="{$menulist_one.url}"<else />href='{:U("/$menulist_one[route]@$myurl","",true,true)}'</neq> <eq name="menulist_one.open" value="1">target="_blank"</eq> <neq name="menulist_one.other" value="">{$menulist_one.other}</neq>>{$menulist_one.name}</a></li>
+											   	</volist>
+									       </ul>
+									    </section>
+								    </div>
+							    </div>
+							</notempty>
+			   			</li>
+		   			</volist>
+	   			</notempty>
+	        </ul>
+	    </nav>
+	    <div class="search">
+			<form method="post" action="" id="searchForm" onsubmit="return false">
+				<input type="search" name="key" id="search" placeholder="搜索...">
+			</form>
+			<script type="text/javascript">
+				$(function(){
+					$('#search').keypress(function(event){
+					    var keycode = (event.keyCode ? event.keyCode : event.which);
+					    if(keycode == '13'){
+					       if($(this).val() == ''){
+						    	layer.msg('请输入搜索的关键字...', {icon: 5});
+						    	$(this).focus();
+						    	return false;
+						    }
+					       location.href  = '{:U("/s/'+$(this).val()+'@$myurl")}';
+					    }
+					});
+				})
+			</script>
+	    </div>
+	    <div class="user-nav-inner" id="user-login-box-top">
+	    	<if condition="!empty($userData)">
+				<a href="{$userData.url}" target="_blank" style="padding-right: 10px"><img src="{$userData.avatar_url}" width="40" class="img-circle" alt="{$userData.name}" title="{$userData.name}"><strong style="padding-left:5px">{$userData.name|msubstr=0,15,"utf-8",''}</strong></a><a href="http://geyoutu.duoshuo.com/logout/?sso=1&redirect_uri=http%3A%2F%2Fwww.geyoutu.com%2Flogout%2Ffrom%2F{$current_url}.html" class="btn btn-primary">退出</a>
+			<else/>
+				<a href="http://geyoutu.duoshuo.com/login/qq/?sso=1&redirect_uri=http%3A%2F%2Fwww.geyoutu.com%2Flogin%2Ffrom%2F{$current_url}.html" class="user-nav-tab" rel="nofollow"><i class="icon icon40 icon-qq-mid" style="background-position: 0px 0px;"></i>QQ登录</a>
+	    		<a href="http://geyoutu.duoshuo.com/login/weibo/?sso=1&redirect_uri=http%3A%2F%2Fwww.geyoutu.com%2Flogin%2Ffrom%2F{$current_url}.html" class="user-nav-tab" rel="nofollow"><i class="icon icon40 icon-sina-mid" style="background-position: -45px 0px;"></i>微博登录</a>
+	    	</if>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>

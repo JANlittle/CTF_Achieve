@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+    <meta content="application/xhtml+xml;charset=UTF-8" http-equiv="Content-Type">
+    <meta content="no-cache,must-revalidate" http-equiv="Cache-Control">
+    <meta content="no-cache" http-equiv="pragma">
+    <meta content="0" http-equiv="expires">
+    <meta content="telephone=no, address=no" name="format-detection">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>{$data.title}</title>
+    <link rel="stylesheet" type="text/css" href="__CSS__/font-awesome.css" media="all">
+    <link rel="stylesheet" type="text/css" href="__CSS__/mobile_module.css" media="all">
+    <script type="text/javascript" src="__JQUERY__/jquery-2.0.3.min.js"></script>
+    <script src="__PUBLIC__/jqueryui/layer/mobile/layer.m.js" type="text/javascript"></script>
+    <script src="__JS__/base.js" type="text/javascript"></script>
+    <script type="text/javascript" src="__JS__/prefixfree.min.js"></script>
+    <script type="text/javascript" src="__JS__/m/dialog.js"></script>
+    <script type="text/javascript" src="__JS__/m/flipsnap.min.js"></script>
+    <script type="text/javascript" src="__JS__/m/mobile_module.js"></script>
+    <script type="text/javascript" src="__JS__/admin_common.js"></script>
+    <link href="__IMG__/vote/vote.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<div class="container body">
+	<div class="vote_wrap">
+  <article>
+  	<div class="img_wrap">
+        <if condition="!empty($data['thumb'])">
+        	<img width="100%" src="__ROOT__{$data[thumb][0][thumb]}">
+        	<h2>{$data.title}</h2>
+        <else />
+        	<h2 style="position:static">{$data.title}</h2>
+        </if>
+    </div>
+    <div class="vote_info mb">{$data.content|htmlspecialchars_decode}</div>
+    <notempty name="data.end"><p class="time">投票截止日期：{$data.end|date="Y-m-d H:i:s",###}</p></notempty>
+  </article>
+  <p class="vote_type">
+      本次投票为<if condition="$data['votetype'] eq 1">单选投票<else/>多选投票</if><br>
+      <if condition="time() gt $data['end']">
+        <span class="gray">投票已结束 :)</span>
+      <elseif condition="time() lt $data['start']" />
+        <span class="gray">投票还未开始 :)</span>
+      <elseif condition="$data['status'] eq 0" />
+        <span class="gray">投票已经关闭 :)</span>
+      <elseif condition="$vote_left_number elt 0" />
+        <span class="gray">投票次数已经用完 :)</span> 
+      <else />
+        <span class="gray">已经有{$person_count}人投票，赶紧投下你宝贵的一票吧 :)</span>
+      </if>
+  </p>
+    
+  <form id="myForm" name="myForm" method="post" action="" onSubmit="return false;">
+    <div class="clearfix choice_list">
+      <ul>
+        <volist name='options' id='opt' key="k">
+          <li>
+            <if condition="$opt['type'] eq 1">
+              <p class="mb" style='margin-bottom: 10px'>
+                <notempty name="opt.thumb">
+                  <img src="__ROOT__{$opt['thumb'][0]['thumb']}" tyle="border-radius: 5px" />
+                </notempty>
+              </p>
+            </if>
+            <p class="list"> <input <if condition="$data['votetype'] eq 1">class="regular-radio" type="radio"<else/>class="regular-checkbox" type="checkbox"</if> id="check_{$opt.id}" name="voteArr[]" value="{$opt.id}"
+              ><label for="check_{$opt.id}" style="margin-bottom: 3px;"></label>{$opt.title}
+            </p>
+            <div class="clearfix tb">
+              <div class="databar">
+                <div class="actual_data vote-per-{$k-1}" style="width:0%"></div>
+              </div>
+              <p class="count">
+                {:count($opt['WechatVoteinfo'])} 票
+              </p>
+            </div>
+          </li>
+        </volist>
+      </ul>
+    </div>
+    <input type="hidden" name="vid" value="{$id}">
+    <input type="hidden" name="type" value="{$type}">
+    <input type="hidden" name="votetype" value="{$data.votetype}">
+    <!--确定第几次投票-->
+    <input type="hidden" name="votecount" value="{$votecount}">
+    <!--end 确定第几次投票-->
+    <if condition="time() elt $data['end'] && time() egt $data['start'] && $data['status'] eq 1 && $vote_left_number gt 0">
+      <div class="tb"><input type="button" class="btn m_10 flex_1" value="确认提交" onclick='submitForm("{:U("index")}","#myForm")' /></div>
+    </if>
+     <div class="tb"><input type="button" class="btn m_10 flex_1" value="投票记录" onclick='location.href="{:U("record",array("id"=>$id,"type"=>$type))}"' /></div>
+     <div class="tb" id="close_page" style="display:none"><input type="button" id="close_page_btn" class="btn m_10 flex_1" value="关闭返回" /></div>
+  </form>
+  </div>
+</div>
+</body>
+</html>
+<script type="text/javascript">
+/**
+ * [init_close 关闭窗口]
+ * @return {[type]} [description]
+ */
+function init_close(){
+    $('#close_page').show();
+    $('#close_page_btn').click(function(){
+        WeixinJSBridge.invoke('closeWindow',{},function(res){;});
+    }); 
+}
+
+
+$(function(){
+  //初始化投票进度条
+	<php>
+	foreach($options as $k=>$v){
+	   echo '$(".vote-per-'.$k.'").animate( { width: "'.(count($v['WechatVoteinfo'])/$vote_total_count*100).'%"}, 3000);';
+	}
+	</php>
+	
+  //按钮点击效果
+	$(".list").click(function () {
+    if($(this).find('input').hasClass('regular-radio')){
+      $(".list").removeClass("bgBlue").find('input.regular-radio').prop("checked", false);
+      $(this).addClass("bgBlue").find('input.regular-radio').prop("checked", true);
+    }
+
+    if($(this).find('input').hasClass('regular-checkbox')){
+      if($(this).hasClass("bgBlue")) {
+        $(this).removeClass("bgBlue").find('input.regular-checkbox').prop("checked", false);
+      } else {
+        $(this).addClass("bgBlue").find('input.regular-checkbox').prop("checked", true);
+      }
+    }
+	});
+
+  $(".list").find('label').click(function () {
+    if($(this).siblings('input').hasClass('regular-radio')){
+      $(".list").removeClass("bgBlue").find('input.regular-radio').prop("checked", false);
+      $(this).parent(".list").addClass("bgBlue").find('input.regular-radio').prop("checked", true);
+    }
+
+    if($(this).siblings('input').hasClass('regular-checkbox')){
+      if($(this).parent(".list").hasClass("bgBlue")) {
+        $(this).parent(".list").removeClass("bgBlue").find('input.regular-checkbox').prop("checked", false);
+      } else {
+        $(this).parent(".list").addClass("bgBlue").find('input.regular-checkbox').prop("checked", true);
+      }
+    }
+  });
+	
+  //执行微信代码
+	if (typeof WeixinJSBridge == "undefined"){
+		if( document.addEventListener ){
+			document.addEventListener('WeixinJSBridgeReady', init_close, false);
+		}else if (document.attachEvent){
+			document.attachEvent('WeixinJSBridgeReady', init_close); 
+			document.attachEvent('onWeixinJSBridgeReady', init_close);
+		}
+	}else{
+		init_close();
+	}	   
+});
+</script>

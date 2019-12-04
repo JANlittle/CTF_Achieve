@@ -1,0 +1,87 @@
+<layout name="Public/layout" />
+<div class="mwrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><span class="crumb-name">管理员管理</span></div>
+    </div>
+    <div class="result-wrap">
+        <form name="myform" id="myform" method="post">
+            <div class="result-title">
+                <div class="result-list">
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/add",session("uid")) eq 1'>
+                        <a href='{:U("add",$parameter."&parameter=".encode($parameter))}'><i class="icon-font">&#xe026;</i>新增管理员</a>
+                    </if>
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/del",session("uid")) eq 1'>
+                        <a id="batchDel" href="javascript:void(0)" onclick="delall('{:U('del')}')"><i class="icon-font">&#xe037;</i>批量删除</a>
+                    </if>
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/sort",session("uid")) eq 1'>
+                        <a id="updateOrd" href="javascript:void(0)" onclick="sort('{:U('sort')}')"><i class="icon-font">&#xe00a;</i>更新排序</a>
+                    </if>
+                </div>
+            </div>
+            <div class="result-content table-responsive">
+                <table class="result-tab table table-hover" width="100%">
+                    <tr class='head-tr'>
+                        <th class="tc ids-td"><input class="allChoose" onchange="selectAll(this)" id="selectall" type="checkbox"></th>
+                        <th class="sort-td">排序</th>
+                        <th>ID</th>
+                        <th>用户名</th>
+                        <th>Email</th>
+                        <th>电话</th>
+                        <th>最近登录ip</th>
+                        <th>最近登录时间</th>
+                        <th>登录次数</th>
+                        <th>状态</th>
+                        <th>开发者</th>
+                        <th>操作</th>
+                    </tr>
+                    <volist name="data" id="datalist">
+                    <tr>
+                        <td class="tc ids-td"><input name="ids[]" class='select_ids' value="{$datalist.id}" type="checkbox" ></td>
+                        <td class="sort-td">
+                            <input class="common-input sort-input sort form-control" dataId="{$datalist.id}" name="sort[]" value="{$datalist.sort}" type="text">
+                        </td>
+                        <td>{$datalist.id}</td>
+                        <td ><a href='javascript:;' title="{$datalist.username}">{$datalist.username}</a></td>
+                        <td>{$datalist.email}</td>
+                        <td>{$datalist.mobile}</td>
+                        <td>{$datalist.last_login_ip}</td>
+                        <td>
+                            <neq name="datalist.last_login_time" value="">
+                                {$datalist.last_login_time|date='Y-m-d H:i:s',###}
+                            </neq>
+                        </td>
+                        <td>{$datalist.login_count}</td>
+                        <td>
+                            <eq name="datalist.status" value="1">
+                                <img src="__IMG__/yes.gif" alt="开启">
+                            <else />
+                                <img src="__IMG__/no.gif" alt="关闭">
+                            </eq>
+                        </td>
+                        <td>
+                            <eq name="datalist.dev" value="1">
+                                <img src="__IMG__/yes.gif" alt="是">
+                            <else />
+                                <img src="__IMG__/no.gif" alt="否">
+                            </eq>
+                        </td>
+                        <td>
+                            <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/fenpei",session("uid")) eq 1'>
+                                <a class="link-update" href='{:U("fenpei",$parameter."&id=".$datalist["id"]."&parameter=".encode($parameter))}'>分配角色(<strong style='color:red'> {:count($datalist['authgroupaccess'])} </strong>)</a>
+                            </if>
+                            <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/edit",session("uid")) eq 1'>
+                                <a class="link-update" href='{:U("edit",$parameter."&id=".$datalist["id"]."&parameter=".encode($parameter))}'>修改</a>
+                            </if>
+                            <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/del",session("uid")) eq 1'>
+                                <a class="link-del" href="javascript:;" onclick="del('{:U('del')}',{$datalist.id})">删除</a>
+                            </if>
+                        </td>
+                    </tr>
+                    </volist>
+
+                </table>
+                <div class="list-page">{$pagelist}</div>
+            </div>
+        </form>
+    </div>
+</div>

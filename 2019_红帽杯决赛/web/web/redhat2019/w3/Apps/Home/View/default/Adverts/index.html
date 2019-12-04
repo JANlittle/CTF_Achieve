@@ -1,0 +1,178 @@
+<include file="Public:htmlcommon" />
+<include file="Public:seolist" />
+<include file="Public:headcommon" />
+</head>
+<body>
+<style type="text/css">
+    fieldset{
+        border:1px solid #ccc;
+        border-radius:5px;
+        padding: 10px;
+    }
+
+    legend{
+        border-radius:5px;
+        padding:3px 10px;
+        font-weight:bold;
+        background:#1e64c8;
+        color:#fff;
+    }
+
+    legend {
+        display: inherit;
+        width: auto;
+        margin-bottom: 0px;
+        font-size: inherit;
+        border-bottom: none 
+    }
+</style>
+	<div class="container">
+		<include file="Public:demonav" />
+		<h3>广告</h3>
+		<!-- <fieldset>
+			<legend>单个广告</legend>
+			<div class="content">
+				<div class="help-block">图片广告</div>
+			    <p>永不过期：<script src="http://project.aikehou.com/index.php?s=/Plugins/Adverts/index/adid/5/siteid/1/adspaceid/1.html" type="text/javascript"></script></p>
+			    <p>设定时间：<script src="http://project.aikehou.com/index.php?s=/Plugins/Adverts/index/adid/6/siteid/1/adspaceid/1.html" type="text/javascript"></script></p>
+
+			    <div class="help-block">文字广告</div>
+			    <p>永不过期：<script src="http://project.aikehou.com/index.php?s=/Plugins/Adverts/index/adid/1/siteid/1/adspaceid/2.html" type="text/javascript"></script></p>
+			    <p>设定时间：<script src="http://project.aikehou.com/index.php?s=/Plugins/Adverts/index/adid/2/siteid/1/adspaceid/2.html" type="text/javascript"></script></p>
+
+			    <div class="help-block">代码广告</div>
+			    <p>永不过期：<script src="http://project.aikehou.com/index.php?s=/Plugins/Adverts/index/adid/3/siteid/1/adspaceid/3.html" type="text/javascript"></script></p>
+			    <p>设定时间：<script src="http://project.aikehou.com/index.php?s=/Plugins/Adverts/index/adid/4/siteid/1/adspaceid/3.html" type="text/javascript"></script></p>
+			</div>
+		</fieldset>
+		<div class="blank10"></div>
+		<fieldset>
+			<legend>广告位(多个)</legend>
+			<div class="content">
+				<div class="help-block">图片广告</div>
+			    <p><script src="http://project.aikehou.com/index.php?s=/Plugins/Adverts/index/adspaceid/1/siteid/1.html" type="text/javascript"></script></p>
+
+			    <div class="help-block">文字广告</div>
+			    <p><script src="http://project.aikehou.com/index.php?s=/Plugins/Adverts/index/adspaceid/2/siteid/1.html" type="text/javascript"></script></p>
+
+			    <div class="help-block">代码广告</div>
+			    <p><script src="http://project.aikehou.com/index.php?s=/Plugins/Adverts/index/adspaceid/3/siteid/1.html" type="text/javascript"></script></p>
+			</div>
+		</fieldset>
+		<div class="blank10"></div> -->
+
+		<fieldset>
+			<legend>单个广告</legend>
+			<div class="content">
+				<div class="help-block">图片广告</div>
+			    <p>永不过期：{:aikehou_ad(5,1,1)}</p>
+			    <p>设定时间：{:aikehou_ad(6,1,1)}</script></p>
+
+			    <div class="help-block">文字广告</div>
+			    <p>永不过期：{:aikehou_ad(1,1,2)}</p>
+			    <p>设定时间：{:aikehou_ad(2,1,2)}</script></p>
+
+			    <div class="help-block">代码广告</div>
+			    <p>永不过期：{:aikehou_ad(3,1,3)}</p>
+			    <p>设定时间：{:aikehou_ad(4,1,3)}</p>
+			</div>
+		</fieldset>
+		<div class="blank10"></div>
+		<fieldset>
+			<legend>广告位(多个)</legend>
+			<div class="content">
+				<div class="help-block">图片广告</div>
+			    <p>{:aikehou_ad('',1,1)}</p>
+
+			    <div class="help-block">文字广告</div>
+			    <p>{:aikehou_ad('',1,2)}</p>
+
+			    <div class="help-block">代码广告</div>
+			    <p>{:aikehou_ad('',1,3)}</p>
+			</div>
+		</fieldset>
+		<div class="blank10"></div>
+<div class="blokc-help">PHP代码：</div>
+<pre class="prettyprint linenums">
+代码文件：AdvertsController.class.php、Apps/Plugins/Controller/AdvertsController.class.php、Apps/Common/Common/function.php
+
+其中：Apps/Plugins/Controller/AdvertsController.class.php是JS调用方式
+
+其中：Apps/Common/Common/function.php作为函数调用方式，函数名为：aikehou_ad()
+</pre>
+
+<div class="blokc-help">函数调用方式代码：</div>
+<pre class="prettyprinthtml prettyprint linenums">
+<literal>
+<fieldset>
+	<legend>单个广告</legend>
+	<div class="content">
+		<div class="help-block">图片广告</div>
+	    <p>永不过期：{:aikehou_ad(5,1,1)}</p>
+	    <p>设定时间：{:aikehou_ad(6,1,1)}</script></p>
+
+	    <div class="help-block">文字广告</div>
+	    <p>永不过期：{:aikehou_ad(1,1,2)}</p>
+	    <p>设定时间：{:aikehou_ad(2,1,2)}</script></p>
+
+	    <div class="help-block">代码广告</div>
+	    <p>永不过期：{:aikehou_ad(3,1,3)}</p>
+	    <p>设定时间：{:aikehou_ad(4,1,3)}</p>
+	</div>
+</fieldset>
+<div class="blank10"></div>
+<fieldset>
+	<legend>广告位(多个)</legend>
+	<div class="content">
+		<div class="help-block">图片广告</div>
+	    <p>{:aikehou_ad('',1,1)}</p>
+
+	    <div class="help-block">文字广告</div>
+	    <p>{:aikehou_ad('',1,2)}</p>
+
+	    <div class="help-block">代码广告</div>
+	    <p>{:aikehou_ad('',1,3)}</p>
+	</div>
+</fieldset>
+</literal>
+</pre>
+
+<div class="blokc-help">JS调用方式代码：</div>
+<pre class="prettyprinthtml prettyprint linenums">
+<literal>
+<fieldset>
+	<legend>单个广告</legend>
+	<div class="content">
+		<div class="help-block">图片广告</div>
+	    <p>永不过期：<script src="http://project.aikehou.com/index.php?s=/Plugins/Adverts/index/adid/5/siteid/1/adspaceid/1.html" type="text/javascript"></script></p>
+	    <p>设定时间：<script src="http://project.aikehou.com/index.php?s=/Plugins/Adverts/index/adid/6/siteid/1/adspaceid/1.html" type="text/javascript"></script></p>
+
+	    <div class="help-block">文字广告</div>
+	    <p>永不过期：<script src="http://project.aikehou.com/index.php?s=/Plugins/Adverts/index/adid/1/siteid/1/adspaceid/2.html" type="text/javascript"></script></p>
+	    <p>设定时间：<script src="http://project.aikehou.com/index.php?s=/Plugins/Adverts/index/adid/2/siteid/1/adspaceid/2.html" type="text/javascript"></script></p>
+
+	    <div class="help-block">代码广告</div>
+	    <p>永不过期：<script src="http://project.aikehou.com/index.php?s=/Plugins/Adverts/index/adid/3/siteid/1/adspaceid/3.html" type="text/javascript"></script></p>
+	    <p>设定时间：<script src="http://project.aikehou.com/index.php?s=/Plugins/Adverts/index/adid/4/siteid/1/adspaceid/3.html" type="text/javascript"></script></p>
+	</div>
+</fieldset>
+<div class="blank10"></div>
+<fieldset>
+	<legend>广告位(多个)</legend>
+	<div class="content">
+		<div class="help-block">图片广告</div>
+	    <p><script src="http://project.aikehou.com/index.php?s=/Plugins/Adverts/index/adspaceid/1/siteid/1.html" type="text/javascript"></script></p>
+
+	    <div class="help-block">文字广告</div>
+	    <p><script src="http://project.aikehou.com/index.php?s=/Plugins/Adverts/index/adspaceid/2/siteid/1.html" type="text/javascript"></script></p>
+
+	    <div class="help-block">代码广告</div>
+	    <p><script src="http://project.aikehou.com/index.php?s=/Plugins/Adverts/index/adspaceid/3/siteid/1.html" type="text/javascript"></script></p>
+	</div>
+</fieldset>
+</literal>
+</pre>
+	</div>
+<include file="Public:foot" />	
+</body>
+</html>

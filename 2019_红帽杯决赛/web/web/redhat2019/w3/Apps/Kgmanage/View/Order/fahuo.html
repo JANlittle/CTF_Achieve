@@ -1,0 +1,227 @@
+<layout name="Public/layout" />
+<div class="main-wrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><a class="crumb-name" href='{:U("index",decode($parameter))}'>订单管理</a><span class="crumb-step">&gt;</span><span>发货管理</span></div>
+    </div>
+    <div class="result-wrap  table-responsive">
+        <div class="result-content">
+            <form action="" method="post" id="myform" name="myform" onsubmit="return false">
+                <table class="insert-tab table table-hover" width="100%">
+                    <tbody>
+                        <tr>
+                            <th>订单号：</th>
+                            <td>{$data.sn}</td>
+                        </tr>
+                        <tr>
+                            <th>订单名称：</th>
+                            <td>{$data.name}</td>
+                        </tr>
+                        <tr>
+                            <th>购买用户：</th>
+                            <td>
+                                <eq name="data.ucmembers.type" value="system">
+                                    {$data.ucmembers.username}
+                                <else/>
+                                    {$data.ucmembers.name}
+                                </eq>({$data.ucmembers.type})
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>支付方式：</th>
+                            <td>{$data.paytype}</td>
+                        </tr>
+                        <tr>
+                            <th>单价：</th>
+                            <td>￥{$data.price}</td>
+                        </tr>
+                        <tr>
+                            <th>数量：</th>
+                            <td>{$data.quantity}</td>
+                        </tr>
+                        <tr>
+                            <th>总金额：</th>
+                            <td><strong class='red'>￥{$data.money}</strong></td>
+                        </tr>
+                        <tr>
+                            <th>说明：</th>
+                            <td>{$data.description}</td>
+                        </tr>
+                        <tr>
+                            <th>留言：</th>
+                            <td>{$data.message}</td>
+                        </tr>
+                        <tr>
+                            <th>地区：</th>
+                            <td>{$data.area.area} {$data.area.country}</td>
+                        </tr>
+                        <tr>
+                            <th>下单时间：</th>
+                            <td>{$data.create_time|date='Y-m-d H:i:s',###}</td>
+                        </tr>
+                        <tr>
+                            <th>支付状态：</th>
+                            <td>
+                                <eq name="data.status" value="1">
+                                    <div data-toggle="popover" data-trigger="hover" data-html="true" data-placement='top' data-container="body" title="支付说明" data-content="支付时间：{$data.payoktime|date='Y-m-d H:i:s',###}"><span class="green">已支付</span></div>
+                                <else />
+                                    <span class="red">未支付</span>
+                                </eq>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>退款状态：</th>
+                            <td>
+                                <if condition="$data['refund'] eq 0">
+                                    <span>未申请</span>
+                                <elseif condition="$data['refund'] eq 1" />
+                                    <div data-toggle="popover" data-trigger="hover" data-html="true" data-placement='top' data-container="body" title="退款/退货说明" data-content="方式：{$data.returntype}<br/>说明：{$data.refunddesc}<br/>时间：{$data.refundtime|date='Y-m-d H:i:s',###}"><span class="red">申请退款</span></div>
+                                <elseif condition="$data['refund'] eq 2" />
+                                    <div data-toggle="popover" data-trigger="hover" data-html="true" data-placement='top' data-container="body" title="退款/退货说明" data-content="申请方式：{$data.returntype}<br/>申请说明：{$data.refunddesc}<br/>申请时间：{$data.refundtime|date='Y-m-d H:i:s',###}<br/><strong class='green'>退款时间：</strong>{$data.refundoktime|date='Y-m-d H:i:s',###}<br/><strong class='green'>退款备注：</strong>{$data.refundsm}"><strong class="green">退款成功</strong></div>
+                                </if>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>收货信息：</th>
+                            <td>
+                                {$data.address.city}
+                                {$data.address.area}
+                                {$data.address.street}
+                                <strong>{$data.address.code}</strong>
+                                <strong>{$data.address.name}</strong>
+                                <strong>{$data.address.tel}</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>发货状态：</th>
+                            <td>
+                                <if condition="$data['fahuo'] eq 0">
+                                    <span class="red">未发货</span>
+                                <elseif condition="$data['fahuo'] eq 1" />
+                                    <div data-toggle="popover" data-trigger="hover" data-html="true" data-placement='top' data-container="body" title="发货说明" data-content="快递物流：{$data.express}<br/>物流单号：{$data.expressnum}<br/>发货时间：{$data.fahuotime|date='Y-m-d H:i:s',###}<br/>发货说明：{$data.fahuodesc}"><span class="green">已发货</span><a href="http://m.kuaidi100.com/result.jsp?nu={$data.expressnum}" target="_blank" class='btn btn-default ml10'>快递查询</a></div>
+                                <elseif condition="$data['fahuo'] eq 2" />
+                                    <div data-toggle="popover" data-trigger="hover" data-html="true" data-placement='top' data-container="body" title="发货说明" data-content="快递物流：{$data.express}<br/>物流单号：{$data.expressnum}<br/>发货时间：{$data.fahuotime|date='Y-m-d H:i:s',###}<br/>发货说明：{$data.fahuodesc}<br/><strong class='green'>收货时间：</strong>{$data.shouhuotime|date='Y-m-d H:i:s',###}"><strong class="green">已收货</strong><a href="http://m.kuaidi100.com/result.jsp?nu={$data.expressnum}" target="_blank" class='btn btn-default ml10'>快递查询</a></div>
+                                <elseif condition="$data['fahuo'] eq 3" />
+                                    <div data-toggle="popover" data-trigger="hover" data-html="true" data-placement='top' data-container="body" title="发货说明" data-content="快递物流：{$data.express}<br/>物流单号：{$data.expressnum}<br/>发货时间：{$data.fahuotime|date='Y-m-d H:i:s',###}<br/>发货说明：{$data.fahuodesc}<br/><strong class='green'>收货时间：</strong>{$data.shouhuotime|date='Y-m-d H:i:s',###}<br/><strong class='green'>退货时间：</strong>{$data.tuihuotime|date='Y-m-d H:i:s',###}<br/><strong class='green'>退货说明：{$data.tuihuodesc}"><strong class="green">已退货</strong></div>    
+                                </if>
+                            </td>
+                        </tr>
+                        <if condition="$data[status] eq 1">
+                            <if condition="($data[refund] eq 0 && $data[fahuo] neq 2)|| ($data[refund] eq 1 && $data[fahuo] eq 2)">
+                                <eq name="data.fahuo" value="0">
+                                    <tr>
+                                        <th><span class="red">收货信息：</span></th>
+                                        <td>
+                                            <div class="form-inline">
+                                                <input type="text" name="address[city]" value="{$data.address.city}" placeholder="请输入城市" class='form-control'/>
+                                                <input type="text" name="address[area]" value="{$data.address.area}" placeholder="请输入地区" class='form-control'/>
+                                                <input type="text" name="address[street]" value="{$data.address.street}" placeholder="请输入详细街道地址" class='form-control' style="width: 200px"/>
+                                                <input type="text" name="address[code]" value="{$data.address.code}" placeholder="请输入邮编号码" class='form-control'/>
+                                                <input type="text" name="address[name]" value="{$data.address.name}" placeholder="请输入收货人姓名" class='form-control'/>
+                                                <input type="text" name="address[tel]" value="{$data.address.tel}" placeholder="请输入联系电话" class='form-control' />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </eq>
+                                <neq name="data.fahuo" value="3">
+                                    <tr>
+                                        <th><span class='red'>发货操作：</span></th>
+                                        <td>
+                                            <select name="fahuo" class="form-control">
+                                                <eq name="data.fahuo" value="1">
+                                                    <option value="0" <eq name="data.fahuo" value="0">selected="selected"</eq>>取消发货</option>
+                                                </eq>
+                                                <eq name="data.fahuo" value="0">
+                                                    <option value="1" <eq name="data.fahuo" value="1">selected="selected"</eq>>确认发货</option>
+                                                </eq>
+                                                <eq name="data.fahuo" value="1">
+                                                    <option value="2" <eq name="data.fahuo" value="2">selected="selected"</eq>>确认收货</option>
+                                                </eq>
+                                                <eq name="data.fahuo" value="2">
+                                                    <option value="3" <eq name="data.fahuo" value="2">selected="selected"</eq>>确认退货</option>
+                                                </eq>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </neq>
+                                <script type="text/javascript">
+                                    $(function(){
+                                        $('select[name="fahuo"]').change(function(event) {
+                                            if($(this).val() == 1){
+                                                $("#fahuowuliu").show();
+                                                $("#fahuosm").show();
+                                            } else {
+                                                $("#fahuowuliu").hide();
+                                                $("#fahuosm").hide();
+                                            }
+                                        });
+                                    })
+                                </script>
+                                <eq name="data.fahuo" value="0">
+                                    <tr id="fahuowuliu">
+                                        <th>快递物流：</th>
+                                        <td>
+                                            <div class="form-inline">
+                                                <select name="express" class="form-control" style="width:10%">
+                                                    <volist name="expresslist" id="express">
+                                                        <option value="{$express.name}" <eq name="data.express" value="$express['name']">selected="selected"</eq>>{$express.name}</option>
+                                                    </volist>
+                                                </select>
+                                                <input class="common-text required form-control" style="width:60%" id="expressnum" name="expressnum" size="50" value="{$data.expressnum}" type="text" placeholder="请输入物流单号">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr id="fahuosm">
+                                        <th>发货说明：</th>
+                                        <td>
+                                            <textarea name="fahuodesc" class="common-textarea form-control" id="fahuodesc" cols="30" rows="3" placeholder="确认订单，备货完成，确认发货！"><notempty name="data.fahuodesc">{$data.fahuodesc}<else/>确认订单，备货完成，确认发货！</notempty></textarea>
+                                        </td>
+                                    </tr>
+                                </eq>
+                                <eq name="data.fahuo" value="2">
+                                    <tr id="tuihuosm">
+                                        <th>退货说明：</th>
+                                        <td>
+                                            <textarea name="tuihuodesc" class="common-textarea form-control" id="tuihuodesc" cols="30" rows="3" placeholder="确认订单，收到退货，退货完成！"><notempty name="data.tuihuodesc">{$data.tuihuodesc}<else/>确认订单，收到退货，退货完成！</notempty></textarea>
+                                        </td>
+                                    </tr>
+                                </eq>
+                            </if>
+                            <tr>
+                                <th></th>
+                                <td>
+                                    <if condition="$data[fahuo] neq 3 && $data[refund] eq 0">
+                                        <neq name="data.fahuo" value="2">
+                                            <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitForm("{:U("fahuo")}","#myform")'>
+                                            <input class="btn btn6" onclick="history.go(-1)" value="返回" type="button">
+                                        <else />
+                                            <input class="btn btn-primary btn6" onclick="history.go(-1)" value="返回" type="button">    
+                                        </neq>
+                                    <else/>
+                                        <eq name="data.fahuo" value="2">
+                                            <eq name="data.refund" value="1">
+                                                <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitForm("{:U("fahuo")}","#myform")'>
+                                                <input class="btn btn6" onclick="history.go(-1)" value="返回" type="button">
+                                            </eq>
+                                        <else />
+                                            <input class="btn btn-primary btn6" onclick="history.go(-1)" value="返回" type="button">    
+                                        </eq>
+                                    </if>
+                                </td>
+                            </tr> 
+                        <else/>
+                            <tr>
+                                <th></th>
+                                <td>
+                                    <input class="btn btn-primary btn6" onclick="history.go(-1)" value="返回" type="button">
+                                </td>
+                            </tr>
+                        </if>    
+                    </tbody></table>
+                    <input type="hidden" name="siteid" value="{$data.siteid}">
+                    <input type="hidden" name="id" value="{$data.id}">
+                    <input type="hidden" name="parameter" value="{$parameter}">
+            </form>
+        </div>
+    </div>
+
+</div>

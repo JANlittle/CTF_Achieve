@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+    <meta content="application/xhtml+xml;charset=UTF-8" http-equiv="Content-Type">
+    <meta content="no-cache,must-revalidate" http-equiv="Cache-Control">
+    <meta content="no-cache" http-equiv="pragma">
+    <meta content="0" http-equiv="expires">
+    <meta content="telephone=no, address=no" name="format-detection">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>投票记录 - {$data.title}</title>
+    <link rel="stylesheet" type="text/css" href="__CSS__/font-awesome.css" media="all">
+    <link rel="stylesheet" type="text/css" href="__CSS__/mobile_module.css" media="all">
+    <script type="text/javascript" src="__JQUERY__/jquery-2.0.3.min.js"></script>
+    <script src="__PUBLIC__/jqueryui/layer/mobile/layer.m.js" type="text/javascript"></script>
+    <script src="__JS__/base.js" type="text/javascript"></script>
+    <script type="text/javascript" src="__JS__/prefixfree.min.js"></script>
+    <script type="text/javascript" src="__JS__/m/dialog.js"></script>
+    <script type="text/javascript" src="__JS__/m/flipsnap.min.js"></script>
+    <script type="text/javascript" src="__JS__/m/mobile_module.js"></script>
+    <script type="text/javascript" src="__JS__/admin_common.js"></script>
+    <link href="__IMG__/vote/vote.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<div class="container body">
+	<div class="vote_wrap">
+  <article>
+  	<div class="img_wrap">
+        <if condition="!empty($data['thumb'])">
+        	<img width="100%" src="__ROOT__{$data[thumb][0][thumb]}">
+        	<h2>{$data.title}</h2>
+        <else />
+        	<h2 style="position:static">{$data.title}</h2>
+        </if>
+    </div>
+    <div class="vote_info mb">{$data.content|htmlspecialchars_decode}</div>
+    <notempty name="data.end"><p class="time">投票截止日期：{$data.end|date="Y-m-d H:i:s",###}</p></notempty>
+  </article>
+  <p class="vote_type">
+      本次投票为<if condition="$data['votetype'] eq 1">单选投票<else/>多选投票</if>，已经有{$person_count}人投票，您还有{$vote_left_number}次投票次数 :)<br>
+      <if condition="time() gt $data['end']">
+        <span class="gray">投票已结束 :)</span>
+      <elseif condition="time() lt $data['start']" />
+        <span class="gray">投票还未开始 :)</span>
+      <elseif condition="$data['status'] eq 0" />
+        <span class="gray">投票已经关闭 :)</span>
+      <elseif condition="$vote_left_number elt 0" />
+        <span class="gray">投票次数已经用完 :)</span> 
+      </if>
+  </p>
+
+    <div class="clearfix choice_list">
+      <ul>
+        <volist name='vote_list' id='list' key="k">
+          <li>
+            <p>投票选项：<strong style='color:green'>{$list.WechatVoteoptions.title}</strong></p>
+            <eq name="type" value="1">
+              <notempty name="list.WechatVoteoptions.thumb">
+              <p><img src="__ROOT__{$list['WechatVoteoptions']['thumb'][0]['thumb']}" alt="{$list.WechatVoteoptions.title}" style='border-radius: 5px'></p>
+              </notempty>
+            </eq>
+            <p>投票第次：<strong style='color:green'>{$list.votecount}</strong></p>
+            <p>投票时间：<strong style='color:green'>{$list.create_time|date="Y-m-d H:i:s",###}</strong></p>
+          </li>
+        </volist>
+      </ul>
+    </div>
+     <div class="tb"><input type="button" class="btn m_10 flex_1" value="返回" onclick='javascript:history.go(-1);' /></div>
+  </div>
+</div>
+</body>
+</html>

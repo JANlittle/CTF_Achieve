@@ -1,0 +1,51 @@
+<layout name="Public/layout" />
+<div class="mwrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><a class="crumb-name" href='{:U("index",decode($parameter))}'>管理员管理</a><span class="crumb-step">&gt;</span><span>分配角色</span></div>
+    </div>
+    <div class="result-wrap">
+        <form name="myform" id="myform" action='' method="post" onsubmit="return false;">
+            <div class="result-content">
+                <div class="groupname">给：【 <span style='color:red'>{$userinfo.username}</span> 】 分配角色</div>
+
+                    <div class="shouquanlist">
+                        <div class="modlelist">
+                            <label class='label'>
+                                <input type="checkbox" name="mid" value=""><span>角色列表</span>
+                            </label>
+                        </div>
+                        <div class="rulelist">
+                            <volist name="data" id="data_one">
+                                <h3>{$key}</h3>
+                                <notempty name="data_one" value="">
+                                    <volist name="data_one" id="list" key="key_list">
+                                        <label class='label' title="{$list.title}">
+                                            <input type="checkbox" name="groups[]" <in name="list.id" value="$userinfo.groupid">checked="checked"</in> value="{$list.id}" ><span>{$list.title}</span>
+                                        </label>
+                                    </volist>
+                                </notempty>
+                                <div class="clearfix"></div>
+                                <div class="blank15"></div>
+                            </volist>
+                        </div>
+                    </div>
+            </div>
+            <input type="hidden" name="uid" value="{$userinfo.id}">
+            <input type="hidden" name="parameter" value="{$parameter}">
+            <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitForm("{:U("fenpei")}","#myform")'>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        //选中节点
+        $(".modlelist").find('input').change(function(){
+            if($(this).is(':checked')){
+                $(this).parents(".modlelist").next('.rulelist').find('input').prop('checked',true);
+            } else {
+                $(this).parents(".modlelist").next('.rulelist').find('input').prop('checked',false);
+            }
+        });
+    });
+</script>

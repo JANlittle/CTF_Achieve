@@ -1,0 +1,176 @@
+<layout name="Public/layout" />
+<div class="mwrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><a href='{:U("fields",decode($linkcate_parameter))}'>字段管理</a><span class="crumb-step">&gt;</span><span class="crumb-name">编辑字段</span></div>
+    </div>
+    <div class="result-wrap table-responsive" style='padding-bottom:0;'>
+        <form name="myform" id="myform" method="post" onsubmit="return false">
+            <div class="result-content">
+                <div class="tab-wrap">
+                    <ul class="tab-nav nav">
+                        <li class="current"><a href='#1' onclick="tabs('#tab1',this)">基本</a></li>
+                        <li><a href='#2' onclick="tabs('#tab2',this)">高级</a></li>
+                        <div class="clear"></div>
+                    </ul>
+                    <table class="insert-tab table table-hover" id="tab1" width="100%">
+                        <tbody>
+                            <tr>
+                                <th><i class="require-red">*</i>字段名：</th>
+                                <td>
+                                    <input class="common-text required form-control" id="field" name="field" value="{$data.field}" type="text" placeholder="请输入字段名，长度不超过20" <eq name="data.issystem" value="1">readonly="readonly"</eq>>
+                                    <div class="help-block">只能由英文字母、数字和下划线组成，并且仅能字母开头，不以下划线结尾，例如：catid</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><i class="require-red">*</i>字段标题：</th>
+                                <td>
+                                    <input class="common-text required form-control" id="name" name="name" value="{$data.name}" type="text" placeholder="请输入字段标题，用于表单显示">
+                                    <div class="help-block">例如：分类id</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>提示信息：</th>
+                                <td>
+                                    <input class="common-text required form-control" id="tips" name="tips" value="{$data.tips}" type="text" placeholder="字段提示信息">
+                                    <div class="help-block">例如：请输入用户名</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><i class="require-red">*</i>字段类型：</th>
+                                <td>
+                                    <select name="type" id="data-type" class="form-control" <eq name="data.issystem" value="1">disabled="disabled"</eq>>
+                                        <option value="">----请选择----</option>
+                                        <option value="num" rule="int(11) UNSIGNED NOT NULL" <eq name="data.type" value="num">selected="selected"</eq>>数字</option>
+                                        <option value="string" rule="varchar(255) NULL" <eq name="data.type" value="string">selected="selected"</eq>>字符串</option>
+                                        <option value="color" rule="varchar(20) NULL" <eq name="data.type" value="color">selected="selected"</eq>>颜色</option>
+                                        <option value="password" rule="varchar(40) NULL" <eq name="data.type" value="password">selected="selected"</eq>>密码</option>
+                                        <option value="textarea" rule="varchar(255) NULL" <eq name="data.type" value="textarea">selected="selected"</eq>>文本框</option>
+                                        <option value="datetime" rule="varchar(20) NULL" <eq name="data.type" value="datetime">selected="selected"</eq>>时间</option>
+                                        <option value="rangetime" rule="varchar(255) NULL" <eq name="data.type" value="rangetime">selected="selected"</eq>>范围时间</option>
+                                        <option value="bool" rule="tinyint(1) NOT NULL" <eq name="data.type" value="bool">selected="selected"</eq>>布尔</option>
+                                        <option value="select" rule="char(50) NULL" <eq name="data.type" value="select">selected="selected"</eq>>枚举</option>
+                                        <option value="radio" rule="char(10) NULL" <eq name="data.type" value="radio">selected="selected"</eq>>单选</option>
+                                        <option value="checkbox" rule="varchar(100) NULL" <eq name="data.type" value="checkbox">selected="selected"</eq>>多选</option>
+                                        <option value="editor" rule="mediumtext NULL" <eq name="data.type" value="editor">selected="selected"</eq>>编辑器</option>
+                                        <option value="linkagemenu" rule="varchar(20) NULL" <eq name="data.type" value="linkagemenu">selected="selected"</eq>>联动菜单</option>
+                                        <option value="thumb" rule="text NULL" <eq name="data.type" value="thumb">selected="selected"</eq>>缩略图</option>
+                                        <option value="picture" rule="text NULL" <eq name="data.type" value="picture">selected="selected"</eq>>上传图片</option>
+                                        <option value="file" rule="text NULL" <eq name="data.type" value="file">selected="selected"</eq>>上传附件</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><i class="require-red">*</i>字段定义：</th>
+                                <td>
+                                    <input class="common-text required form-control" id="field_rule" name="field_rule" value="{$data.field_rule}" type="text" placeholder="字段属性的sql表示">
+                                    <div class="help-block"><span style='color:green;cursor:pointer;display:inline-block;' onclick="dialogContentPer('#canshu_fomart','字段定义')">查看字段定义<strong class='red'>(请严格按照格式填写，否则会出现不可预料的错误！)</span></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>参数：</th>
+                                <td>
+                                    <textarea name="extra" class="common-textarea form-control" id="extra" cols="30" rows="3" placeholder="布尔、枚举、多选字段类型的定义数据">{$data.extra}</textarea>
+                                    <div class="help-block"><span style='color:green;cursor:pointer;display:block' onclick="dialogContentPer('#canshu_fomart','参数格式')">查看参数格式<strong class='red'>(请严格按照参数格式填写，否则会出现不可预料的错误！)</strong></span></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>默认值：</th>
+                                <td>
+                                    <input class="common-text required form-control" id="default" name="default" value="{$data.default}" type="text" placeholder="字段的默认值">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>字段备注：</th>
+                                <td>
+                                    <input class="common-text required form-control" id="remark" name="remark" value="{$data.remark}" type="text" placeholder="字段备注">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>是否必填：</th>
+                                <td>
+                                    <select name="is_must" class="form-control">
+                                        <option value="0" <eq name="data.is_must" value="0">selected="selected"</eq>>否</option>
+                                        <option value="1" <eq name="data.is_must" value="1">selected="selected"</eq>>是</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>是否拓展：</th>
+                                <td>
+                                    <select name="isextend" class="form-control">
+                                        <option value="0" <eq name="data.isextend" value="0">selected="selected"</eq>>否</option>
+                                        <option value="1" <eq name="data.isextend" value="1">selected="selected"</eq>>是</option>
+                                    </select>
+                                    <div class="help-block">显示在不同的TAB位置</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>列表显示：</th>
+                                <td>
+                                    <select name="listshow" class="form-control">
+                                        <option value="0" <eq name="data.listshow" value="0">selected="selected"</eq>>否</option>
+                                        <option value="1" <eq name="data.listshow" value="1">selected="selected"</eq>>是</option>
+                                    </select>
+                                    <div class="help-block">是否在内容列表中显示这个字段</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>内容列表排序：</th>
+                                <td>
+                                    <input class="common-text required form-control" id="listsort" name="listsort" value="{$data.listsort}" type="number" placeholder="请输入内容列表排序" onkeyup="value=value.replace(/[^\d]/ig,'')">
+                                    <div class="help-block">字段在内容列表的排序显示位置</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>状态：</th>
+                                <td>
+                                    <select name="status" class="form-control">
+                                        <option value="1" <eq name="data.status" value="1">selected="selected"</eq>>开启</option>
+                                        <option value="0" <eq name="data.status" value="0">selected="selected"</eq>>关闭</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table class="insert-tab table table-hover" id="tab2" width="100%" style='display: none'>
+                        <tbody>
+                            <tr>
+                                <th width="150">自动验证：</th>
+                                <td>
+                                    <textarea name="validate" class="common-textarea form-control" id="validate" cols="30" rows="3" placeholder="格式：array(array('field','require','标题必须填写！'),array('field','3,10','标题必须是3到10位！',0,'length',3)),...">{$data.validate}</textarea>
+                                    <div class="help-block"><span class='red'>*其中字段用field填充即可！</span><span style='color:green;cursor:pointer' onclick="dialogContentPer('#validate_canshu','自动验证参数')">查看自动验证参数</span></div>
+                                </td>
+                            </tr>
+                            <tr width="150">
+                                <th>自动完成：</th>
+                                <td>
+                                    <textarea name="auto" class="common-textarea form-control" id="auto" cols="30" rows="3" placeholder="格式：array(array('field','md5',1,'function'),array('field','sha1',1,'function')),...">{$data.auto}</textarea>
+                                    <div class="help-block"><span class='red'>*其中字段用field填充即可！</span><span style='color:green;cursor:pointer' onclick="dialogContentPer('#auto_canshu','自动完成参数')">查看自动完成参数</span></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="blank15"></div>
+                    <table width="100%">
+                        <tbody>
+                            <tr>
+                                <th></th>
+                                <td>
+                                    <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitForm("{:U("fieldsedit")}","#myform")'>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="blank15"></div>
+                </div>
+            </div>
+            <input type="hidden" name="tablename" value="{$tablename}">
+            <input type="hidden" name="modelid" value="{$modelid}">
+            <input type="hidden" name="id" value="{$data.id}">
+            <input type="hidden" name="fieldname" value="{$data.field}">
+            <input type="hidden" name="linkcate_parameter" value="{$linkcate_parameter}">
+        </form>
+    </div>
+</div>
+<include file="rule" />

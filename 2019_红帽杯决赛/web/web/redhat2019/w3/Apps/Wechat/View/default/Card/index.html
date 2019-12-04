@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+    <meta content="application/xhtml+xml;charset=UTF-8" http-equiv="Content-Type">
+    <meta content="no-cache,must-revalidate" http-equiv="Cache-Control">
+    <meta content="no-cache" http-equiv="pragma">
+    <meta content="0" http-equiv="expires">
+    <meta content="telephone=no, address=no" name="format-detection">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>{$card.name}</title>
+    <link rel="stylesheet" type="text/css" href="__CSS__/font-awesome.css" media="all">
+    <link rel="stylesheet" type="text/css" href="__CSS__/mobile_module.css" media="all">
+    <script type="text/javascript" src="__JQUERY__/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="__JS__/prefixfree.min.js"></script>
+    <script type="text/javascript" src="__JS__/m/dialog.js"></script>
+    <script type="text/javascript" src="__JS__/m/flipsnap.min.js"></script>
+    <script type="text/javascript" src="__JS__/m/mobile_module.js"></script>
+    <script type="text/javascript" src="__JS__/admin_common.js"></script>
+    <link href="__CSS__/card.css" rel="stylesheet" type="text/css">
+</head>
+
+
+<body>
+	<div id="container" class="container body">
+        <div class="p_10">
+            <div class="vipcard_content">
+                <div class="card" style='background-image:url(<neq name="card.background" value="0">__PUBLIC__/images/wechatcard/card_bg_{$card.background}.png<else/>__ROOT__{$card[thumb][0][thumb]}</neq>);'>
+                    <span class="card_name">{$card.name}</span>
+                    <div class="card_mask"></div>
+                </div>
+                <div class="card_info">
+                    <div class="tb"><a href="{:U('getCard')}" class="btn m_15 flex_1">点击领取会员卡</a></div>
+                    <p class="m_15 gray_txt"><center>微信会员卡时代</center></p>
+                    <div class="single_item m_15">
+                        <a class="p_10 arrow_icon mr_10" href='{:U("useCard")}'>会员卡使用说明</a>
+                    </div>
+                    <if condition="!empty($card['address']) || !empty($card['address']) || !empty($card['address'])">
+                        <div class="single_item m_15">
+                            <notempty name="card.address">
+                                <a class="p_10 arrow_icon mr_10" href="http://api.map.baidu.com/marker?location=31.308707,121.523804&title={$card.address}&name={$card.address}&content={$card.address}&output=html&src=echophp">地址：{$card.address}</a>
+                            </notempty>
+                            <notempty name="card.tel">
+                                <div class="single_item_line"></div>
+                                <a class="p_10 arrow_icon mr_10" href="tel:{$card.tel}">电话：{$card.tel}</a>
+                            </notempty>
+                            <notempty name="card.url">
+                                <div class="single_item_line"></div>
+                                <a class="p_10 arrow_icon mr_10" href="{$card.url}" target="_blank">网址：{$card.url}</a>
+                            </notempty>
+                        </div>
+                    </if>
+                </div>
+            </div>
+        </div>
+        <p class="copyright">{$WechatExtension.copyright}</p>
+    </div>
+</body>
+</html>

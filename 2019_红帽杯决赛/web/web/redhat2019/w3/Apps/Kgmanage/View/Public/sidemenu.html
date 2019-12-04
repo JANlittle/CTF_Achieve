@@ -1,0 +1,21 @@
+<div class="sidebar-wrap">
+    <if condition='!empty($menuchild)'>
+    <div class="sidebar-title">
+        <h1>菜单</h1>
+    </div>
+    </if>
+    <div class="sidebar-content">
+        <ul class="sidebar-list">
+            <volist name="menuchild" id="menu" key="key">
+            <li>
+                <a href="javascript:;"><i class="icon-font">&#xe018;</i>{$key}</a>
+                <ul class="sub-menu">
+                    <volist name="menu" id="menulist">
+                    <li <eq name="menulist.class" value="childon">class="childon"</eq>><a  href='{:U($menulist["url"],$menulist["parameter"])}'><i class="icon-font">&#xe008;</i>{$menulist.name}</a></li>
+                    </volist>
+                </ul>
+            </li>
+            </volist>
+        </ul>
+    </div>
+</div>

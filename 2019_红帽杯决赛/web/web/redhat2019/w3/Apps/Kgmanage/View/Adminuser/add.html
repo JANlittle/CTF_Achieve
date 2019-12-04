@@ -1,0 +1,77 @@
+<layout name="Public/layout" />
+<div class="main-wrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><a class="crumb-name" href='{:U("index",decode($parameter))}'>管理员管理</a><span class="crumb-step">&gt;</span><span>新增管理员</span></div>
+    </div>
+    <div class="result-wrap table-responsive">
+        <div class="result-content">
+            <form action="" method="post" id="myform" name="myform" onsubmit="return false">
+                <table class="insert-tab table table-hover" width="100%">
+                    <tbody>
+                        <tr>
+                            <th><i class="require-red">*</i>用户名：</th>
+                            <td>
+                                <input class="common-text required form-control" id="username" name="username" size="50" value="" type="text" placeholder="请输入用户名">
+                                <div class="help-block">例如：admin</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>密码：</th>
+                            <td>
+                                <input class="common-text required form-control" id="password" name="password" size="50" value="" type="password" placeholder="请输入密码">
+                                <div class="help-block">例如：admin123</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>确认密码：</th>
+                            <td>
+                                <input class="common-text required form-control" id="ckpassword" name="ckpassword" size="50" value="" type="password" placeholder="请输入确认密码">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>邮件：</th>
+                            <td>
+                                <input class="common-text required form-control" id="email" name="email" size="50" value="" type="email" placeholder="请输入邮件">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>手机：</th>
+                            <td>
+                                <input class="common-text required form-control" id="mobile" name="mobile" size="50" value="" type="tel" placeholder="请输入手机">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>状态：</th>
+                            <td>
+                                <select name="status" class="form-control">
+                                    <option value="1" selected="selected">开启</option>
+                                    <option value="0">关闭</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <if condition="in_array(session('uid'),C('SUPERADMIN')) || in_array(session('uid'),C('ADMINISTRATOR'))">
+                            <tr>
+                                <th><span style='color:red'>开发者：</span></th>
+                                <td>
+                                    <select name="dev" class="form-control">
+                                        <option value="1">是</option>
+                                        <option value="0" selected="selected">否</option>
+                                    </select>
+                                    <div class="help-block">如果是开发者，则显示开发者菜单！</div>
+                                </td>
+                            </tr>
+                        </if>
+                        <tr>
+                            <th></th>
+                            <td>
+                                <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitForm("{:U("add")}","#myform")'>
+                                <input class="btn btn6" onclick="history.go(-1)" value="返回" type="button">
+                            </td>
+                        </tr>
+                    </tbody></table>
+                    <input type="hidden" name="parameter" value="{$parameter}">
+            </form>
+        </div>
+    </div>
+
+</div>

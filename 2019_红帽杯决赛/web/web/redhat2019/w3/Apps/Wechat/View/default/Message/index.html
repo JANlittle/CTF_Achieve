@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+    <meta content="application/xhtml+xml;charset=UTF-8" http-equiv="Content-Type">
+    <meta content="no-cache,must-revalidate" http-equiv="Cache-Control">
+    <meta content="no-cache" http-equiv="pragma">
+    <meta content="0" http-equiv="expires">
+    <meta content="telephone=no, address=no" name="format-detection">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>建议意见</title>
+    <link rel="stylesheet" type="text/css" href="__CSS__/font-awesome.css" media="all">
+    <link rel="stylesheet" type="text/css" href="__CSS__/mobile_module.css" media="all">
+    <script type="text/javascript" src="__JQUERY__/jquery-2.0.3.min.js"></script>
+    <script src="__PUBLIC__/jqueryui/layer/mobile/layer.m.js" type="text/javascript"></script>
+    <script src="__JS__/base.js" type="text/javascript"></script>
+    <script type="text/javascript" src="__JS__/prefixfree.min.js"></script>
+    <script type="text/javascript" src="__JS__/m/dialog.js"></script>
+    <script type="text/javascript" src="__JS__/m/flipsnap.min.js"></script>
+    <script type="text/javascript" src="__JS__/m/mobile_module.js"></script>
+    <script type="text/javascript" src="__JS__/admin_common.js"></script>
+    <link href="__IMG__/message/message.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+	<div class="container body">
+    	<img src="__IMG__/message/images/suggest_head.png" width="100%"/>
+    	<div class="p_10"> 
+            <!-- 表单 -->
+            <form method="post" onsubmit="return false;" action="">
+              <!-- 基础文档模型 -->
+              <div id="tab1" class="tab-pane">
+                   <div class="form-item cf">
+                        <label class="item-label">姓名</label>
+                        <div class="controls">
+                          <input type="text" class="text input-medium" name="name" id="name" value="{$user.name}">
+                         </div>
+                   </div>
+                   <div class="form-item cf">
+                        <label class="item-label">联系方式</label>
+                        <div class="controls">
+                          <input type="text" class="text input-large" name="contact" id="contact" value="{$user.contact}">
+                      	</div>
+                   </div>
+                   <div class="form-item cf">
+                        <label class="item-label">内容</label>
+                        <div class="controls">
+                          <label class="textarea input-large"><textarea name="content" id="content"></textarea></label>
+                        </div>
+                   </div>                
+                   <div class="form-item cf tb pt_10">
+                		<button class="home_btn submit-btn mb_10 flex_1" id="button" type="button" target-form="form-horizontal">提  交</button>
+                  </div>
+          	</div>
+            </form>
+        </div>
+        <p class="copyright">{$WechatExtension.copyright}</p>
+        <script type="text/javascript">
+          $(function(){
+              $('#button').click(function(){
+                if($('#name').val() == ""){
+                  layer.open({
+                      content: '请填写姓名！',
+                      btn: ['确定'],
+                      yes:function(index){
+                        layer.close(index);
+                        $('#name').focus();
+                      }
+                  });
+                  return false;
+                }
+                if(!checkTel($('#contact').val()) ||  $('#contact').val() == ""){
+                  layer.open({
+                      content: '请填写正确的联系方式！',
+                      btn: ['确定'],
+                      yes:function(index){
+                        layer.close(index);
+                        $('#contact').focus();
+                      }
+                  });
+                  return false;
+                }
+
+                if($('#content').val() == ""){
+                  layer.open({
+                      content: '请填写内容！',
+                      btn: ['确定'],
+                      yes:function(index){
+                        layer.close(index);
+                        $('#content').focus();
+                      }
+                  });
+                  return false;
+                }
+
+                //ajax发送数据
+                postUrl("{:U('')}",{'name':$('#name').val(),'contact':$('#contact').val(),'content':$('#content').val()});
+              })
+          })
+        </script>
+    </div>
+</body>
+</html>

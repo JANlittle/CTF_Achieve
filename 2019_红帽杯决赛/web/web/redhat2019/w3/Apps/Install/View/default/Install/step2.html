@@ -1,0 +1,253 @@
+<extend name="Public/base"/>
+
+<block name="header">
+    <li><a href="javascript:;">安装协议</a></li>
+    <li><a href="javascript:;">环境检测</a></li>
+    <li class="active"><a href="javascript:;">创建数据库</a></li>
+    <li><a href="javascript:;">完成</a></li>
+</block>
+
+<block name="body">
+    <?php
+        defined('SAE_MYSQL_HOST_M') or define('SAE_MYSQL_HOST_M', 'localhost');
+        defined('SAE_MYSQL_HOST_M') or define('SAE_MYSQL_PORT', '3306');
+    ?>
+    <h1>创建数据库</h1>
+    <form action="" method="post" id="form" onsubmit="return false;">
+        <div class="create-database">
+            <div class="form-group">
+                <label for="dbtype">数据库类型</label>
+                <select name="db[dbtype]" class='form-control' id="dbtype">
+	                <option value="mysql">mysql</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="dbhost">数据库服务器</label>
+                <input type="text" name="db[dbhost]" value="<defined name='SAE_MYSQL_HOST_M'>{$Think.const.SAE_MYSQL_HOST_M}<else/>localhost</defined>" class='form-control' id="dbhost">
+                <div class="help-block-kk">数据库服务器IP，一般为localhost、127.0.0.1</div>
+            </div>
+            <div class="form-group">
+                <label for="dbuser">数据库用户名</label>
+                <input type="text" name="db[dbuser]" value="<defined name='SAE_MYSQL_USER'>{$Think.const.SAE_MYSQL_USER}<else/>root</defined>" class='form-control' id="dbuser" placeholder="请输入数据库用户名">
+            </div>
+            <div class="form-group">
+                <label for="dbpasswd">数据库密码</label>
+                <input type="text" name="db[dbpasswd]" value="<defined name='SAE_MYSQL_PASS'>{$Think.const.SAE_MYSQL_PASS}</defined>" class='form-control' id="dbpasswd" placeholder="请输入数据库密码">
+            </div>
+            <div class="form-group">
+                <label for="dbport">数据库端口</label>
+                <input type="text" name="db[dbport]" value="<defined name='SAE_MYSQL_PORT'>{$Think.const.SAE_MYSQL_PORT}<else/>3306</defined>" class='form-control' id="dbport" placeholder="请输入数据库端口">
+                <div class="help-block-kk">数据库服务连接端口，一般为3306</div>
+            </div>
+            <div class="form-group">
+                <label for="dbname">数据库名</label>
+                <input type="text" name="db[dbname]" value="<defined name='SAE_MYSQL_DB'>{$Think.const.SAE_MYSQL_DB}<else/>echo</defined>" class='form-control' id="dbname" placeholder="请输入数据库名">
+                <div class="help-block-kk">只能由英文字母、数字和下划线组成，并且仅能字母开头，不以下划线结尾</div>
+            </div>
+            <div class="form-group">
+                <label for="dbprefix">数据表前缀</label>
+                <input type="text" name="db[dbprefix]" value="echo_" class='form-control' id="dbprefix" placeholder="请输入数据表前缀">
+                <div class="help-block-kk">只能由英文字母、数字和下划线组成，并且仅能字母开头。</div>
+            </div>
+        </div>
+
+        <div class="create-database">
+            <h2>Ucenter用户中心信息</h2>
+            <div class="form-group">
+                <label for="ucdbname">用户中心数据库名</label>
+                <input type="text" name="uc[ucdbname]" value="<defined name='SAE_MYSQL_DB'>{$Think.const.SAE_MYSQL_DB}<else/>echoucenter</defined>" class='form-control' id="ucdbname" placeholder="请输入用户中心数据库名">
+                <div class="help-block-kk">只能由英文字母、数字和下划线组成，并且仅能字母开头，不以下划线结尾</div>
+            </div>
+            <div class="form-group">
+                <label for="ucdbprefix">用户中心数据表前缀</label>
+                <input type="text" name="uc[ucdbprefix]" value="echo_" class='form-control' id="ucdbprefix" placeholder="请输入用户中心数据表前缀">
+                <div class="help-block-kk">只能由英文字母、数字和下划线组成，并且仅能字母开头。</div>
+            </div>
+            <div class="form-group">
+                <label for="ucdomain">用户中心域名</label>
+                <input type="text" name="uc[ucdomain]" value="http://ucenter.aikehou.com" class='form-control' id="ucdomain" placeholder="请输入用户中心域名">
+                <div class="help-block-kk">访问用户中心的独立域名，如：http://ucenter.aikehou.com</div>
+            </div>
+        </div>
+
+        <div class="create-database">
+            <h2>创始人帐号信息</h2>
+            <div class="form-group">
+                <label for="username">用户名</label>
+                <input type="text" name="admin[username]" value="admin" class='form-control' id="username" placeholder="请输入用户名">
+                <div class="help-block-kk">只能由英文字母、数字组成，并且仅能字母开头，5 到 20 个字符</div>
+            </div>
+            <div class="form-group">
+                <label for="password">密码</label>
+                <input type="password" name="admin[password]" value="" class='form-control' id="password" placeholder="请输入密码">
+                <div class="help-block-kk">密码长度为 6 到 20 个字符</div>
+            </div>
+            <div class="form-group">
+                <label for="passwordck">确认密码</label>
+                <input type="password" name="admin[passwordck]" value="" class='form-control' id="passwordck" placeholder="请输入确认密码">
+            </div>
+        </div>
+    </form>
+    <div class="blank10"></div>
+    <div class="blank10"></div>
+    <div class="blank10"></div>
+    <script type="text/javascript">
+        //验证数据
+        $(function(){
+            $('#form').bootstrapValidator({
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    'db[dbtype]': {
+                        validators: {
+                            notEmpty: {
+                                'message':'请选择数据库类型！'
+                            }
+                        }
+                    },
+                    'db[dbhost]': {
+                        validators: {
+                            notEmpty: {
+                                'message':'数据库服务器必须填写！'
+                            }
+                        }
+                    },
+                    'db[dbuser]': {
+                        validators: {
+                            notEmpty: {
+                                'message':'数据库用户名必须填写！'
+                            }
+                        }
+                    },
+                    /*'db[dbpasswd]': {
+                        validators: {
+                            notEmpty: {
+                                'message':'数据库密码必须填写！'
+                            }
+                        }
+                    },*/
+                    'db[dbport]': {
+                        validators: {
+                            notEmpty: {
+                                'message':'数据库端口必须填写！'
+                            }
+                        }
+                    },
+                    'db[dbname]': {
+                        validators: {
+                            notEmpty: {
+                                'message':'数据库名必须填写！'
+                            },
+                            regexp: {
+                                regexp: /^[a-zA-Z]{1}([a-zA-Z0-9]|[_]){0,19}([a-zA-Z0-9]){1}$/,
+                                'message':'数据库名格式不正确！'
+                            }
+                        }
+                    },
+                    'db[dbprefix]': {
+                        validators: {
+                            notEmpty: {
+                                'message':'数据表前缀必须填写！'
+                            },
+                            regexp: {
+                                regexp: /^[a-zA-Z]{1}([a-zA-Z0-9]|[_]){0,19}$/,
+                                'message':'数据表前缀格式不正确！'
+                            }
+                        }
+                    },
+                    'uc[ucdbname]': {
+                        validators: {
+                            notEmpty: {
+                                'message':'用户中心数据库名必须填写！'
+                            },
+                            regexp: {
+                                regexp: /^[a-zA-Z]{1}([a-zA-Z0-9]|[_]){0,19}([a-zA-Z0-9]){1}$/,
+                                'message':'用户中心数据库名格式不正确！'
+                            }
+                        }
+                    },
+                    'uc[ucdbprefix]': {
+                        validators: {
+                            notEmpty: {
+                                'message':'用户中心数据表前缀必须填写！'
+                            },
+                            regexp: {
+                                regexp: /^[a-zA-Z]{1}([a-zA-Z0-9]|[_]){0,19}$/,
+                                'message':'用户中心数据表前缀格式不正确！'
+                            }
+                        }
+                    },
+                    'uc[ucdomain]': {
+                        validators: {
+                            notEmpty: {
+                                'message':'用户中心域名必须填写'
+                            },
+                            regexp: {
+                                regexp: /^http[s]?:\/\/(([0-9]{1,3}\.){3}[0-9]{1,3}|([0-9a-z_!~*\'()-]+\.)*([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\.[a-z]{2,6})(:[0-9]{1,4})?((\/\?)|(\/[0-9a-zA-Z_!~\'\.;\?:@&=\+\$,%#-\/^\*\|]*)?)$/,
+                                'message':'用户中心域名格式不正确！'
+                            }
+                        }
+                    },
+                    'admin[username]': {
+                        validators: {
+                            notEmpty: {
+                                'message':'用户名必须填写！'
+                            },
+                            stringLength: {
+                                min: 5,
+                                max: 20,
+                                'message':'用户名长度为 5 至 20 个字符'
+                            },
+                            regexp: {
+                                regexp: /^[a-zA-Z]{1}([a-zA-Z0-9])+$/,
+                                'message':'用户名格式不正确！'
+                            }
+                        }
+                    },
+                    'admin[password]': {
+                        validators: {
+                            notEmpty: {
+                                'message':'密码必须填写！'
+                            },
+                            stringLength: {
+                                min: 6,
+                                max: 20,
+                                'message':'密码长度为 6 至 20 个字符'
+                            }
+                        }
+                    },
+                    'admin[passwordck]': {
+                        validators: {
+                            notEmpty: {
+                                'message':'确认密码必须填写！'
+                            },
+                            identical: {
+                                field: 'admin[password]',
+                                message: '两次密码不一致！'
+                            }
+                        }
+                    }
+                }
+            }).on('success.form.bv', function(e) {
+                //禁止默认提交
+                e.preventDefault();
+
+                //提交数据
+                submitForm('{:U("step2")}','#form');
+            });
+
+            //按钮事件
+            $('#anzhuan').click(function() {
+                $('#form').bootstrapValidator('validate');
+            });
+        });
+    </script>
+</block>
+
+<block name="footer">
+    <a class="btn btn-success btn-lg" href="{:U('Install/step1')}">上一步</a>
+    <button type="button" class="btn btn-primary btn-lg" id="anzhuan">下一步</button>
+</block>

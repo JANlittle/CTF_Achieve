@@ -1,0 +1,104 @@
+<layout name="Public/layout" />
+<link rel="stylesheet" href="__PUBLIC__/jqueryui/colorpicker/css/jquery.bigcolorpicker.css" type="text/css" />
+<script type="text/javascript" src="__PUBLIC__/jqueryui/colorpicker/js/jquery.bigcolorpicker.min.js"></script>
+<script  type="text/javascript">
+$(function(){
+    $("#titlecolor").bigColorpicker(function(el,color){
+        $(el).val(color).css("color",color);
+    },"L",10);
+})
+</script>
+<div class="main-wrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><a class="crumb-name" href='{:U("index",decode($parameter))}'>友情链接</a><span class="crumb-step">&gt;</span><span>编辑链接</span></div>
+    </div>
+    <div class="result-wrap table-responsive">
+        <div class="result-content">
+            <form action="" method="post" id="myform" name="myform" onsubmit="return false" enctype="multipart/form-data">
+                <table class="insert-tab table table-hover" width="100%">
+                <tbody>
+                    <tr>
+                        <th width="120"><i class="require-red">*</i>名称：</th>
+                        <td>
+                            <input class="common-text required form-control" id="title" name="title" size="50" value="{$data.title}" type="text" placeholder="请输入名称">
+                            <div class="help-block">例如：爱客猴</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>显示颜色：</th>
+                        <td>
+                            <input class="common-text required form-control" id="titlecolor" name="titlecolor" size="50" value="{$data.titlecolor}" type="text" <neq name="data.titlecolor" value="">style="color:{$data.titlecolor}"</neq> placeholder="请输入显示颜色">
+                            <div class="help-block">例如：red,#000</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><i class="require-red">*</i>URL地址：</th>
+                        <td>
+                            <input class="common-text required form-control" id="url" name="url" size="50" value="{$data.url}" type="text" placeholder="请输入URL地址">
+                        </td>
+                    </tr>
+                    <script type="text/javascript">
+                        $(function(){
+                            $('select[name="linktype"]').change(function(event) {
+                                if($(this).val() == 1){
+                                    $("#photo").show();
+                                } else {
+                                    $("#photo").hide();
+                                }
+                            });
+                        })
+                    </script>
+                    <tr class="">
+                        <th>类型：</th>
+                        <td>
+                            <select name="linktype" class="form-control">
+                                <option value="0" <eq name="data.linktype" value="0">selected="selected"</eq>>文字</option>
+                                <option value="1" <eq name="data.linktype" value="1">selected="selected"</eq>>图片</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr class="" id='photo' <eq name="data.linktype" value="0"> style='display: none'</eq>>
+                        <th>友链图片：</th>
+                        <td>
+                            <include file="Uploadfile:fileedit" />
+                        </td>
+                    </tr>
+                    <tr class="">
+                        <th>打开方式：</th>
+                        <td>
+                            <select name="open" class="form-control">
+                                <option value="1" <eq name="data.open" value="1">selected="selected"</eq>>新窗口</option>
+                                <option value="0" <eq name="data.open" value="0">selected="selected"</eq>>当前窗口</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>描述：</th>
+                        <td><textarea name="description" class="common-textarea form-control" id="description" cols="30" rows="3"  placeholder="请输入描述">{$data.description}</textarea></td>
+                    </tr>
+                    <tr>
+                        <th>状态：</th>
+                        <td>
+                            <select name="status" class="form-control">
+                                <option value="1" <eq name="data.status" value="1">selected="selected"</eq>>开启</option>
+                                <option value="0" <eq name="data.status" value="0">selected="selected"</eq>>关闭</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <td>
+                            <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitAjaxForm("{:U("edit")}","#myform")'>
+                            <input class="btn btn6" onclick="history.go(-1)" value="返回" type="button">
+                        </td>
+                    </tr>
+                </tbody></table>
+                <input type="hidden" name="parameter" value="{$parameter}">
+                <input type="hidden" name="siteid" value="{$data.siteid}">
+                <input type="hidden" name="id" value="{$data.id}">
+                <input type="hidden" name="catid" value="{$catid}">
+            </form>
+        </div>
+    </div>
+
+</div>

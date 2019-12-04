@@ -1,0 +1,99 @@
+<layout name="Public/layout" />
+<div class="mwrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><span class="crumb-name">栏目管理</span></div>
+    </div>
+    <div class="result-wrap">
+        <form name="myform" id="myform" method="post">
+            <div class="result-title">
+                <div class="result-list">
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/add",session("uid")) eq 1'>
+                        <a href='{:U("add",$parameter."&parameter=".encode($parameter))}'><i class="icon-font">&#xe026;</i>新增栏目</a>
+                    </if>
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/del",session("uid")) eq 1'>
+                        <a id="batchDel" href="javascript:void(0)" onclick="delall('{:U('del')}')"><i class="icon-font">&#xe037;</i>批量删除</a>
+                    </if>
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/sort",session("uid")) eq 1'>
+                        <a id="updateOrd" href="javascript:void(0)" onclick="sort('{:U('sort')}')"><i class="icon-font">&#xe00a;</i>更新排序</a>
+                    </if>
+                </div>
+            </div>
+            <div class="result-content table-responsive">
+                <table class="result-tab table table-hover" width="100%">
+                    <tr class='head-tr'>
+                        <th class="tc ids-td"><input class="allChoose" onchange="selectAll(this)" id="selectall" type="checkbox"></th>
+                        <th class="sort-td">排序</th>
+                        <th>ID</th>
+                        <th>名称</th>
+                        <th>父级菜单</th>
+                        <th>归属模型</th>
+                        <th>显示位置</th>
+                        <th>路由变量</th>
+                        <th>缩略图</th>
+                        <th>打开方式</th>
+                        <th>是否单页</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                    <volist name="data" id="datalist">
+                    <tr>
+                        <td class="tc ids-td"><input name="ids[]" class='select_ids' value="{$datalist.id}" type="checkbox" ></td>
+                        <td class="sort-td">
+                            <input class="common-input sort-input sort form-control" dataId="{$datalist.id}" name="sort[]" value="{$datalist.sort}" type="text">
+                        </td>
+                        <td>{$datalist.id}</td>
+                        <td ><a <if condition="count($datalist['categoryson']) gt 0">href='{:U("index","pid=".$datalist["id"])}'<else/>href="javascript:;"</if> <neq name="datalist.url" value=''>data-toggle="popover" data-trigger="hover" data-html="true" data-container="body" data-placement='top' title="跳转地址" data-content="{$datalist.url}"</neq> >{$datalist.name}<if condition="$datalist['danye'] eq 0 && count($datalist['categoryson']) gt 0">( <span class="red"><b>{:count($datalist['categoryson'])}</b></span> )</if></a></td>
+                        <td><eq name="datalist.pid" value="0">顶级菜单<else/>{$datalist.pidname}</eq></td>
+                        <td>{$datalist.sitemodel.name}</td>
+                        <td>
+                            <switch name="datalist.position">
+                                <case value="0">不显示</case>
+                                <case value="1">顶部</case>
+                                <case value="2">中部</case>
+                                <case value="3">底部</case>
+                            </switch>
+                        </td>
+                        <td>{$datalist.route}</td>
+                        <td>
+                            <notempty name="datalist.thumb" value="">
+                            <div data-toggle="popover" data-trigger="hover" data-html="true" data-container="body" data-placement="left" title="缩略图" data-content="<img src='__ROOT__{$datalist[thumb][0][thumb]}' style='width:200px' />"><a href="__ROOT__{$datalist[thumb][0][photo]}" target="_blank"><img src="__ROOT__{$datalist[thumb][0][thumb]}" style="height:25px" /></a></div>
+                            </notempty>
+                        </td>
+                        <td>
+                            <eq name="datalist.open" value="1">
+                                <span style='color:green'>新窗口</span>
+                            <else />
+                                <span style='color:red'>当前窗口</span>
+                            </eq>
+                        </td>
+                        <td>
+                            <eq name="datalist.danye" value="1">
+                                <img src="__IMG__/yes.gif" alt="是">
+                            <else />
+                                <img src="__IMG__/no.gif" alt="否">
+                            </eq>
+                        </td>
+                        <td>
+                            <eq name="datalist.status" value="1">
+                                <img src="__IMG__/yes.gif" alt="开启">
+                            <else />
+                                <img src="__IMG__/no.gif" alt="关闭">
+                            </eq>
+                        </td>
+                        <td>
+                            <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/edit",session("uid")) eq 1'>
+                                <a class="link-update" href='{:U("edit",$parameter."&id=".$datalist["id"]."&parameter=".encode($parameter))}'>修改</a>
+                            </if>
+                            <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/del",session("uid")) eq 1'>
+                                <a class="link-del" href="javascript:;" onclick="del('{:U('del')}',{$datalist.id})">删除</a>
+                            </if>
+                        </td>
+                    </tr>
+                    </volist>
+
+                </table>
+                <div class="list-page">{$pagelist}</div>
+            </div>
+        </form>
+    </div>
+</div>

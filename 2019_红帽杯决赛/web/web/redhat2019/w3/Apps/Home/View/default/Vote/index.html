@@ -1,0 +1,45 @@
+<include file="Public:htmlcommon" />
+<include file="Public:seolist" />
+<include file="Public:headcommon" />
+</head>
+<body>
+	<div class="container">
+		<include file="Public:demonav" />
+		<h3>投票</h3>
+		<notempty name="vote">
+			<volist name="vote" id="data">
+				<div class="help-block"><a href="{:U('vote',array('id'=>$data['id']))}">{$i}、{$data.title}</a></div>
+			</volist>	
+		</notempty>
+<div class="blokc-help">PHP代码：</div>
+<pre class="prettyprint linenums">
+代码文件：VoteController.class.php
+
+//获取投票信息
+$Vote = D('Vote');
+$where['siteid'] = array('eq',C('SITEID'));
+$where['status'] = array('eq',1);
+$vote = $Vote->where($where)->relation(array('Voteoptions','Voteinfo'))->select();
+
+//处理图片
+if(!empty($vote)){
+	foreach ($vote as $key => $value) {
+		$vote[$key]['thumb'] = unserialize($value['thumb']);
+	}
+}
+</pre>
+
+<div class="blokc-help">HTML代码：</div>
+<pre class="prettyprinthtml prettyprint linenums">
+<literal>
+<notempty name="vote">
+	<volist name="vote" id="data">
+		<div class="help-block"><a href="{:U('vote',array('id'=>$data['id']))}">{$i}、{$data.title}</a></div>
+	</volist>	
+</notempty>
+</literal>
+</pre>		
+	</div>
+<include file="Public:foot" />	
+</body>
+</html>

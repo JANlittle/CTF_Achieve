@@ -1,0 +1,197 @@
+<include file="Public:head" />
+<!-- 配置文件 -->
+<script type="text/javascript" src="__UEDITOR_PATH__/ueditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" src="__UEDITOR_PATH__/ueditor.all.js"></script>
+<script type="text/javascript">
+//验证数据
+$(function(){
+    $('#caijiForm').bootstrapValidator({
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            url: {
+                validators: {
+                    notEmpty: {
+                        'message':'采集网址必须填写！'
+                    },
+                    regexp: {
+                        regexp: /^(https|http)?:\/\/(.*)$/,
+                        'message':'采集网址格式不合法！'
+                    }
+                }
+            },
+            class: {
+                validators: {
+                    notEmpty: {
+                        'message':'内容选择器必须填写！'
+                    }
+                }
+            },
+            pageoneurl: {
+                validators: {
+                    notEmpty: {
+                        'message':'第一页网址必须填写！'
+                    },
+                    regexp: {
+                        regexp: /^(https|http)?:\/\/(.*)$/,
+                        'message':'第一页网址格式不合法！'
+                    }
+                }
+            }
+        }
+    }).on('success.form.bv', function(e) {
+        //禁止默认提交
+        e.preventDefault();
+
+        //提交数据
+        submitCaijiForm('{:U('caiji')}','{$iframe}','#caijiForm');
+    });
+
+    //按钮事件
+    $('#caijibtn').click(function() {
+        $('#caijiForm').bootstrapValidator('validate');
+    });
+});
+/**
+ * [submitCaijiForm 表单提交ajax数据处理]
+ * @param  {[type]} url    [数据发送的url地址]
+ * @param  {[type]} iframe [iframe名称]
+ * @param  {[type]} obj    [对象的DOM节点：#myFrom]
+ * @return {[type]}        [返回json]
+ */
+function submitCaijiForm (url,iframe,obj) {
+    //提交采集
+    $.post(url, $(obj).serialize(), function(data, textStatus, xhr) {
+        if(data.status) {
+            //解决iframe刷新
+            if(typeof parent.frames[iframe] == 'undefined'){
+                var parentDom = parent.document;
+            } else {
+                var parentDom = parent.frames[iframe].document;
+            }
+
+            var str = data.content;
+            var mycontent = $('<div id="linshicontent"></div>');
+            mycontent.html(str);
+
+            //设置title
+            var title_html = mycontent.find('title').html();
+            $(parentDom).find('#title').val(title_html);
+
+            //设置keywords
+            //$(parentDom).find('#keywords').val(mycontent.find('meta[name=keywords]').attr('content'));
+
+            //设置description
+            //$(parentDom).find('#description').val(mycontent.find('meta[name=description]').attr('content'));
+            
+            //设置keywords与description
+            var meta = mycontent.find('meta');
+            $.each(meta,function(index,val){
+                if(typeof($(val).attr('name')) != 'undefined'){
+                    if($(val).attr('name').toLowerCase() == 'keywords'){
+                        //设置keywords
+                        $(parentDom).find('#keywords').val($(val).attr('content'));
+                    }
+
+                    if($(val).attr('name').toLowerCase() == 'description'){
+                        //设置description
+                        $(parentDom).find('#description').val($(val).attr('content'));
+                    }
+                }
+            });
+
+            //设置keywords
+            if($(parentDom).find('#keywords').val() == ''){
+                $(parentDom).find('#keywords').val(title_html);
+            }
+
+            //设置description
+            if($(parentDom).find('#description').val() == ''){
+                $(parentDom).find('#description').val(title_html);
+            }
+
+            //设置内容
+            var contentlist = mycontent.find($('#class').val());
+
+            //获取父级javascript对象
+            if(typeof parent.frames[iframe] == 'undefined'){
+                var ue_content = window.parent.ue_content;
+            } else {
+                var ue_content = window.parent.frames[iframe].ue_content;
+            }
+            
+            //设置编辑器内容                            
+            if(contentlist.length == 1){
+                ue_content.ready(function() {
+                    ue_content.setContent(contentlist.html());
+                }); 
+            } else {
+                var content_more = '';
+                $.each(contentlist, function(index, val) {
+                    if($(this).html() != 'undefined'){
+                        content_more += $(this).html();
+                    }
+                });
+                ue_content.ready(function() {
+                    ue_content.setContent(content_more);
+                });
+            }
+
+            //关闭上一层
+            parent.layer.msg(data.info,{icon:1,time:2000,shade: [0.3,'#000']},function(){
+                mycontent.remove();
+                closeIframe();
+            });
+
+        } else {
+            parent.layer.open({
+                content:data.info,
+                yes:function(index){
+                    if(data.url){
+                        parent.location.href = data.url;
+                    } else {
+                        parent.layer.close(index);
+                    }
+                },
+                icon:2
+            });
+        }
+    });
+}
+</script>
+<div id="caiji">
+    <form action="" id="caijiForm" onsubmit="return false">
+        <div class="form-group">
+            <label for="url" class="new_label">采集网址：</label>
+            <input type="text" name="url" id="url" class="form-control" placeholder="请输入采集的网址" value="" />
+            <div class="help-block">如果有分页则url格式为：http://www.aikehou.com/article/1_<literal>{$page}</literal>.html</div>
+        </div>
+        <div class="form-group">
+            <label for="class" class="new_label">内容选择器：</label>
+            <input type="text" name="class" id="class" class="form-control" placeholder="请输入内容选择器" value=".article-main .inner" />
+            <div class="help-block">内容选择器，即所采集内容数据所在的DOM标签，jquery格式，例如：.article-main .inner</div>
+        </div>
+        <div class="form-group">
+            <label for="pageoneurl" class="new_label">第一页网址：</label>
+            <input type="text" name="pageoneurl" id="pageoneurl" class="form-control" placeholder="请输入第一页网址" value=""/>
+            <div class="help-block">采集第一页网址必须填写，例如：http://www.aikehou.com/article/1.html</div>
+        </div>
+        <div class="form-group">
+            <label for="sfenye" class="new_label">起始分页码：</label>
+            <input type="number" name="sfenye" id="sfenye" class="form-control" placeholder="请输入起始分页码" value="1"/>
+            <div class="help-block">起始分页码是对采集有分页内容的数据的开始分页码值，例如：1</div>
+        </div>
+        <div class="form-group">
+            <label for="efenye" class="new_label">结束分页码：</label>
+            <input type="number" name="efenye" id="efenye" class="form-control" placeholder="请输入结束分页码" value="5"/>
+            <div class="help-block">结束分页码是对采集有分页内容的数据的结束分页码值，例如：10</div>
+        </div>
+        <div class="form-group">
+            <input class="btn btn-primary btn6" id="caijibtn" value="开始采集" type="button" />
+        </div>
+    </form>
+</div>

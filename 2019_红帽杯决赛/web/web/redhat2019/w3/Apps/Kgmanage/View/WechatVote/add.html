@@ -1,0 +1,104 @@
+<layout name="Public/layout" />
+<div class="main-wrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><a class="crumb-name" href='{:U("index",decode($parameter))}'>图文投票</a><span class="crumb-step">&gt;</span><span>新增投票</span></div>
+    </div>
+    <div class="result-wrap table-responsive">
+        <div class="result-content">
+            <form action="" method="post" id="myform" name="myform" onsubmit="return false" enctype="multipart/form-data">
+                <table class="insert-tab table table-hover" width="100%">
+                    <tbody>
+                        <tr>
+                            <th><i class="require-red">*</i>类型：</th>
+                            <td>
+                                <select name="votetype" id="votetype" class="form-control">
+                                    <option value="1" selected="selected">单选</option>
+                                    <option value="2">多选</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>标题：</th>
+                            <td>
+                                <input class="common-text required form-control" id="title" name="title" size="50" value="" type="text" placeholder="请输入标题">
+                            </td>
+                        </tr>
+                        <tr class="" id='photo'>
+                                <th><i class="require-red">*</i>封面图片：</th>
+                                <td>
+                                    <include file="Uploadfile:fileadd" />
+                                </td>
+                        </tr>
+                        <tr id="chicun">
+                            <th>选项图片尺寸：</th>
+                            <td>
+                                <div class="form-inline">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">宽度：</div>
+                                        <input type="number" name="width" class="form-control" id="width" value="360" placeholder="请输入宽度" onkeyup="value=value.replace(/[^\d]/ig,'')">
+                                    </div>
+                                    <label>×</label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">高度：</div>
+                                        <input type="number" name="height" value="200" id="height" placeholder="请输入高度" class="form-control" onkeyup="value=value.replace(/[^\d]/ig,'')">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <style type="text/css">
+                            .laydate-icon{
+                                height: auto;
+                            }
+                        </style>
+                        <script type="text/javascript" src="__PUBLIC__/jqueryui/layer/extendplugin/laydate/laydate.js"></script>
+                        <script type="text/javascript" src="__PUBLIC__/js/date_select.js"></script>
+                        <tr>
+                            <th><i class="require-red">*</i>开始时间：</th>
+                            <td>
+                                <input class="common-text required laydate-icon form-control" id="starttime" name="start" size="18" value="" type="text" placeholder="请输入开始时间">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>结束时间：</th>
+                            <td>
+                                <input class="common-text required laydate-icon form-control" id="endtime" name="end" size="18" value="" type="text" placeholder="请输入结束时间">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>投票次数：</th>
+                            <td>
+                                <input class="common-text required form-control" id="number" name="number" size="50" value="1" type="number"  min="1" placeholder="请输入投票次数">
+                                <div class="help-block">限制每个用户的投票次数！</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style='width:120px'>简介：</th>
+                            <td>
+                                <!-- 加载编辑器的容器 -->
+                                <textarea name="content" id="container" style="width:100%;height:150px;line-height:20px"></textarea>
+                                <include file="Public:ueditor" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>状态：</th>
+                            <td>
+                                <select name="status" id="status" class="form-control">
+                                    <option value="1" selected="selected">开启</option>
+                                    <option value="0">关闭</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <td>
+                                <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitAjaxForm("{:U("add")}","#myform")'>
+                                <input class="btn btn6" onclick="history.go(-1)" value="返回" type="button">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <input type="hidden" name="parameter" value="{$parameter}">
+            </form>
+        </div>
+    </div>
+</div>

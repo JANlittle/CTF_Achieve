@@ -1,0 +1,103 @@
+<include file="Public:head" />
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/jqueryui/easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/jqueryui/easyui/themes/icon.css">
+<script src="__PUBLIC__/jqueryui/easyui/jquery.easyui.min.js" type="text/javascript"></script>
+
+<div class="mwrap">
+    <div class="result-wrap" style="padding-top:0">
+        <form name="myform" id="myform" action='' method="post" onsubmit="return false">
+            <div class="result-content">
+                <div class="groupname">给：【 <span style='color:red'>{$authinfo.title}</span> 】 栏目授权</div>
+                <ul id="tt" class="easyui-tree" data-options="lines:true,checkbox:true">
+                    {$catids}
+                </ul>
+            </div>
+            <div class="blank10"></div>
+            <input type="hidden" name="gid" value="{$authinfo.id}" id="groupid">
+            <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='getChecked()'>
+        </form>
+    </div>
+</div>
+
+<style type='text/css'>
+.tree-node{
+    height:28px;
+    padding-top: 5px;
+}
+
+ul#tt li span.tree-title{
+    color:#000;
+    font-size:12px;
+    width: 81%;
+}
+
+ul#tt li ul li span.tree-title{
+    color:#000;
+    font-size:12px;
+    width: 72%;
+}
+
+ul#tt li ul li ul li span.tree-title{
+    color:#000;
+    font-size:12px;
+    width: 62%;
+}
+
+ul#tt li ul li ul li ul li span.tree-title{
+    color:#000;
+    font-size:12px;
+    width: 52%;
+}
+
+ul#tt li ul li ul li ul li ul li span.tree-title{
+    color:#000;
+    font-size:12px;
+
+}
+
+.tree-title a{
+    color:#000;
+    font-size:12px;
+    display: block;
+}
+</style>
+
+<script type="text/javascript">
+    /**
+     * [getChecked 后去树形id]
+     * @return {[type]} [description]
+     */
+    function getChecked(){
+        //获取选中数据
+        var nodes = $('#tt').tree('getChecked');
+        var catids_string = '';
+        var cateids_arr = Array();
+        $.each(nodes,function(index,val){
+            //console.log($(val.text).attr('id'));
+
+            if (catids_string != ''){
+                catids_string += ',';
+            }
+
+            cateids_arr = $(val.text).attr('id').split('_');
+            catids_string += cateids_arr[1];
+        });
+
+        //获取不确定选中的选项
+        /*var nodes_indeterminate = $('#tt').tree('getChecked', 'indeterminate');
+        var cateids_arr_indeterminate = Array();
+        $.each(nodes_indeterminate,function(index,val){
+            //console.log($(val.text).attr('id'));
+
+            if (catids_string != ''){
+                catids_string += ',';
+            }
+
+            cateids_arr_indeterminate = $(val.text).attr('id').split('_');
+            catids_string += cateids_arr_indeterminate[1];
+        });*/
+
+        //发送数据
+        postUrlIframe("{:U("catshouquan")}",{'gid':$('#groupid').val(),'catids':catids_string});
+    }
+</script>

@@ -1,0 +1,116 @@
+<layout name="Public/layout" />
+<div class="mwrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><span class="crumb-name">优惠券</span></div>
+    </div>
+    <div class="result-wrap">
+        <form name="myform" id="myform" method="post">
+            <div class="result-title">
+                <div class="result-list">
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/add",session("uid")) eq 1'>
+                        <a href='{:U("add",$parameter."&parameter=".encode($parameter))}'><i class="icon-font">&#xe026;</i>新增优惠券</a>
+                    </if>
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/del",session("uid")) eq 1'>
+                        <a id="batchDel" href="javascript:void(0)" onclick="delall('{:U('del')}')"><i class="icon-font">&#xe037;</i>批量删除</a>
+                    </if>
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/sort",session("uid")) eq 1'>
+                        <a id="updateOrd" href="javascript:void(0)" onclick="sort('{:U('sort')}')"><i class="icon-font">&#xe00a;</i>更新排序</a>
+                    </if>
+                </div>
+            </div>
+            <div class="result-content table-responsive">
+                <table class="result-tab table table-hover" width="100%">
+                    <tr class='head-tr'>
+                        <th class="tc ids-td"><input class="allChoose" onchange="selectAll(this)" id="selectall" type="checkbox"></th>
+                        <th class="sort-td">排序</th>
+                        <th>ID</th>
+                        <th>名称</th>
+                        <th>过期类型</th>
+                        <th>数量</th>
+                        <th>最大获取数</th>
+                        <th>已有人数</th>
+                        <th>状态</th>
+                        <th>发布时间</th>
+                        <th>操作</th>
+                    </tr>
+                    <volist name="data" id="datalist">
+                    <tr>
+                        <td class="tc ids-td"><input name="ids[]" class='select_ids' value="{$datalist.id}" type="checkbox" ></td>
+                        <td class="sort-td">
+                            <input class="common-input sort-input sort form-control" dataId="{$datalist.id}" name="sort[]" value="{$datalist.sort}" type="text">
+                        </td>
+                        <td>{$datalist.id}</td>
+                        <td>{$datalist.name}</td>
+                        <td>
+                            <div data-toggle="popover" data-trigger="hover" data-html="true" data-container="body" data-placement='top' title='设定时间<if condition="time() lt $datalist['start']">（<span class="blue">未开始</span>）<elseif condition="time() gt $datalist['end']"/>（<span class="red">已结束</span>）<else/>（<span class="green">进行中</span>）</if>' data-content="开始时间：{$datalist.start|date='Y-m-d H:i:s',###}<br/>结束时间：{$datalist.end|date='Y-m-d H:i:s',###}"></div>
+                        </td>
+                        <td>{$datalist.number}</td>
+                        <td>{$datalist.max}</td>
+                        <td>{:count($datalist['WechatCouponsmember'])}</td>
+                        <td>
+                            <eq name="datalist.status" value="1">
+                                <img src="__IMG__/yes.gif" alt="开启">
+                            <else />
+                                <img src="__IMG__/no.gif" alt="关闭">
+                            </eq>
+                        </td>
+                        <td>{$datalist.create_time|date="Y-m-d H:i:s",###}</td>
+                        <td>
+                             <a href="javascript:;" onclick="dialogContent('#getcode_{$datalist.id}','获取代码','80%','27%')">获取代码</a>
+                            <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/member",session("uid")) eq 1'>
+                                <a class="link-member" href='{:U("member","id=".$datalist["id"]."&parameter=".encode($parameter))}'>优惠券（<strong class='red'>{:count($datalist['WechatCouponsmember'])}</strong>）</a>
+                            </if>
+                            <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/edit",session("uid")) eq 1'>
+                                <a class="link-update" href='{:U("edit",$parameter."&id=".$datalist["id"]."&parameter=".encode($parameter))}'>修改</a>
+                            </if>
+                            <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/del",session("uid")) eq 1'>
+                                <a class="link-del" href="javascript:;" onclick="del('{:U('del')}',{$datalist.id})">删除</a>
+                            </if>
+                        </td>
+                    </tr>
+                    </volist>
+                </table>
+                <div class="list-page">{$pagelist}</div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<volist name="data" id="datalist">
+<div id="getcode_{$datalist.id}" style="display: none;padding:15px 20px;">
+    <style type="text/css">
+        fieldset{
+            border:1px solid #ccc;
+            border-radius:5px;
+            padding: 10px;
+        }
+
+        legend{
+            border-radius:5px;
+            padding:3px 10px;
+            font-weight:bold;
+            background:#1e64c8;
+            color:#fff;
+        }
+
+        legend {
+            display: inherit;
+            width: auto;
+            margin-bottom: 0px;
+            font-size: inherit;
+            border-bottom: none 
+        }
+    </style>
+    <div class="form">
+        <fieldset>
+            <legend>调用URL代码</legend>
+            <div class="form-group">
+                <input type="text" name="jscode_js_{$datalist.id}" id="jscode_js_{$datalist.id}" value='{:U("Wechat/Coupons/index",array("id"=>$datalist["id"]),true,true)}' class="form-control">
+            </div>
+            <div class="input-group">
+                <input type="button" onclick="$('#jscode_js_{$datalist.id}').select();document.execCommand('Copy');" value="复制代码至剪贴板" class="btn btn-primary">
+            </div>
+        </fieldset>
+    </div>
+</div>
+</volist>

@@ -1,0 +1,58 @@
+<layout name="Public/layout" />
+<div class="main-wrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><a class="crumb-name" href='{:U("products",decode($linkcate_parameter))}'>奖品管理</a><span class="crumb-step">&gt;</span><span>新增奖品</span></div>
+    </div>
+    <div class="result-wrap table-responsive">
+        <div class="result-content">
+            <form action="" method="post" id="myform" name="myform" onsubmit="return false" enctype="multipart/form-data">
+                <table class="insert-tab table table-hover" width="100%">
+                    <tbody>
+                        <tr>
+                            <th width="120"><i class="require-red">*</i>奖品标题：</th>
+                            <td>
+                                <input class="common-text required form-control" id="title" name="title" size="50" value="" type="text" placeholder="例如：一等奖">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th width="120"><i class="require-red">*</i>奖品名称：</th>
+                            <td>
+                                <input class="common-text required form-control" id="name" name="name" size="50" value="" type="text" placeholder="例如：手机一部">
+                            </td>
+                        </tr>
+                        <tr class="" id='photo'>
+                            <th><i class="require-red">*</i>上传图片：</th>
+                            <td>
+                               <include file="Uploadfile:fileadd" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th width="120"><i class="require-red">*</i>奖品数量：</th>
+                            <td>
+                                <input class="common-text required form-control" id="number" name="number" size="50" value="0" type="number" placeholder="请输入奖品数量">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>状态：</th>
+                            <td>
+                                <select name="status" class="form-control">
+                                    <option value="1" selected="selected">开启</option>
+                                    <option value="0">关闭</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <td>
+                                <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitAjaxForm("{:U("productsadd")}","#myform")'>
+                                <input class="btn btn6" onclick="history.go(-1)" value="返回" type="button">
+                            </td>
+                        </tr>
+                    </tbody></table>
+                    <input type="hidden" name="linkcate_parameter" value="{$linkcate_parameter}">
+                    <input type="hidden" name="pid" value="{$pid}">
+            </form>
+        </div>
+    </div>
+
+</div>

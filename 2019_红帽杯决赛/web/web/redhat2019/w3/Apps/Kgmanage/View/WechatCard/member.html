@@ -1,0 +1,82 @@
+<layout name="Public/layout" />
+<div class="mwrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list">
+            <div id="wechatReply">
+                <ul class="wechat-nav wechatnav">
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/index",session("uid")) eq 1'>
+                    <li class="">
+                        <a href="{:U('index',decode($index_parameter))}">会员卡信息<span class="arrow fa fa-sort-up"></span></a>
+                    </li>
+                    </if>
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/member",session("uid")) eq 1'>
+                    <li class="current">
+                        <a href="{:U('member',$parameter.'&=parameter'.encode($parameter))}">会员管理<span class="arrow fa fa-sort-up"></span></a>
+                    </li>
+                    </if>
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/notice",session("uid")) eq 1'>
+                    <li class="">
+                        <a href="{:U('notice','parameter='.$index_parameter)}">通知管理<span class="arrow fa fa-sort-up"></span></a>
+                    </li>
+                    </if>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="result-wrap">
+        <form name="myform" id="myform" method="post">
+            <div class="result-title">
+                <div class="result-list">
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/memberadd",session("uid")) eq 1'>
+                        <a href='{:U("memberadd","parameter=".encode($parameter))}'><i class="icon-font">&#xe026;</i>新增会员卡</a>
+                    </if>
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/memberdel",session("uid")) eq 1'>
+                        <a id="batchDel" href="javascript:void(0)" onclick="delall('{:U('memberdel')}')"><i class="icon-font">&#xe037;</i>批量删除</a>
+                    </if>
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/membersort",session("uid")) eq 1'>
+                        <a id="updateOrd" href="javascript:void(0)" onclick="sort('{:U('membersort')}')"><i class="icon-font">&#xe00a;</i>更新排序</a>
+                    </if>
+                </div>
+            </div>
+            <div class="result-content table-responsive">
+                <table class="result-tab table table-hover" width="100%">
+                    <tr class='head-tr'>
+                        <th class="tc ids-td"><input class="allChoose" onchange="selectAll(this)" id="selectall" type="checkbox"></th>
+                        <th class="sort-td">排序</th>
+                        <th>ID</th>
+                        <th>openid</th>
+                        <th>姓名</th>
+                        <th>电话</th>
+                        <th>卡号</th>
+                        <th>加入时间</th>
+                        <th>操作</th>
+                    </tr>
+                    <volist name="data" id="datalist">
+                    <tr>
+                        <td class="tc ids-td"><input name="ids[]" class='select_ids' value="{$datalist.id}" type="checkbox" ></td>
+                        <td class="sort-td">
+                            <input class="common-input sort-input sort form-control" dataId="{$datalist.id}" name="sort[]" value="{$datalist.sort}" type="text">
+                        </td>
+                        <td>{$datalist.id}</td>
+                        <td>{$datalist.openid}</td>
+                        <td>{$datalist.name}</td>
+                        <td>{$datalist.tel}</td>
+                        <td>{$datalist.number}</td>
+                        <td>{$datalist.create_time|date="Y-m-d H:i:s",###}</td>
+                        <td>
+                            <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/memberedit",session("uid")) eq 1'>
+                                <a class="link-update" href='{:U("memberedit","id=".$datalist["id"]."&parameter=".encode($parameter))}'>修改</a>
+                            </if>
+                            <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/memberdel",session("uid")) eq 1'>
+                                <a class="link-del" href="javascript:;" onclick="del('{:U('memberdel')}',{$datalist.id})">删除</a>
+                            </if>
+                        </td>
+                    </tr>
+                    </volist>
+
+                </table>
+                <div class="list-page">{$pagelist}</div>
+            </div>
+        </form>
+    </div>
+</div>

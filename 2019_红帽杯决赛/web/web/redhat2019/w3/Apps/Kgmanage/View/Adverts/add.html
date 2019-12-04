@@ -1,0 +1,67 @@
+<include file="Public:head" />
+<div class="main-wrap">
+    <div class="result-wrap table-responsive" style='padding-top:10px'>
+        <div class="result-content">
+            <form action="" method="post" id="myform" name="myform" onsubmit="return false">
+                <table class="insert-tab table table-hover" width="100%">
+                    <tbody>
+                        <tr>
+                            <th><i class="require-red">*</i>广告位名称：</th>
+                            <td>
+                                <input class="common-text required form-control" id="name" name="name" size="50" value="" type="text" placeholder="请输入广告位名称">
+                                <div class="help-block">例如：图片广告</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>类型：</th>
+                            <td>
+                                <select name="type" id="type" class="form-control">
+                                    <option value="1" selected="selected">图片</option>
+                                    <option value="2">文字</option>
+                                    <option value="3">代码</option>
+                                </select>
+                                <div class="help-block">请选择广告位类型</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>尺寸：</th>
+                            <td>
+                                <div class="form-inline">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">宽度：</div>
+                                        <input type="text" name="width" class="form-control" id="width" value="200" placeholder="请输入宽度" onkeyup="value=value.replace(/[^\d]/ig,'')">
+                                    </div>
+                                    <label>×</label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">高度：</div>
+                                        <input type="text" name="height" value="150" id="height" placeholder="请输入高度" class="form-control" onkeyup="value=value.replace(/[^\d]/ig,'')">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>状态：</th>
+                            <td>
+                                <select name="status" class="form-control">
+                                    <option value="1" selected="selected">开启</option>
+                                    <option value="0">关闭</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>描述：</th>
+                            <td><textarea name="description" class="common-textarea form-control" id="description" cols="30" rows="3" placeholder="请输入描述"></textarea></td>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <td>
+                                <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitFormIframe("{:U("add")}","#myform")'>
+                                <input class="btn btn6" onclick="closeIframe()" value="关闭" type="button">
+                            </td>
+                        </tr>
+                    </tbody></table>
+            </form>
+        </div>
+    </div>
+</div>
+<include file="Public:foot" />

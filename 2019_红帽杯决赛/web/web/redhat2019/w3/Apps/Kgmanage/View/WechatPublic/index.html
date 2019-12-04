@@ -1,0 +1,109 @@
+<layout name="Public/layout" />
+<div class="mwrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><span class="crumb-name">公众号管理</span></div>
+    </div>
+    <div class="result-wrap table-responsive" style='padding-bottom:0;'>
+        <form name="myform" id="myform" method="post" onsubmit="return false">
+            <div class="result-content">
+                <div class="tab-wrap">
+                    <ul class="tab-nav nav">
+                        <li class="current"><a href='#1' onclick="tabs('#tab1',this)">1、基本信息</a></li>
+                        <li><a href='#2' onclick="tabs('#tab2',this)">2、配置公众平台</a></li>
+                        <li><a href='#3' onclick="tabs('#tab3',this)">3、保存接口配置</a></li>
+                        <div class="clear"></div>
+                    </ul>
+                    <table class="insert-tab table table-hover" id="tab1" width="100%">
+                        <tbody>
+                            <tr>
+                                <th width="150"><i class="require-red">*</i>公众号名称：</th>
+                                <td>
+                                    <input class="common-text required form-control" id="name" name="name" size="50" value="{$data.name}" type="text" placeholder="请输入公众号名称">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><i class="require-red">*</i>原始ID：</th>
+                                <td>
+                                    <input class="common-text required form-control" id="originid" name="originid" size="50" value="{$data.originid}" type="text" placeholder="请输入原始ID">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><i class="require-red">*</i>微信号：</th>
+                                <td>
+                                    <input class="common-text required form-control" id="account" name="account" size="50" value="{$data.account}" type="text" placeholder="请输入微信号">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><i class="require-red">*</i>公众号类型：</th>
+                                <td>
+                                    <select name="type" id="data-type" class="form-control">
+                                        <option value="1" <eq name="data.type" value="1">selected="selected"</eq>>普通订阅号</option>
+                                        <option value="2" <eq name="data.type" value="2">selected="selected"</eq>>认证订阅号/普通服务号</option>
+                                        <option value="3" <eq name="data.type" value="3">selected="selected"</eq>>认证服务号</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table class="insert-tab table table-hover" id="tab2" width="100%" style='display: none'>
+                        <tbody>
+                            <tr id="wechat_sm">
+                                <td colspan='2'>
+                                <h3 class='red'><p>请在公众平台开发者中心里的服务器配置录入以下参数：</p></h3>
+                                <p><strong>1、URL(服务器地址)：</strong>{:U("Wechat/Index/index",array(),false,true)}</p>
+                                <p><strong>2、Token(令牌)：</strong>echophp</p>
+                                <p><strong>3、EncodingAESKey(消息加解密密钥)：</strong>点击随机生成得到密钥，不需要自己填写</p>
+                                <p><strong>4、消息加解密方式：</strong>根据自己的需要选择其中一种</p>
+                                <p class='red'><strong>5、授权回调页面：</strong>微信公众号－开发者中心－网页获取用户基本信息，授权回调页面域名改成：{$urlinfo.host}</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <style type="text/css">
+                        #wechat_sm p{
+                            line-height:2;
+                            padding:8px 0;
+                        }
+                    </style>
+
+                    <table class="insert-tab table table-hover" id="tab3" width="100%" style='display: none'>
+                        <tbody>
+                            <tr>
+                                <th style='width:160px'><i class="require-red">*</i>AppID：</th>
+                                <td>
+                                    <input class="common-text required form-control" id="appid" name="appid" size="50" value="{$data.appid}" type="text" placeholder="应用ID">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style='width:160px'><i class="require-red">*</i>AppSecret：</th>
+                                <td>
+                                    <input class="common-text required form-control" id="appsecret" name="appsecret" size="50" value="{$data.appsecret}" type="text" placeholder="应用密钥">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style='width:160px'><i class="require-red">*</i>EncodingAESKey：</th>
+                                <td>
+                                    <input class="common-text required form-control" id="encodingaeskey" name="encodingaeskey" size="50" value="{$data.encodingaeskey}" type="text" placeholder="消息加密密钥，安全模式下必填">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="blank15"></div>
+                    <table width="100%">
+                        <tbody>
+                            <tr>
+                                <th></th>
+                                <td>
+                                    <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitForm("{:U("index")}","#myform")'>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="blank15"></div>
+                </div>
+            </div>
+            <input type="hidden" name="id" value="{$data.id}">
+        </form>
+    </div>
+</div>

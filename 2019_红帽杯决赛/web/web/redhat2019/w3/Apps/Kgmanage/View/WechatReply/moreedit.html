@@ -1,0 +1,76 @@
+<layout name="Public/layout" />
+<include file="morecommon" />
+<div class="main-wrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><a class="crumb-name" href='{:U("moreindex",decode($parameter))}'>多图文回复</a><span class="crumb-step">&gt;</span><span>编辑回复</span></div>
+    </div>
+    <div class="result-wrap table-responsive">
+        <div class="result-content">
+            <form action="" method="post" id="myform" name="myform" onsubmit="return false" enctype="multipart/form-data">
+                <table class="insert-tab table table-hover" width="100%">
+                    <tbody>
+                        <tr>
+                            <th width="120"><i class="require-red">*</i>关键字：</th>
+                            <td>
+                                <input class="common-text required form-control" id="keywords" name="keywords" size="60" value="{$data.keywords}" type="text" placeholder="例如：你好">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div id="morepicselect table-responsive" style="margin:5px">
+                                    <div class="piclist" style='width:650px;height:500px;overflow-y:auto;float:left'>
+                                        <table cellpadding="0" width="98%" class="result-tab table table-hover">
+                                            <tr>
+                                                <th width="70%">标题</th>
+                                                <th width="20%">封面</th>
+                                                <th width="10%">操作</th>
+                                            </tr>
+                                            <volist name="datalist" id="list">
+                                            <tr>
+                                                <td id="news_{$list.id}" class='title'>{$list.title|msubstr=0,15,'utf-8'}</td>
+                                                <td class="cover">
+                                                    <notempty name="list.thumb" value="">
+                                                    <a href="__ROOT__{$list[thumb][0][thumb]}" target="_blank"><img class="list_img" src="__ROOT__{$list[thumb][0][thumb]}" height="25" /></a>
+                                                    </notempty>
+                                                </td>
+                                                <td><a href="javascript:void(0);" onclick="select_news({$list.id})">选择</a></td>
+                                            </tr>
+                                            </volist>
+                                        </table>
+                                    </div>
+                                    <div class="morepicdemo" style='margin-left:20px;float:left;height:500px;overflow-y:auto;width:340px'>
+                                        <ul class="weixin-muti-preview" id="select_news" data-listidx="0" <empty name="idsinfo">style='display:none'</empty>>
+                                            <notempty name="idsinfo">
+                                            <volist name="idsinfo" id="ids">
+                                            <li class="sltr select-item" rel="{$ids.id}" id="select_tr_{$ids.id}" onmouseenter="select_item(this)" onmouseleave="select_item(this)">
+                                                <p>
+                                                    {$ids.title|msubstr=0,15,'utf-8'}<input type="hidden" value="{$ids.id}" name="ids[]">
+                                                </p>
+                                                <div class="cover">
+                                                    <notempty name="ids.thumb" value=""><img class="list_img" src="__ROOT__{$ids[thumb][0][thumb]}"></notempty>
+                                                </div>
+                                                <a class="del" onclick="del_news({$ids.id})" href="javascript:void(0);" style="display: none;" title="删除"> </a>
+                                            </li>
+                                            </volist>
+                                            </notempty>
+
+                                        </ul>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitForm("{:U("moreedit")}","#myform")'>
+                                <input class="btn btn6" onclick="history.go(-1)" value="返回" type="button">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <input type="hidden" name="id" value="{$data.id}">
+                <input type="hidden" name="parameter" value="{$parameter}">
+            </form>
+        </div>
+    </div>
+</div>

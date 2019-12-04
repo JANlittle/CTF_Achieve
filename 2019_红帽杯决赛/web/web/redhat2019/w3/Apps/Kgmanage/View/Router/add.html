@@ -1,0 +1,76 @@
+<layout name="Public/layout" />
+<div class="main-wrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><a class="crumb-name" href='{:U("index")}'>URL路由</a><span class="crumb-step">&gt;</span><span>新增路由</span></div>
+    </div>
+    <div class="result-wrap table-responsive">
+        <div class="result-content">
+            <form action="" method="post" id="myform" name="myform" onsubmit="return false">
+                <table class="insert-tab table table-hover" width="100%">
+                    <tbody>
+                        <tr>
+                            <th style='width:150px'><i class="require-red">*</i>分组：</th>
+                            <td>
+                                <select name="pid" class="form-control" id="data-type">
+                                    <option value="0">顶级分组</option>
+                                    {$menulist_a}
+                                </select>
+                            </td>
+                        </tr>
+                        <script type="text/javascript">
+                            $(function(){
+                                $("#data-type").change(function(event) {
+                                    if($(this).val() != 0){
+                                        $("#data-expression").show();
+                                        $("#data-routerurl").show();
+                                        $('#data-type-name').html('路由');
+                                    } else {
+                                        $("#data-expression").hide();
+                                        $("#data-routerurl").hide();
+                                        $('#data-type-name').html('分组');
+                                    }
+                                });
+                            })
+                        </script>
+                        <tr>
+                            <th><i class="require-red">*</i><span id="data-type-name">分组</span>名称：</th>
+                            <td>
+                                <input class="common-text required form-control" id="name" name="name" size="50" value="" type="text" placeholder="请输入名称">
+                            </td>
+                        </tr>
+                        <tr id="data-expression" style='display:none'>
+                            <th><i class="require-red">*</i>表达式：</th>
+                            <td>
+                                <input class="common-text required form-control" id="expression" name="expression" size="50" value="" type="text" placeholder="/^about\/(\d+)$/">
+                                <div class="help-block">正则路由：/^about\/(\d+)$/，规则路由：blog/:id</div>
+                            </td>
+                        </tr>
+                        <tr id="data-routerurl" style='display:none'>
+                            <th><i class="require-red">*</i>路由地址：</th>
+                            <td>
+                                <input class="common-text required form-control" id="routerurl" name="routerurl" size="50" value="" type="text" placeholder="Home/News/details?cid=:1&id=:2&p=:3">
+                                <div class="help-block">路由地址即路由匹配到的真实地址，Home/News/details?cid=:1&id=:2&p=:3</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>状态：</th>
+                            <td>
+                                <select name="status" class="form-control">
+                                    <option value="1" selected="selected">开启</option>
+                                    <option value="0">关闭</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <td>
+                                <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitForm("{:U("add")}","#myform")'>
+                                <input class="btn btn6" onclick="history.go(-1)" value="返回" type="button">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>

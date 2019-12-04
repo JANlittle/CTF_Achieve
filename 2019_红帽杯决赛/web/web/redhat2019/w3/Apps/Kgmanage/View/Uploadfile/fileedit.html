@@ -1,0 +1,82 @@
+<?php
+    //保存数据的字段
+    $jiben['field'] = I('get.thumbfield','thumb');
+
+    //缩略图配置
+    $site_thumbw = C('SITE_SYSTEM_THUMB_WIDTH');
+    $site_thumbh = C('SITE_SYSTEM_THUMB_HEIGHT');
+    $thumbw = isset($site_thumbw) && !empty($site_thumbw) ? C('SITE_SYSTEM_THUMB_WIDTH') : C('SYSTEM_THUMB_WIDTH');
+    $thumbh = isset($site_thumbh) && !empty($site_thumbh) ? C('SITE_SYSTEM_THUMB_HEIGHT') : C('SYSTEM_THUMB_HEIGHT');
+    $thumbW = I('get.thumbw',$thumbw);
+    $thumbH = I('get.thumbh',$thumbh);
+
+    //上传文件大小
+    $filesize = I('get.filesize',0);
+
+    //上传类型
+    $returntype = I('get.returntype','single');
+
+    //保存目录
+    $savedir = I('get.savedir');
+?>
+<div id="{$jiben.field}-layer-images" class="layer-images-demo">
+    <volist name="data[$jiben['field']]" id="imagesdata">
+        <div class="images_list <if condition='$returntype eq "single"'>images_single_list</if>">
+            <img class="fancybox" href="{$imagesdata.photo}" data-fancybox-group="gallery" title="{$imagesdata.name}" src="{$imagesdata.thumb}" alt="{$imagesdata.name}">
+            <div class="images_name">
+                <if condition="$returntype eq 'single'">
+                    <input type="hidden" name="{$jiben.field}[{$key}][name]" placeholder="文件名称" value="{$imagesdata.name}">
+                <else/>
+                    <input type="text" class="common-text form-control" name="{$jiben.field}[{$key}][name]" placeholder="文件名称" value="{$imagesdata.name}">
+                </if>
+            </div>
+            <div class="images_sort">
+                <if condition="$returntype eq 'single'">
+                    <input type="hidden" name="{$jiben.field}[{$key}][sort]" placeholder="文件排序" value="{$imagesdata.sort}" onkeyup="value=value.replace(/[^\d]/ig,'')">
+                <else/>
+                    <input type="text" class="common-text form-control" name="{$jiben.field}[{$key}][sort]" placeholder="文件排序" value="{$imagesdata.sort}" onkeyup="value=value.replace(/[^\d]/ig,'')">
+                </if>
+                <input type="hidden" name="{$jiben.field}[{$key}][thumb]" value="{$imagesdata.thumb}">
+                <input type="hidden" name="{$jiben.field}[{$key}][photo]" value="{$imagesdata.photo}">
+                <input type="hidden" name="{$jiben.field}[{$key}][type]" value="{$imagesdata.type}">
+                <input type="hidden" name="{$jiben.field}[{$key}][oringinal_type]" value="{$imagesdata.oringinal_type}">
+                <input type="hidden" name="{$jiben.field}[{$key}][location]" value="{$imagesdata.location}">
+            </div>
+            <div class="imgdel" title="删除" fileData='{:json_encode($imagesdata)}' onclick="delFiles(this,event)"></div>
+        </div>
+    </volist>
+</div>
+<if condition="$returntype neq 'single'"><div class="clear"></div></if>
+<span class='imgupload' title="点击上传图片" onclick="dialogIframe('{:U('Uploadfile/index',array('type'=>'images','thumbw'=>$thumbW,'thumbh'=>$thumbH,'field'=>$jiben[field],'myid'=>$jiben[field].'-layer-images','returntype'=>$returntype,'savedir'=>$savedir,'filesize'=>$filesize))}','上传图片','80%','70%')"></span>
+<div class="help-block">图片规格：以宽度{$thumbW}*{$thumbH}以上这个值或者是它的倍数为佳！</div>
+<script type="text/javascript" src="__PUBLIC__/jqueryui/fancyBox/lib/jquery.mousewheel.pack.js?v=3.1.3"></script>
+<script type="text/javascript" src="__PUBLIC__/jqueryui/fancyBox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/jqueryui/fancyBox/source/jquery.fancybox.css?v=2.1.5" media="screen" />
+<script type="text/javascript">
+    $(function(){
+        $('#{$jiben.field}-layer-images .fancybox').fancybox();
+    });
+    /**
+     * [delFiles 删除文件]
+     * @param  {[type]} obj [description]
+     * @return {[type]}     [description]
+     */
+    if(typeof delFiles != 'function'){
+        function delFiles (obj,event) {
+            //禁止冒泡
+            event.stopPropagation();
+            //删除上传的图片或者文件
+            var json = $.parseJSON(unescape($(obj).attr('fileData')));
+            $.post('{:U("Uploadfile/del")}', json, function(data, textStatus, xhr) {
+                if(data.status){
+                    $(obj).parent('.img').remove();
+                } else {
+                    parent.layer.msg(data.info,{icon:2,time:2000,shade: [0.3,'#000']});
+                }
+            });
+
+            //移除节点
+            $(obj).parent(".images_list,.files_list").remove();
+        }
+    }
+</script>

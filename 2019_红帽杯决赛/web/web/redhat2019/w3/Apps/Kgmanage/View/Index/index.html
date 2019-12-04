@@ -1,0 +1,72 @@
+<include file="Public:head" />
+<include file="Public:topmenu" />
+<div class="Conframe" style='width:100%;margin-left:0;'>
+<div class="crumb-wrap">
+    <div class="crumb-list"><i class="icon-font">&#xe06b;</i><span>欢迎使用{:C('SYSTEM_TITLE')}，希望您过得愉快。</span></div>
+</div>
+<div class="result-wrap">
+    <div class="result-title">
+        <h1>系统基本信息</h1>
+    </div>
+    <div class="result-content">
+        <ul class="sys-info-list">
+            <li>
+                <label class="res-lab">操作系统</label><span class="res-info">{$Think.const.PHP_OS}</span>
+            </li>
+            <li>
+                <label class="res-lab">运行环境</label><span class="res-info">{$Think.server.SERVER_SOFTWARE}</span>
+            </li>
+            <li>
+                <label class="res-lab">CGI 规范的版本</label><span class="res-info">{$Think.server.GATEWAY_INTERFACE}</span>
+            </li>
+            <li>
+                <label class="res-lab">MYSQL版本</label>
+                <span class="res-info">
+                    <?php 
+                        $Model = M();
+                        $version = $Model->query("select VERSION() as version");
+                        echo $version[0]['version'];
+                    ?>
+                </span>
+            </li>
+            <li>
+                <label class="res-lab">上传附件限制</label><span class="res-info">{:ini_get('upload_max_filesize')}</span>
+            </li>
+            <li>
+                <label class="res-lab">服务器时间</label><span class="res-info">{:date("Y年m月d H:i:s")}</span>
+            </li>
+            <li>
+                <label class="res-lab">服务器域名/IP</label><span class="res-info">{$Think.server.SERVER_NAME} [ {$Think.server.SERVER_ADDR} ]</span>
+            </li>
+            <li>
+                <label class="res-lab">客户端ip</label><span class="res-info">{$Think.server.REMOTE_ADDR}</span>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="result-wrap">
+    <div class="result-title">
+        <h1>使用帮助</h1>
+    </div>
+    <div class="result-content">
+        <ul class="sys-info-list">
+            <li>
+                <label class="res-lab">官方交流网站：</label><span class="res-info"><a href="{:C('SYSTEM_COPYRIGHT_URL')}" target="_blank">{:C('SYSTEM_NAME')}</a></span>
+            </li>
+            <li>
+                <label class="res-lab">官方交流QQ群：</label><span class="res-info"><a target="_blank" href="javascript:;"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="echo信息科技" title="echo信息科技"></a></span>
+            </li>
+            <li>
+                <label class="res-lab">联系作者：</label><span class="res-info"><a target="_blank" href="tencent://message/?uin=1010117575&Site=www.aikehou.com&Menu=yes"><img border="0" src="__IMG__/qq.png" height="22" alt="联系作者" title="联系作者"></a></span>
+            </li>
+            <li>
+                <label class="res-lab">系统开发者：</label><span class="res-info">CopyLian、copy酱</span>
+            </li>
+        </ul>
+    </div>
+</div>
+</div>
+<include file="Public:copyright" />
+<div id="progress"><span></span></div>
+<include file="Public:foot" />
+

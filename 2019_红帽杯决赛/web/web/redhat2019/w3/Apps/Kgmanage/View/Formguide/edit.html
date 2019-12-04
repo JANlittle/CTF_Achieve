@@ -1,0 +1,60 @@
+<include file="Public:head" />
+<div class="main-wrap">
+    <div class="result-wrap table-responsive" style='padding-top:10px'>
+        <div class="result-content">
+            <form action="" method="post" id="myform" name="myform" onsubmit="return false">
+                <table class="insert-tab table table-hover" width="100%">
+                    <tbody>
+                        <tr>
+                            <th><i class="require-red">*</i>名称：</th>
+                            <td>
+                                <input class="common-text required form-control" id="name" name="name" size="50" value="{$data.name}" type="text" placeholder="请输入名称">
+                                <div class="help-block">例如：用户报名表单</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>数据表名：</th>
+                            <td>
+                                <input class="common-text required form-control" id="tablename" name="tablename" size="50" value="{$data.tablename}" type="text" placeholder="请输入模型表名">
+                                <div class="help-block">只能由英文字母、数字和下划线组成，并且仅能字母开头，不以下划线结尾，例如：article</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>描述：</th>
+                            <td><textarea name="description" class="common-textarea form-control" id="description" cols="30" rows="3" placeholder="请输入描述">{$data.description}</textarea></td>
+                        </tr>
+                        <tr>
+                            <th>允许游客：</th>
+                            <td>
+                                <select name="guest" class="form-control">
+                                    <option value="1" <eq name="data.guest" value="1">selected="selected"</eq>>允许</option>
+                                    <option value="0" <eq name="data.guest" value="0">selected="selected"</eq>>不允许</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>状态：</th>
+                            <td>
+                                <select name="status" class="form-control">
+                                    <option value="1" <eq name="data.status" value="1">selected="selected"</eq>>开启</option>
+                                    <option value="0" <eq name="data.status" value="0">selected="selected"</eq>>关闭</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <td>
+                                <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitFormIframe("{:U("edit")}","#myform")'>
+                                <input class="btn btn6" onclick="closeIframe()" value="关闭" type="button">
+                            </td>
+                        </tr>
+                    </tbody>
+                    </table>
+                    <input type="hidden" name="siteid" value="{$data.siteid}">
+                    <input type="hidden" name="id" value="{$data.id}">
+                    <input type="hidden" name="parameter" value="{$parameter}">
+            </form>
+        </div>
+    </div>
+</div>
+<include file="Public:foot" />

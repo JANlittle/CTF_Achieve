@@ -1,0 +1,160 @@
+<layout name="Public/layout" />
+<div class="mwrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><a href='{:U("index",decode($parameter))}'>广告管理</a><span class="crumb-step">&gt;</span><span class="crumb-name">广告列表</span></div>
+    </div>
+    <div class="result-wrap">
+        <form name="myform" id="myform" method="post">
+            <div class="result-title">
+                <div class="result-list">
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/fieldsadd",session("uid")) eq 1'>
+                        <a href='{:U("adsadd","aid=".$adspace["id"]."&thumbw=".$adspace["width"]."&thumbh=".$adspace["height"]."&savedir=adverts&linkcate_parameter=".encode($linkcate_parameter))}'><i class="icon-font">&#xe026;</i>新增广告</a>
+                    </if>
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/adsdel",session("uid")) eq 1'>
+                        <a id="batchDel" href="javascript:void(0)" onclick="delall('{:U('adsdel')}','{$sitemodeldata.tablename}')"><i class="icon-font">&#xe037;</i>批量删除</a>
+                    </if>
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/adssort",session("uid")) eq 1'>
+                        <a id="adssort" href="javascript:void(0)" onclick="sort('{:U('adssort')}')"><i class="icon-font">&#xe00a;</i>更新排序</a>
+                    </if>
+                </div>
+            </div>
+            <div class="result-content table-responsive">
+                <table class="result-tab table table-hover" width="100%">
+                    <tr class='head-tr'>
+                        <th class="tc ids-td"><input class="allChoose" onchange="selectAll(this)" id="selectall" type="checkbox"></th>
+                        <th class="sort-td">排序</th>
+                        <th>ID</th>
+                        <th>名称</th>
+                        <th>广告位</th>
+                        <th>类型</th>
+                        <th>广告内容</th>
+                        <th>过期类型</th>
+                        <th>显示次数</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                    <volist name="data" id="datalist">
+                    <tr>
+                        <td class="tc ids-td"><input name="ids[]" class='select_ids' value="{$datalist.uniqid}" type="checkbox"></td>
+                        <td class="sort-td">
+                            <input class="common-input sort-input sort form-control" dataId="{$datalist.id}" name="sort[]" value="{$datalist.sort}" type="text">
+                        </td>
+                        <td>{$datalist.id}</td>
+                        <td>
+                            <div data-toggle="popover" data-trigger="hover" data-html="true" data-container="body" data-placement="top" title="名称" data-content="{$datalist.name}">{$datalist.name|msubstr=0,25,'utf-8'}</div>
+                        </td>
+                        <td>{$datalist.adspace.name}</td>
+                        <td>
+                            <if condition="$datalist['adspace']['type'] eq 1">
+                                <span class="green">图片广告</span>
+                            <elseif condition="$datalist['adspace']['type'] eq 2"/>
+                                <span class="red">文字广告</span>
+                            <elseif condition="$datalist['adspace']['type'] eq 3"/>
+                                代码广告
+                            </if>
+                        </td>
+                        <td>
+                           <if condition="$datalist['type'] eq 1">
+                                <a <notempty name="datalist.links">href="{$datalist['links']}" target="_blank"<else/>href="javascript:;"</notempty>><notempty name="datalist.thumb" value="">
+                                <div data-toggle="popover" data-trigger="hover" data-html="true" data-container="body" data-placement="left" title="缩略图" data-content="<img src='__ROOT__{$datalist[thumb][0][thumb]}' style='width:200px' />"><a href="__ROOT__{$datalist[thumb][0][photo]}" target="_blank"><img src="__ROOT__{$datalist[thumb][0][thumb]}" style="height:25px" /></a></div>
+                                </notempty></a>
+                            <elseif condition="$datalist['type'] eq 2"/>
+                                <a <notempty name="datalist.links">href="{$datalist['links']}" target="_blank"<else/>href="javascript:;"</notempty>>{$datalist['words']}</a>
+                            <elseif condition="$datalist['type'] eq 3"/>
+                                <input type="text" name="code" class="form-control" value="{$datalist.code}"/>
+                            </if>
+                        </td>
+                        <td <if condition="$datalist['datetype'] eq 2">data-toggle="popover" data-trigger="hover" data-html="true" data-container="body" data-placement='top' title='设定时间<if condition="time() lt $datalist['starttime']">（<span class="blue">未开始</span>）<elseif condition="time() gt $datalist['endtime']"/>（<span class="red">已结束</span>）<else/>（<span class="green">进行中</span>）</if>' data-content="开始时间：{$datalist.starttime|date='Y-m-d H:i:s',###}<br/>结束时间：{$datalist.endtime|date='Y-m-d H:i:s',###}"</if>>
+                            <if condition="$datalist['datetype'] eq 1">
+                                <span class="red">永不过期</span>
+                            <elseif condition="$datalist['datetype'] eq 2"/>
+                                <span class="green">设定时间</span>
+                            </if>
+                        </td>
+                        <td>{$datalist.shownum}</td>
+                        <td>
+                            <eq name="datalist.status" value="1">
+                                <img src="__IMG__/yes.gif" alt="开启">
+                            <else />
+                                <img src="__IMG__/no.gif" alt="关闭">
+                            </eq>
+                        </td>
+                        <td>
+                            <a href="javascript:;" onclick="dialogContent('#getcode_{$datalist.id}','获取代码','80%','56%')">获取代码</a>
+                            <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/adsedit",session("uid")) eq 1'>
+                                <a class="link-adsedit" href='{:U("adsedit","aid=".$datalist["adspace"]["id"]."&id=".$datalist["id"]."&thumbw=".$adspace["width"]."&thumbh=".$adspace["height"]."&savedir=adverts&linkcate_parameter=".encode($linkcate_parameter))}'>修改</a>
+                            </if>
+                            <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/adsdel",session("uid")) eq 1'>
+                                <a class="link-del" href="javascript:;" onclick="del('{:U('adsdel')}','{$datalist.uniqid}')">删除</a>
+                            </if>
+                        </td>
+                    </tr>
+                    </volist>
+
+                </table>
+                <div class="list-page">{$pagelist}</div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<volist name="data" id="datalist">
+<div id="getcode_{$datalist.id}" style="display: none;padding:15px 20px;">
+    <style type="text/css">
+        fieldset{
+            border:1px solid #ccc;
+            border-radius:5px;
+            padding: 10px;
+        }
+
+        legend{
+            border-radius:5px;
+            padding:3px 10px;
+            font-weight:bold;
+            background:#1e64c8;
+            color:#fff;
+        }
+
+        legend {
+            display: inherit;
+            width: auto;
+            margin-bottom: 0px;
+            font-size: inherit;
+            border-bottom: none 
+        }
+    </style>
+    <div class="form">
+        <fieldset>
+            <legend>JS调用代码</legend>
+            <div class="form-group">
+                <input type="text" name="jscode_js_{$datalist.id}" id="jscode_js_{$datalist.id}" value='<script src="{:U("Plugins/Adverts/index@$domain",array("adid"=>$datalist["id"],"siteid"=>$datalist["siteid"],"adspaceid"=>$datalist["aid"]),true,true)}" type="text/javascript"></script>' class="form-control">
+            </div>
+            <div class="input-group">
+                <input type="button" onclick="$('#jscode_js_{$datalist.id}').select();document.execCommand('Copy');" value="复制代码至剪贴板" class="btn btn-primary">
+            </div>
+        </fieldset>
+        <div class="blank5"></div>
+        <fieldset>
+            <legend>函数调用代码</legend>
+            <div class="form-group">
+                <input type="text" name="jscode_function_{$datalist.id}" id="jscode_function_{$datalist.id}" value=':aikehou_ad({$datalist["id"]},{$datalist["siteid"]},{$datalist["aid"]})' class="form-control">
+            </div>
+            <div class="input-group">
+                <input type="button" onclick="$('#jscode_function_{$datalist.id}').select();document.execCommand('Copy');" value="复制代码至剪贴板" class="btn btn-primary">
+            </div>
+        </fieldset>
+    </div>
+    <div class="blank5"></div>
+    <div class="help-block">
+        1、JS调用代码：使用javascript方式调用广告，程序开启SHOW_PAGE调试模式时会报错<br/>
+        2、函数调用代码：使用PHP原生代码调用广告，速度相对比js方式快<br/>
+        3、调用说明：根据自身实际情况，把调用代码复制粘贴到需要显示广告的模板再更新相关网页即可
+    </div>
+</div>
+<script type="text/javascript">
+    $(function(){
+        var jscode_function = $("#jscode_function_{$datalist.id}");
+        jscode_function.val("\{"+ jscode_function.val() +"\}");
+    });
+</script>
+</volist>

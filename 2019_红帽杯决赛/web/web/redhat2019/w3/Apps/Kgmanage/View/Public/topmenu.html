@@ -1,0 +1,79 @@
+<div class="topbar-wrap white">
+<div class="topbar-inner clearfix">
+    <nav class="navbar navbar-inverse">
+        <div class="">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">显示菜单</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <h1 class="topbar-logo"><a class="navbar-brand" href="{:U('Index/index')}"><img src="__IMG__/logo.png"></a></a></h1>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <volist name="menumain" id="menu" offset="0" length='7'>
+                        <li><a <eq name="menu.class" value="current">class="on"</eq> <if condition="!preg_match('/^(http|https):\/\//',$menu['url'])">href='{:U($menu["url"],$menu["parameter"])}'<else/>href='{$menu.url}' target="_blank"</if>>{$menu.name}</a></li>
+                    </volist>
+                    <if condition="count($menumain) gt 7">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">导航<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <volist name="menumain" id="menu" offset="7">
+                                    <li><a <eq name="menu.class" value="current">class="on"</eq> <if condition="!preg_match('/^(http|https):\/\//',$menu['url'])">href='{:U($menu["url"],$menu["parameter"])}'<else/>href='{$menu.url}' target="_blank"</if>>{$menu.name}</a></li>
+                                </volist>
+                            </ul>
+                        </li>
+                    </if>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <if condition='authCheck(MODULE_NAME."/Adminuser/profile",session("uid")) eq 1'>
+                        <li><a href='{:U("Adminuser/profile",array("id"=>session("uid")))}'>{$Think.session.username}</a></li>
+                    </if>
+                    <notempty name="site">
+                        <li class="dropdown">
+                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <volist name="site" id="sitelist">
+                                <if condition="$sitelist['id'] eq session('siteid')">
+                                   {$sitelist.name}
+                                </if>
+                            </volist>
+                            <if condition="session('siteid') eq 0">
+                                公共设置
+                            </if>
+                            <span class="caret"></span></a>
+                            <if condition="session('usiteid') eq 0">
+                                <ul class="dropdown-menu dropdown-menu-right" id="changesite">
+                                    <volist name="site" id="sitelist">
+                                        <if condition="session('siteid') neq $sitelist['id']">
+                                            <if condition='authCheck(MODULE_NAME."/Common/setSite",session("uid")) eq 1'>
+                                                <li><a href="javascript:;" onclick='postUrl("{:U("Common/setSite")}",{$sitelist["id"]})'>{$sitelist.name}</a></li>
+                                            </if>
+                                        </if>
+                                    </volist>
+                                    <li role="separator" class="divider"></li>
+                                    <if condition='authCheck(MODULE_NAME."/Common/setSite",session("uid")) eq 1'>
+                                        <li id="commonmenuli" data-toggle="popover" data-trigger="hover" data-html="true" data-placement='top' title="说明" data-container="#commonmenuli" data-content="方便站点公共数据的操作(增删改)，如果没有特殊用途请切换到其他站点！"><a href="javascript:;" onclick='postUrl("{:U("Common/setSite")}",0)'>公共设置</a></li>
+                                    </if>
+                                </ul>
+                            </if>
+                        </li>
+                        <volist name="site" id="sitelist">
+                            <if condition="$sitelist['id'] eq session('siteid')">
+                                <li><a <eq name="sitelist.url" value=''>href='{:U("/")}'<else/>href='{$sitelist.url}'</eq> target="_blank">站点首页</a></li>
+                            </if>
+                        </volist>
+                    <else />
+                        <if condition='authCheck(MODULE_NAME."/Site/add",session("uid")) eq 1'>
+                            <li><a href='{:U("Site/add")}'>新增站点</a></li>
+                        </if>
+                    </notempty>
+                    <li><a href='{:U("Login/loginout")}'>退出</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>  
+</div>

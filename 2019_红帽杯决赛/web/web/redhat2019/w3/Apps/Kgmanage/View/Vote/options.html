@@ -1,0 +1,74 @@
+<layout name="Public/layout" />
+<div class="mwrap">
+    <div class="crumb-wrap">
+    <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><a href='{:U("index",decode($parameter))}'>投票</a><span class="crumb-step">&gt;</span><span class="crumb-name">投票<eq name="type" value="1">图文<else/>文本</eq>选项</span></div>
+    </div>
+    <div class="result-wrap">
+        <form name="myform" id="myform" method="post">
+            <div class="result-title">
+                <div class="result-list">
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/optionsadd",session("uid")) eq 1'>
+                        <a href='javascript:;' onclick="dialogIframe('{:U('optionsadd','vid='.$vid.'&thumbw='.$vote['width'].'&thumbh='.$vote['height'].'&savedir=vote&linkcate_parameter='.encode($linkcate_parameter))}','新增<eq name="type" value="1">图文<else/>文本</eq>选项','80%','50%')"><i class="icon-font">&#xe026;</i>新增<eq name="type" value="1">图文<else/>文本</eq>选项</a>
+                    </if>
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/optionsdel",session("uid")) eq 1'>
+                        <a id="batchDel" href="javascript:void(0)" onclick="delall('{:U('optionsdel')}')"><i class="icon-font">&#xe037;</i>批量删除</a>
+                    </if>
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/optionssort",session("uid")) eq 1'>
+                        <a id="updateOrd" href="javascript:void(0)" onclick="sort('{:U('optionssort')}')"><i class="icon-font">&#xe00a;</i>更新排序</a>
+                    </if>
+                </div>
+            </div>
+            <div class="result-content table-responsive">
+                <table class="result-tab table table-hover" width="100%">
+                    <tr class='head-tr'>
+                        <th class="tc ids-td"><input class="allChoose" onchange="selectAll(this)" id="selectall" type="checkbox"></th>
+                        <th class="sort-td">排序</th>
+                        <th>ID</th>
+                        <th>标题</th>
+                        <if condition="$type eq 1">
+                            <th>缩略图</th>
+                        </if>
+                        <th>投票次数</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                    <volist name="data" id="datalist">
+                    <tr>
+                        <td class="tc ids-td"><input name="ids[]" class='select_ids' value="{$datalist.uniqid}" type="checkbox" ></td>
+                        <td class="sort-td">
+                            <input class="common-input sort-input sort form-control" dataId="{$datalist.id}" name="sort[]" value="{$datalist.sort}" type="text">
+                        </td>
+                        <td>{$datalist.id}</td>
+                        <td>{$datalist.title}</td>
+                        <if condition="$type eq 1">
+                            <td>
+                                <notempty name="datalist.thumb" value="">
+                                <div data-toggle="popover" data-trigger="hover" data-html="true" data-container="body" data-placement="left" title="缩略图" data-content="<img src='__ROOT__{$datalist[thumb][0][thumb]}' style='width:200px' />"><a href="__ROOT__{$datalist[thumb][0][photo]}" target="_blank"><img src="__ROOT__{$datalist[thumb][0][thumb]}" style="height:25px" /></a></div>
+                                </notempty>
+                            </td>
+                        </if>
+                        <td>{:count($datalist['Voteinfo'])}</td>
+                        <td>
+                            <eq name="datalist.status" value="1">
+                                <img src="__IMG__/yes.gif" alt="开启">
+                            <else />
+                                <img src="__IMG__/no.gif" alt="关闭">
+                            </eq>
+                        </td>
+                        <td>
+                            <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/optionsedit",session("uid")) eq 1'>
+                                <a class="link-update" href='javascript:;' onclick="dialogIframe('{:U('optionsedit','id='.$datalist['id'].'&vid='.$vid.'&thumbw='.$vote['width'].'&thumbh='.$vote['height'].'&savedir=vote&linkcate_parameter='.encode($linkcate_parameter))}','编辑<eq name="type" value="1">图文<else/>文本</eq>选项','80%','50%')">修改</a>
+                            </if>
+                            <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/optionsdel",session("uid")) eq 1'>
+                                <a class="link-del" href="javascript:;" onclick="del('{:U('optionsdel')}','{$datalist.uniqid}')">删除</a>
+                            </if>
+                        </td>
+                    </tr>
+                    </volist>
+
+                </table>
+                <div class="list-page">{$pagelist}</div>
+            </div>
+        </form>
+    </div>
+</div>

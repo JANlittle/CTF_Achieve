@@ -1,0 +1,736 @@
+<include file="Public:head" />
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/jqueryui/easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/jqueryui/easyui/themes/icon.css">
+<script src="__PUBLIC__/jqueryui/easyui/jquery.easyui.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+/**
+ * [submitContentAjaxForm 表单提交ajax数据处理,文件上传,支持父级弹窗,enctype="multipart/form-data"]
+ * @param  {[url]} str    [数据发送的url地址]
+ * @param  {[object]} obj [对象的DOM节点：#myFrom]
+ * @return {[json]}     [返回json]
+ */
+function submitContentAjaxFormSingle (url,obj) {
+   $(obj).ajaxSubmit({
+        type:'post',
+        url:url,
+        data:$(obj).fixedsSerializeArray(),
+        success:function(data, textStatus, jqXHR){
+            //弹出消息
+            if(data.status){
+                //改变左侧栏目
+                refreshCate('{:U("refreshCate")}',{},parent.document);
+
+                parent.layer.msg(data.info,{icon:1,time:2000,shade: [0.3,'#000']},function(){
+                    if(data.url){
+                        location.href = data.url;
+                    } else {
+                        location.reload();
+                    }
+                });
+            } else {
+                 parent.layer.open({
+                    content:data.info,
+                    yes:function(index){
+                        parent.layer.close(index);
+                    },
+                    icon:2
+                });
+                //layer.msg(data.info,{icon:2});
+            }
+        }
+   });
+}
+</script>
+<!-- 配置文件 -->
+<script type="text/javascript" src="__UEDITOR_PATH__/ueditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" src="__UEDITOR_PATH__/ueditor.all.js"></script>
+<div style="padding-right: 13px;">
+    <form name="myform" id="myform" method="post" onsubmit="return false" enctype="multipart/form-data">
+        <div class="result-content table-responsive">
+            <div class="tab-wrap">
+                <ul class="tab-nav nav">
+                    <li class="current"><a href='#1' onclick="tabs('#tab1',this)">基本</a></li>
+                    <li><a href='#2' onclick="tabs('#tab2',this)">扩展</a></li>
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/caiji",session("uid")) eq 1'>
+                        <a id="caiji" href="javascript:void(0)" onclick="dialogIframe('{:U('caiji')}','采集数据','80%','80%')" class="fr"><i class="icon-font">&#xe03e;</i>采集数据</a>
+                    </if>
+                    <div class="clear"></div>
+                </ul>
+                <if condition="!empty($fields)">
+                <table class="insert-tab table table-hover" id="tab1" width="100%">
+                    <tbody>
+                        <volist name="fields" id="jiben">
+                            <if condition="$jiben.isextend eq 0">
+                                <switch name="jiben.type">
+                                    <case value="num">
+                                        <tr>
+                                            <th><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</th>
+                                            <td>
+                                                <input class="common-text required form-control" id="{$jiben.field}" name="{$jiben.field}" size="50" value="" type="text" placeholder="{$jiben.tips}" onkeyup="value=value.replace(/[^\d\.]/ig,'')">
+                                            </td>
+                                        </tr>
+                                    </case>
+                                    <case value="string">
+                                        <tr>
+                                            <th><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</th>
+                                            <td>
+                                                <input class="common-text required form-control" id="{$jiben.field}" name="{$jiben.field}" size="50" value="" type="text" placeholder="{$jiben.tips}">
+                                            </td>
+                                        </tr>
+                                    </case>
+                                    <case value="color">
+                                        <link rel="stylesheet" href="__PUBLIC__/jqueryui/colorpicker/css/jquery.bigcolorpicker.css" type="text/css" />
+                                        <script type="text/javascript" src="__PUBLIC__/jqueryui/colorpicker/js/jquery.bigcolorpicker.min.js"></script>
+                                        <script  type="text/javascript">
+                                            $(function(){
+                                                $("#{$jiben.field}").bigColorpicker(function(el,color){
+                                                    $(el).val(color).css("color",color);
+                                                },"L",10);
+                                            })
+                                        </script>
+                                        <tr>
+                                            <th><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</th>
+                                            <td>
+                                                <input class="common-text required form-control" id="{$jiben.field}" name="{$jiben.field}" size="50" value="" type="text" placeholder="{$jiben.tips}">
+                                            </td>
+                                        </tr>
+                                    </case>
+                                    <case value="password">
+                                        <tr>
+                                            <th><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</th>
+                                            <td>
+                                                <input class="common-text required form-control" id="{$jiben.field}" name="{$jiben.field}" size="50" value="" type="password" placeholder="{$jiben.tips}">
+                                            </td>
+                                        </tr>
+                                        <if condition="$jiben[extra]['check'] eq 1">
+                                        <tr>
+                                            <th><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>确认{$jiben.name}：</th>
+                                            <td>
+                                                <input class="common-text required form-control" id="{$jiben.field}" name="{$jiben.field}_checkpassword" size="50" value="" type="password" placeholder="{$jiben.tips}">
+                                            </td>
+                                        </tr>
+                                        </if>
+                                    </case>
+                                    <case value="textarea">
+                                        <tr>
+                                            <th><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</th>
+                                            <td><textarea name="{$jiben.field}" class="common-textarea form-control" id="{$jiben.field}" cols="30" rows="3" placeholder="{$jiben.tips}"></textarea></td>
+                                        </tr>
+                                    </case>
+                                    <case value="datetime">
+                                        <style type="text/css">
+                                            .laydate-icon{
+                                                height: auto;
+                                            }
+                                        </style>
+                                        <script type="text/javascript" src="__PUBLIC__/jqueryui/layer/extendplugin/laydate/laydate.js"></script>
+                                        <script  type="text/javascript">
+                                            $(function(){
+                                                var start = {
+                                                    elem: '#{$jiben.field}',
+                                                    format: 'YYYY/MM/DD hh:mm:ss',
+                                                    min: '1800-06-16 23:59:59', //设定最小日期为当前日期
+                                                    max: '2099-06-16 23:59:59', //最大日期
+                                                    istime: true,
+                                                    //istoday: true,
+                                                };
+                                                laydate(start);
+                                            });
+                                        </script>
+                                         <tr>
+                                            <th><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</th>
+                                            <td>
+                                                <input class="common-text required laydate-icon form-control" id="{$jiben.field}" name="{$jiben.field}" size="18" value="" type="text" placeholder="{$jiben.tips}">
+                                            </td>
+                                        </tr>
+                                    </case>
+                                    <case value="rangetime">
+                                        <style type="text/css">
+                                            .laydate-icon{
+                                                height: auto;
+                                            }
+                                        </style>
+                                        <script type="text/javascript" src="__PUBLIC__/jqueryui/layer/extendplugin/laydate/laydate.js"></script>
+                                        <script  type="text/javascript">
+                                            $(function(){
+                                                var start1 = {
+                                                    elem: '#{$jiben.field}_start',
+                                                    format: 'YYYY/MM/DD hh:mm:ss',
+                                                    min: '1800-06-16 23:59:59', //设定最小日期为当前日期
+                                                    max: '2099-06-16 23:59:59', //最大日期
+                                                    istime: true,
+                                                    //istoday: true,
+                                                    choose: function(datas){
+                                                         end1.min = datas; //开始日选好后，重置结束日的最小日期
+                                                         end1.start = datas //将结束日的初始值设定为开始日
+                                                    }
+                                                };
+                                                var end1 = {
+                                                    elem: '#{$jiben.field}_end',
+                                                    format: 'YYYY/MM/DD hh:mm:ss',
+                                                    min: laydate.now(),
+                                                    max: '2099-06-16 23:59:59',
+                                                    istime: true,
+                                                    //istoday: true,
+                                                    choose: function(datas){
+                                                        start1.max = datas; //结束日选好后，重置开始日的最大日期
+                                                    }
+                                                };
+                                                laydate(start1);
+                                                laydate(end1);
+                                            });
+                                        </script>
+                                         <tr>
+                                            <th><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</th>
+                                            <td>
+                                                <input class="common-text required laydate-icon form-control" id="{$jiben.field}_start" name="{$jiben.field}[0]" size="18" value="" type="text"  style="width:49%;display: inline-block" placeholder="开始时间"> ~ <input class="common-text required laydate-icon form-control" id="{$jiben.field}_end" name="{$jiben.field}[1]" size="18" value="" type="text"  style="width:49%;display: inline-block;" placeholder="结束时间">  <neq name="jiben.tips" value=""> <div class="help-block">{$jiben.tips}</div></neq>
+                                            </td>
+                                        </tr>
+                                    </case>
+                                    <case value="bool">
+                                        <tr>
+                                            <th><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</th>
+                                            <td>
+                                                <select name="{$jiben.field}" id="{$jiben.field}" class="form-control">
+                                                    <volist name="jiben.extra" id="bool">
+                                                    <option value="{$bool}">{$key}</option>
+                                                    </volist>
+                                                </select> <neq name="jiben.tips" value=""> <div class="help-block">{$jiben.tips}</div></neq>
+                                            </td>
+                                        </tr>
+                                    </case>
+                                    <case value="select">
+                                        <tr>
+                                            <th><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</th>
+                                            <td>
+                                                <select name="{$jiben.field}" id="{$jiben.field}" class="form-control">
+                                                    <volist name="jiben.extra" id="select">
+                                                    <option value="{$select}" <eq name="i" value="1">selected="selected"</eq>>{$key}</option>
+                                                    </volist>
+                                                </select> <neq name="jiben.tips" value=""> <div class="help-block">{$jiben.tips}</div></neq>
+                                            </td>
+                                        </tr>
+                                    </case>
+                                    <case value="radio">
+                                        <tr>
+                                            <th><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</th>
+                                            <td>
+                                                <volist name="jiben.extra" id="radio">
+                                                    <label for="{$jiben.field}_{$radio}" class="label"><input type="radio" name="{$jiben.field}" id="{$jiben.field}_{$radio}" value="{$radio}" <eq name="i" value="1">checked="checked"</eq>><span>{$key}</span></label>
+                                                </volist>
+                                                <neq name="jiben.tips" value=""> <div class="help-block">{$jiben.tips}</div></neq>
+                                            </td>
+                                        </tr>
+                                    </case>
+                                    <case value="checkbox">
+                                        <tr>
+                                            <th><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</th>
+                                            <td>
+                                                <volist name="jiben.extra" id="checkbox">
+                                                    <label for="{$jiben.field}_{$checkbox}" class="label"><input type="checkbox" name="{$jiben.field}[{$i}]" id="{$jiben.field}_{$checkbox}" value="{$checkbox}"><span>{$key}</span></label>
+                                                </volist>
+                                                <neq name="jiben.tips" value=""> <div class="help-block">{$jiben.tips}</div></neq>
+                                            </td>
+                                        </tr>
+                                    </case>
+                                    <case value="editor">
+                                        <tr>
+                                            <th style='width:150px'><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</th>
+                                            <td>
+                                                <!-- 加载编辑器的容器 -->
+                                                <textarea name="{$jiben.field}" id="{$jiben.field}" style="width:100%;height:350px;line-height:20px"></textarea>
+                                                <!-- 实例化编辑器 -->
+                                                <script type="text/javascript">
+                                                    var ue_{$jiben.field} = UE.getEditor('{$jiben.field}',{
+                                                        autoHeightEnabled:false,
+                                                        zIndex:0,
+                                                        serverUrl:'{:U("Uploadfile/editorUploadfile")}'
+                                                    });
+                                                </script> <neq name="jiben.tips" value=""> <div class="help-block">{$jiben.tips}</div></neq>
+                                            </td>
+                                        </tr>
+                                    </case>
+                                    <case value="linkagemenu">
+                                        <tr>
+                                            <th><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</th>
+                                            <td>
+                                                <?php
+                                                    //获取菜单列表
+                                                    $Linkagemenu = M('Linkagemenu');
+                                                    $menulist = $Linkagemenu->field('id,name,pid')->where('status = 1')->order('sort ASC,id DESC')->select();
+                                                    //组装select下拉菜单
+                                                    $menulist = getSelectedOption($menulist, $jiben['extra'][0], 0);
+                                                ?>
+                                                <select name="{$jiben.field}" id="{$jiben.field}" class="form-control">
+                                                    <?php echo $menulist;?>
+                                                </select> <neq name="jiben.tips" value=""> <div class="help-block">{$jiben.tips}</div></neq>
+                                            </td>
+                                        </tr>
+                                    </case>
+                                    <case value="thumb|picture">
+                                        <?php
+                                            if(!empty($jiben['extra'])){
+                                                $thumbW = intval($jiben['extra'][0]);
+                                                $thumbH = intval($jiben['extra'][1]);
+                                                $filesize = intval($jiben['extra'][2]);
+                                                $returntype = $jiben['extra'][3];
+                                                $savedir = $jiben['extra'][4];
+                                            } else {
+                                                //缩略图配置
+                                                $site_thumbw = C('SITE_SYSTEM_THUMB_WIDTH');
+                                                $site_thumbh = C('SITE_SYSTEM_THUMB_HEIGHT');
+                                                $thumbW = isset($site_thumbw) && !empty($site_thumbw) ? C('SITE_SYSTEM_THUMB_WIDTH') : C('SYSTEM_THUMB_WIDTH');
+                                                $thumbH = isset($site_thumbh) && !empty($site_thumbh) ? C('SITE_SYSTEM_THUMB_HEIGHT') : C('SYSTEM_THUMB_HEIGHT');
+                                            }
+                                        ?>
+                                        <tr>
+                                            <th><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</th>
+                                            <td>
+                                            <div id="{$jiben.field}-layer-images" class="layer-images-demo"></div>
+                                            <if condition="$returntype neq 'single'"><div class="clear"></div></if>
+                                            <span class='imgupload' title="点击上传图片" onclick="dialogIframe('{:U('Uploadfile/index',array('type'=>'images','thumbw'=>$thumbW,'thumbh'=>$thumbH,'field'=>$jiben[field],'myid'=>$jiben[field].'-layer-images','returntype'=>$returntype,'savedir'=>$savedir,'filesize'=>$filesize))}','上传图片','80%','70%')"></span> <neq name="jiben.tips" value=""> <div class="help-block">{$jiben.tips}</div></neq>
+                                            </td>
+                                            <script type="text/javascript" src="__PUBLIC__/jqueryui/fancyBox/lib/jquery.mousewheel.pack.js?v=3.1.3"></script>
+                                            <script type="text/javascript" src="__PUBLIC__/jqueryui/fancyBox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+                                            <link rel="stylesheet" type="text/css" href="__PUBLIC__/jqueryui/fancyBox/source/jquery.fancybox.css?v=2.1.5" media="screen" />
+                                            <script type="text/javascript">
+                                                $(function(){
+                                                    $('#{$jiben.field}-layer-images .fancybox').fancybox();
+                                                });
+                                                /**
+                                                 * [delFiles 删除文件]
+                                                 * @param  {[type]} obj [description]
+                                                 * @return {[type]}     [description]
+                                                 */
+                                                if(typeof delFiles != 'function'){
+                                                    function delFiles (obj,event) {
+                                                        //禁止冒泡
+                                                        event.stopPropagation();
+                                                        //删除上传的图片或者文件
+                                                        var json = $.parseJSON(unescape($(obj).attr('fileData')));
+                                                        $.post('{:U("Uploadfile/del")}', json, function(data, textStatus, xhr) {
+                                                            if(data.status){
+                                                                $(obj).parent('.img').remove();
+                                                            } else {
+                                                                parent.layer.msg(data.info,{icon:2,time:2000,shade: [0.3,'#000']});
+                                                            }
+                                                        });
+
+                                                        //移除节点
+                                                        $(obj).parent(".images_list,.files_list").remove();
+                                                    }
+                                                }
+                                            </script>
+                                        </tr>
+                                    </case>
+                                    <case value="file">
+                                        <?php
+                                            if(!empty($jiben['extra'])){
+                                                $thumbW = intval($jiben['extra'][0]);
+                                                $thumbH = intval($jiben['extra'][1]);
+                                                $filesize = intval($jiben['extra'][2]);
+                                                $returntype = $jiben['extra'][3];
+                                                $savedir = $jiben['extra'][4];
+                                            } else {
+                                                //缩略图配置
+                                                $site_thumbw = C('SITE_SYSTEM_THUMB_WIDTH');
+                                                $site_thumbh = C('SITE_SYSTEM_THUMB_HEIGHT');
+                                                $thumbW = isset($site_thumbw) && !empty($site_thumbw) ? C('SITE_SYSTEM_THUMB_WIDTH') : C('SYSTEM_THUMB_WIDTH');
+                                                $thumbH = isset($site_thumbh) && !empty($site_thumbh) ? C('SITE_SYSTEM_THUMB_HEIGHT') : C('SYSTEM_THUMB_HEIGHT');
+                                            }
+                                        ?>
+                                        <tr>
+                                            <th><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</th>
+                                            <td>
+                                            <div id="{$jiben.field}-layer-files" class="layer-files-demo"></div>
+                                            <if condition="$returntype neq 'single'"><div class="clear"></div></if>
+                                            <span class='imgupload' title="点击上传文件" onclick="dialogIframe('{:U('Uploadfile/index',array('type'=>'files','thumbw'=>$thumbW,'thumbh'=>$thumbH,'field'=>$jiben[field],'myid'=>$jiben[field].'-layer-files','returntype'=>$returntype,'savedir'=>$savedir,'filesize'=>$filesize))}','上传文件','80%','70%')"></span> <neq name="jiben.tips" value=""> <div class="help-block">{$jiben.tips}</div></neq>
+                                            </td>
+                                            <script type="text/javascript" src="__PUBLIC__/jqueryui/fancyBox/lib/jquery.mousewheel.pack.js?v=3.1.3"></script>
+                                            <script type="text/javascript" src="__PUBLIC__/jqueryui/fancyBox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+                                            <link rel="stylesheet" type="text/css" href="__PUBLIC__/jqueryui/fancyBox/source/jquery.fancybox.css?v=2.1.5" media="screen" />
+                                            <script type="text/javascript">
+                                                $(function(){
+                                                    $('#{$jiben.field}-layer-files .fancybox').fancybox();
+                                                });
+                                                /**
+                                                 * [delFiles 删除文件]
+                                                 * @param  {[type]} obj [description]
+                                                 * @return {[type]}     [description]
+                                                 */
+                                                if(typeof delFiles != 'function'){
+                                                    function delFiles (obj,event) {
+                                                        //禁止冒泡
+                                                        event.stopPropagation();
+                                                        //删除上传的图片或者文件
+                                                        var json = $.parseJSON(unescape($(obj).attr('fileData')));
+                                                        $.post('{:U("Uploadfile/del")}', json, function(data, textStatus, xhr) {
+                                                            if(data.status){
+                                                                $(obj).parent('.img').remove();
+                                                            } else {
+                                                                parent.layer.msg(data.info,{icon:2,time:2000,shade: [0.3,'#000']});
+                                                            }
+                                                        });
+
+                                                        //移除节点
+                                                        $(obj).parent(".images_list,.files_list").remove();
+                                                    }
+                                                }
+                                            </script>
+                                        </tr>
+                                    </case>
+                                </switch>
+                            </if>
+                        </volist>
+                    </tbody>
+                </table>
+
+                <table class="insert-tab table table-hover" id="tab2" width="100%" style='display: none'>
+                    <tbody>
+                        <volist name="fields" id="jiben">
+                            <if condition="$jiben.isextend eq 1">
+                                <switch name="jiben.type">
+                                    <case value="num">
+                                        <tr>
+                                            <th><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</th>
+                                            <td>
+                                                <input class="common-text required form-control" id="{$jiben.field}" name="{$jiben.field}" size="50" value="" type="text" placeholder="{$jiben.tips}" onkeyup="value=value.replace(/[^\d\.]/ig,'')">
+                                            </td>
+                                        </tr>
+                                    </case>
+                                    <case value="string">
+                                        <tr>
+                                            <th><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</th>
+                                            <td>
+                                                <input class="common-text required form-control" id="{$jiben.field}" name="{$jiben.field}" size="50" value="" type="text" placeholder="{$jiben.tips}">
+                                            </td>
+                                        </tr>
+                                    </case>
+                                    <case value="color">
+                                        <link rel="stylesheet" href="__PUBLIC__/jqueryui/colorpicker/css/jquery.bigcolorpicker.css" type="text/css" />
+                                        <script type="text/javascript" src="__PUBLIC__/jqueryui/colorpicker/js/jquery.bigcolorpicker.min.js"></script>
+                                        <script  type="text/javascript">
+                                            $(function(){
+                                                $("#{$jiben.field}").bigColorpicker(function(el,color){
+                                                    $(el).val(color).css("color",color);
+                                                },"L",10);
+                                            })
+                                        </script>
+                                        <tr>
+                                            <th><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</th>
+                                            <td>
+                                                <input class="common-text required form-control" id="{$jiben.field}" name="{$jiben.field}" size="50" value="" type="text" placeholder="{$jiben.tips}">
+                                            </td>
+                                        </tr>
+                                    </case>
+                                    <case value="password">
+                                        <tr>
+                                            <th><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</th>
+                                            <td>
+                                                <input class="common-text required form-control" id="{$jiben.field}" name="{$jiben.field}" size="50" value="" type="password" placeholder="{$jiben.tips}">
+                                            </td>
+                                        </tr>
+                                        <if condition="$jiben[extra]['check'] eq 1">
+                                        <tr>
+                                            <th><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>确认{$jiben.name}：</th>
+                                            <td>
+                                                <input class="common-text required form-control" id="{$jiben.field}" name="{$jiben.field}_checkpassword" size="50" value="" type="password" placeholder="{$jiben.tips}">
+                                            </td>
+                                        </tr>
+                                        </if>
+                                    </case>
+                                    <case value="textarea">
+                                        <tr>
+                                            <th><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</th>
+                                            <td><textarea name="{$jiben.field}" class="common-textarea form-control" id="{$jiben.field}" cols="30" rows="3" placeholder="{$jiben.tips}"></textarea></td>
+                                        </tr>
+                                    </case>
+                                    <case value="datetime">
+                                        <style type="text/css">
+                                            .laydate-icon{
+                                                height: auto;
+                                            }
+                                        </style>
+                                        <script type="text/javascript" src="__PUBLIC__/jqueryui/layer/extendplugin/laydate/laydate.js"></script>
+                                        <script  type="text/javascript">
+                                            $(function(){
+                                                var start = {
+                                                    elem: '#{$jiben.field}',
+                                                    format: 'YYYY/MM/DD hh:mm:ss',
+                                                    min: '1800-06-16 23:59:59', //设定最小日期为当前日期
+                                                    max: '2099-06-16 23:59:59', //最大日期
+                                                    istime: true,
+                                                    //istoday: true,
+                                                };
+                                                laydate(start);
+                                            });
+                                        </script>
+                                         <tr>
+                                            <th><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</th>
+                                            <td>
+                                                <input class="common-text required laydate-icon form-control" id="{$jiben.field}" name="{$jiben.field}" size="18" value="" type="text" placeholder="{$jiben.tips}">
+                                            </td>
+                                        </tr>
+                                    </case>
+                                    <case value="rangetime">
+                                        <style type="text/css">
+                                            .laydate-icon{
+                                                height: auto;
+                                            }
+                                        </style>
+                                        <script type="text/javascript" src="__PUBLIC__/jqueryui/layer/extendplugin/laydate/laydate.js"></script>
+                                        <script  type="text/javascript">
+                                            $(function(){
+                                                var start1 = {
+                                                    elem: '#{$jiben.field}_start',
+                                                    format: 'YYYY/MM/DD hh:mm:ss',
+                                                    min: '1800-06-16 23:59:59', //设定最小日期为当前日期
+                                                    max: '2099-06-16 23:59:59', //最大日期
+                                                    istime: true,
+                                                    //istoday: true,
+                                                    choose: function(datas){
+                                                         end1.min = datas; //开始日选好后，重置结束日的最小日期
+                                                         end1.start = datas //将结束日的初始值设定为开始日
+                                                    }
+                                                };
+                                                var end1 = {
+                                                    elem: '#{$jiben.field}_end',
+                                                    format: 'YYYY/MM/DD hh:mm:ss',
+                                                    min: laydate.now(),
+                                                    max: '2099-06-16 23:59:59',
+                                                    istime: true,
+                                                    //istoday: true,
+                                                    choose: function(datas){
+                                                        start1.max = datas; //结束日选好后，重置开始日的最大日期
+                                                    }
+                                                };
+                                                laydate(start1);
+                                                laydate(end1);
+                                            });
+                                        </script>
+                                         <tr>
+                                            <th><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</th>
+                                            <td>
+                                                <input class="common-text required laydate-icon form-control" id="{$jiben.field}_start" name="{$jiben.field}[0]" size="18" value="" type="text" style="width:49%;display: inline-block;" placeholder="结束时间"> ~ <input class="common-text required laydate-icon form-control" id="{$jiben.field}_end" name="{$jiben.field}[1]" size="18" value="" type="text"  style="width:49%;display: inline-block;" placeholder="结束时间">  <neq name="jiben.tips" value=""> <div class="help-block">{$jiben.tips}</div></neq>
+                                            </td>
+                                        </tr>
+                                    </case>
+                                    <case value="bool">
+                                        <tr>
+                                            <th><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</th>
+                                            <td>
+                                                <select name="{$jiben.field}" id="{$jiben.field}" class="form-control">
+                                                    <volist name="jiben.extra" id="bool">
+                                                    <option value="{$bool}">{$key}</option>
+                                                    </volist>
+                                                </select> <neq name="jiben.tips" value=""> <div class="help-block">{$jiben.tips}</div></neq>
+                                            </td>
+                                        </tr>
+                                    </case>
+                                    <case value="select">
+                                        <tr>
+                                            <th><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</th>
+                                            <td>
+                                                <select name="{$jiben.field}" id="{$jiben.field}" class="form-control">
+                                                    <volist name="jiben.extra" id="select">
+                                                    <option value="{$select}" <eq name="i" value="1">selected="selected"</eq>>{$key}</option>
+                                                    </volist>
+                                                </select> <neq name="jiben.tips" value=""> <div class="help-block">{$jiben.tips}</div></neq>
+                                            </td>
+                                        </tr>
+                                    </case>
+                                    <case value="radio">
+                                        <tr>
+                                            <th><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</th>
+                                            <td>
+                                                <volist name="jiben.extra" id="radio">
+                                                    <label for="{$jiben.field}_{$radio}" class="label"><input type="radio" name="{$jiben.field}" id="{$jiben.field}_{$radio}" value="{$radio}" <eq name="i" value="1">checked="checked"</eq>><span>{$key}</span></label>
+                                                </volist>
+                                                <neq name="jiben.tips" value=""> <div class="help-block">{$jiben.tips}</div></neq>
+                                            </td>
+                                        </tr>
+                                    </case>
+                                    <case value="checkbox">
+                                        <tr>
+                                            <th><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</th>
+                                            <td>
+                                                <volist name="jiben.extra" id="checkbox">
+                                                    <label for="{$jiben.field}_{$checkbox}" class="label"><input type="checkbox" name="{$jiben.field}[{$i}]" id="{$jiben.field}_{$checkbox}" value="{$checkbox}"><span>{$key}</span></label>
+                                                </volist>
+                                                 <neq name="jiben.tips" value=""> <div class="help-block">{$jiben.tips} <div class="help-block"></neq>
+                                            </td>
+                                        </tr>
+                                    </case>
+                                    <case value="editor">
+                                        <tr>
+                                            <th style='width:150px'><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</th>
+                                            <td>
+                                                <!-- 加载编辑器的容器 -->
+                                                <textarea name="{$jiben.field}" id="{$jiben.field}" style="width:100%;height:350px;line-height:20px"></textarea>
+                                                <!-- 实例化编辑器 -->
+                                                <script type="text/javascript">
+                                                    var ue_{$jiben.field} = UE.getEditor('{$jiben.field}',{
+                                                        autoHeightEnabled:false,
+                                                        zIndex:0,
+                                                        serverUrl:'{:U("Uploadfile/editorUploadfile")}'
+                                                    });
+                                                </script> <neq name="jiben.tips" value=""> <div class="help-block">{$jiben.tips}</div></neq>
+                                            </td>
+                                        </tr>
+                                    </case>
+                                    <case value="linkagemenu">
+                                        <tr>
+                                            <th><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</th>
+                                            <td>
+                                                <?php
+                                                    //获取菜单列表
+                                                    $Linkagemenu = M('Linkagemenu');
+                                                    $menulist = $Linkagemenu->field('id,name,pid')->where('status = 1')->order('sort ASC,id DESC')->select();
+                                                    //组装select下拉菜单
+                                                    $menulist = getSelectedOption($menulist, $jiben['extra'][0], 0);
+                                                ?>
+                                                <select name="{$jiben.field}" id="{$jiben.field}" class="form-control">
+                                                    <?php echo $menulist;?>
+                                                </select> <neq name="jiben.tips" value=""> <div class="help-block">{$jiben.tips}</div></neq>
+                                            </td>
+                                        </tr>
+                                    </case>
+                                    <case value="thumb|picture">
+                                        <?php
+                                            if(!empty($jiben['extra'])){
+                                                $thumbW = intval($jiben['extra'][0]);
+                                                $thumbH = intval($jiben['extra'][1]);
+                                                $filesize = intval($jiben['extra'][2]);
+                                                $returntype = $jiben['extra'][3];
+                                                $savedir = $jiben['extra'][4];
+                                            } else {
+                                                //缩略图配置
+                                                $site_thumbw = C('SITE_SYSTEM_THUMB_WIDTH');
+                                                $site_thumbh = C('SITE_SYSTEM_THUMB_HEIGHT');
+                                                $thumbW = isset($site_thumbw) && !empty($site_thumbw) ? C('SITE_SYSTEM_THUMB_WIDTH') : C('SYSTEM_THUMB_WIDTH');
+                                                $thumbH = isset($site_thumbh) && !empty($site_thumbh) ? C('SITE_SYSTEM_THUMB_HEIGHT') : C('SYSTEM_THUMB_HEIGHT');
+                                            }
+                                        ?>
+                                        <tr>
+                                            <th><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</th>
+                                            <td>
+                                            <div id="{$jiben.field}-layer-images" class="layer-images-demo"></div>
+                                            <if condition="$returntype neq 'single'"><div class="clear"></div></if>
+                                            <span class='imgupload' title="点击上传图片" onclick="dialogIframe('{:U('Uploadfile/index',array('type'=>'images','thumbw'=>$thumbW,'thumbh'=>$thumbH,'field'=>$jiben[field],'myid'=>$jiben[field].'-layer-images','returntype'=>$returntype,'savedir'=>$savedir,'filesize'=>$filesize))}','上传图片','80%','70%')"></span> <neq name="jiben.tips" value=""> <div class="help-block">{$jiben.tips}</div></neq>
+                                            </td>
+                                            <script type="text/javascript" src="__PUBLIC__/jqueryui/fancyBox/lib/jquery.mousewheel.pack.js?v=3.1.3"></script>
+                                            <script type="text/javascript" src="__PUBLIC__/jqueryui/fancyBox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+                                            <link rel="stylesheet" type="text/css" href="__PUBLIC__/jqueryui/fancyBox/source/jquery.fancybox.css?v=2.1.5" media="screen" />
+                                            <script type="text/javascript">
+                                                $(function(){
+                                                    $('#{$jiben.field}-layer-images .fancybox').fancybox();
+                                                });
+                                                /**
+                                                 * [delFiles 删除文件]
+                                                 * @param  {[type]} obj [description]
+                                                 * @return {[type]}     [description]
+                                                 */
+                                                if(typeof delFiles != 'function'){
+                                                    function delFiles (obj,event) {
+                                                        //禁止冒泡
+                                                        event.stopPropagation();
+                                                        //删除上传的图片或者文件
+                                                        var json = $.parseJSON(unescape($(obj).attr('fileData')));
+                                                        $.post('{:U("Uploadfile/del")}', json, function(data, textStatus, xhr) {
+                                                            if(data.status){
+                                                                $(obj).parent('.img').remove();
+                                                            } else {
+                                                                parent.layer.msg(data.info,{icon:2,time:2000,shade: [0.3,'#000']});
+                                                            }
+                                                        });
+
+                                                        //移除节点
+                                                        $(obj).parent(".images_list,.files_list").remove();
+                                                    }
+                                                }
+                                            </script>
+                                        </tr>
+                                    </case>
+                                    <case value="file">
+                                        <?php
+                                            if(!empty($jiben['extra'])){
+                                                $thumbW = intval($jiben['extra'][0]);
+                                                $thumbH = intval($jiben['extra'][1]);
+                                                $filesize = intval($jiben['extra'][2]);
+                                                $returntype = $jiben['extra'][3];
+                                                $savedir = $jiben['extra'][4];
+                                            } else {
+                                                //缩略图配置
+                                                $site_thumbw = C('SITE_SYSTEM_THUMB_WIDTH');
+                                                $site_thumbh = C('SITE_SYSTEM_THUMB_HEIGHT');
+                                                $thumbW = isset($site_thumbw) && !empty($site_thumbw) ? C('SITE_SYSTEM_THUMB_WIDTH') : C('SYSTEM_THUMB_WIDTH');
+                                                $thumbH = isset($site_thumbh) && !empty($site_thumbh) ? C('SITE_SYSTEM_THUMB_HEIGHT') : C('SYSTEM_THUMB_HEIGHT');
+                                            }
+                                        ?>
+                                        <tr>
+                                            <th><eq name="jiben.is_must" value='1'><i class="require-red">*</i></eq>{$jiben.name}：</th>
+                                            <td>
+                                            <div id="{$jiben.field}-layer-files" class="layer-files-demo"></div>
+                                            <if condition="$returntype neq 'single'"><div class="clear"></div></if>
+                                            <span class='imgupload' title="点击上传文件" onclick="dialogIframe('{:U('Uploadfile/index',array('type'=>'files','thumbw'=>$thumbW,'thumbh'=>$thumbH,'field'=>$jiben[field],'myid'=>$jiben[field].'-layer-files','returntype'=>$returntype,'savedir'=>$savedir,'filesize'=>$filesize))}','上传文件','80%','70%')"></span> <neq name="jiben.tips" value=""> <div class="help-block">{$jiben.tips}</div></neq>
+                                            </td>
+                                            <script type="text/javascript" src="__PUBLIC__/jqueryui/fancyBox/lib/jquery.mousewheel.pack.js?v=3.1.3"></script>
+                                            <script type="text/javascript" src="__PUBLIC__/jqueryui/fancyBox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+                                            <link rel="stylesheet" type="text/css" href="__PUBLIC__/jqueryui/fancyBox/source/jquery.fancybox.css?v=2.1.5" media="screen" />
+                                            <script type="text/javascript">
+                                                $(function(){
+                                                    $('#{$jiben.field}-layer-files .fancybox').fancybox();
+                                                });
+                                                /**
+                                                 * [delFiles 删除文件]
+                                                 * @param  {[type]} obj [description]
+                                                 * @return {[type]}     [description]
+                                                 */
+                                                if(typeof delFiles != 'function'){
+                                                    function delFiles (obj,event) {
+                                                        //禁止冒泡
+                                                        event.stopPropagation();
+                                                        //删除上传的图片或者文件
+                                                        var json = $.parseJSON(unescape($(obj).attr('fileData')));
+                                                        $.post('{:U("Uploadfile/del")}', json, function(data, textStatus, xhr) {
+                                                            if(data.status){
+                                                                $(obj).parent('.img').remove();
+                                                            } else {
+                                                                parent.layer.msg(data.info,{icon:2,time:2000,shade: [0.3,'#000']});
+                                                            }
+                                                        });
+
+                                                        //移除节点
+                                                        $(obj).parent(".images_list,.files_list").remove();
+                                                    }
+                                                }
+                                            </script>
+                                        </tr>
+                                    </case>
+                                </switch>
+                            </if>
+                        </volist>
+                    </tbody>
+                </table>
+                <div class="blank15"></div>
+                <table width="100%">
+                    <tbody>
+                        <tr>
+                            <th></th>
+                            <td>
+                                <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitContentAjaxFormSingle("{:U("add")}","#myform")'>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="blank15"></div>
+                </if>
+            </div>
+        </div>
+        <input type="hidden" name="modelid" value="{$modelid}">
+        <input type="hidden" name="catid" value="{$cid}">
+        <input type="hidden" name="parameter" value="{$parameter}">
+    </form>
+</div>
+<include file="Public:foot" />

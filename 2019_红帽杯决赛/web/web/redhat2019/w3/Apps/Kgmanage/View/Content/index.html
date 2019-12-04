@@ -1,0 +1,19 @@
+<layout name="Public/layout" />
+<div class="mwrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><span class="crumb-name">内容管理</span></div>
+    </div>
+    <include file="contentcate" />
+    <div class="result-wrap" style='padding:41px 0 0 199px;'>
+        <iframe src="{:U('contentlist')}" width="100%" scrolling="auto" frameborder="0" name="contentlist" id="contentlist"></iframe>
+    </div>
+</div>
+<script  type="text/javascript">
+    //设置左侧高度
+    $(function(){
+        $('#contentlist').height($(window).height() - $(".topbar-wrap").outerHeight() - $(".crumb-wrap").outerHeight() - $('.cont-ft').outerHeight());
+        $(window).resize(function() {
+            $('#contentlist').height($(window).height() - $(".topbar-wrap").outerHeight() - $(".crumb-wrap").outerHeight() - $('.cont-ft').outerHeight());
+        });
+    })
+</script>

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>上传文件</title>
+<link rel = "shortcut icon" href="__PUBLIC__/images/favicon.ico" />
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/jqueryui/bootstrap/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/jqueryui/uploadifive/uploadifive.css">
+<script src="__PUBLIC__/jqueryui/jquery-1.11.1.min.js" type="text/javascript"></script>
+<script src="__PUBLIC__/jqueryui/uploadifive/jquery.uploadifive.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="__PUBLIC__/jqueryui/layer/layer.js"></script>
+<style type="text/css">
+#queueFile {
+	border-left: 1px solid #E5E5E5;
+	height: 400px;
+	overflow: auto;
+}
+
+#queueFile .img{
+	width: 120px;
+	height: 90px;
+	overflow: hidden;
+	float: left;
+	padding: 10px;
+	text-align: center;
+	position: relative;
+}
+
+#queueFile .images .imgok{
+	background: url(__PUBLIC__/images/uploadfile/success.png) no-repeat;
+	width: 40px;
+	height: 40px;
+	position: absolute;
+	right:10px;
+	bottom: 5px;
+}
+
+#queueFile .images:hover .imgdel{
+	background: url(__PUBLIC__/images/uploadfile/icons.png) no-repeat right bottom;
+	width: 20px;
+	height: 20px;
+	position: absolute;
+	left:10px;
+	top: 10px;
+	cursor: pointer;
+}
+
+#queueFile .images img{
+	width:100px;
+	border-radius: 5px;
+	height:75px;
+}
+
+#queueFile .files .imgok{
+	background: url(__PUBLIC__/images/uploadfile/success.png) no-repeat;
+	width: 40px;
+	height: 40px;
+	position: absolute;
+	right:32px;
+	bottom:9px;
+}
+
+#queueFile .files:hover .imgdel{
+	background: url(__PUBLIC__/images/uploadfile/icons.png) no-repeat right top;
+	width: 20px;
+	height: 20px;
+	position: absolute;
+	right:35px;
+	top: 17px;
+	cursor: pointer;
+}
+
+#queueFile .files img{
+	height:75px;
+}
+
+#queue {
+	border-left: 1px solid #E5E5E5;
+	height: 400px;
+	overflow: auto;
+}
+
+.row{
+	  border-bottom:1px solid #ccc;
+	  padding: 10px 0;
+	  margin: 0;
+}
+</style>
+<script type="text/javascript">
+	$(function(){
+		$("#queueFile,#queue").height($(window).height()-$(".row:eq(0)").height()*2+1);
+		$(window).resize(function(event) {
+			$("#queueFile,#queue").height($(window).height()-$(".row:eq(0)").height()*3-9);
+		});
+	});
+</script>
+</head>
+
+<body>
+	<form id="myForm" name="myForm" method="post" enctype="multipart/form-data">
+		<div class="row">
+			<div class="col-sm-6">
+				<input id="file_upload" name="file_upload" type="file" multiple="true">
+				<a class="btn btn-primary glyphicon glyphicon-open" href="javascript:$('#file_upload').uploadifive('upload')"><span style='padding-left:5px;position:relative;top:-1px'>开始上传</span></a>
+				<label class="checkbox-inline" style='color:red;padding-left:35px'><input type="checkbox" id="water" name="water">添加水印</label>
+			</div>
+			<div class="col-sm-6 text-right">
+				<a class="btn btn-default glyphicon glyphicon-plus" style='margin-right: 5px' href="javascript:;" onclick="localFile('{:U('files',array('type'=>$type,'myid'=>'queueFile','returntype'=>$returntype,'savedir'=>$savedir))}')"><span style='padding-left:5px;position:relative;top:-1px'>本地文件</span></a><a class="btn btn-primary glyphicon glyphicon-plus" href="javascript:;" onclick="remoteFun()"><span style='padding-left:5px;position:relative;top:-1px'>远程文件</span></a>
+			</div>
+		</div>
+		<div class="row" style='padding:0'>
+		   <div class="col-sm-3" style='padding:0'>
+		   		<div id="queue"></div>
+		   	</div>
+		   <div class="col-sm-9" style='padding:0'>
+		   		<div id="queueFile">
+		   		</div>
+		   </div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
+		   		<button type="button" class="btn btn-primary" id="subok" onclick="returnData('{$field}','{$iframe}','#{$myid}','{$returntype}')">确定</button>
+		   		<button type="button" class="btn btn-default" onclick="closeIframe()">取消</button>
+		   </div>
+		</div>
+	</form>
+
+	<script type="text/javascript">
+		/**
+		 * [localFile 获取本地文件]
+		 * @return {[type]} [description]
+		 */
+		function localFile(url){
+			url = url + "&iframe=" + window.name;
+			parent.layer.open({
+				type:2,
+				title:'本地文件',
+				area: ['50%','60%'],
+				content: url
+			});
+		}
+		/**
+		 * [remoteFun 获取远程文件]
+		 * @return {[type]} [description]
+		 */
+		function remoteFun(){
+			parent.layer.prompt({
+			    value: '',
+			    title: '远程文件'
+			}, function(value, index, elem){
+				//验证远程值
+			    if(!/^(http:\/\/|https:\/\/)/.test(value)){
+			    	parent.layer.msg('远程文件地址不正确！',{icon:2,time:2000,shade: [0.3,'#000']});
+			    	return false;
+			    }
+
+			    //验证类型
+			    var type = "<?php if($type == 'images'){echo 'images';} else {echo 'files';}?>";
+			    if(type == 'images'){
+					var json = {oringinal_type:'images',status:1,name:'demo',thumb:value,photo:value,savename:"demo",location:'remote'};
+					var remote_str = '<div class="img images" onclick="changeImgok(this)"><img src="__ROOT__'+json.thumb+'" fileData='+escape(JSON.stringify(json))+' title="'+json.name+'"><div class="imgok"></div><div class="imgdel" title="删除" onclick="delFiles(this,event)"></div></div>';
+				} else {
+					var json = {oringinal_type:'files',status:1,name:'demo',savepathall:value,ext:"readme",location:'remote'};
+					var remote_str = '<div class="img files" onclick="changeImgok(this)"><img src="__PUBLIC__/images/uploadfile/'+json.ext+'.png" fileData='+escape(JSON.stringify(json))+' title="'+json.name+'"><div class="imgok"></div><div class="imgdel" title="删除" onclick="delFiles(this,event)"></div></div>';
+				}
+
+				var returntype = "<?php echo $returntype;?>";
+				//单个
+				if(returntype == 'single'){
+					//删除上一个
+					$("#queueFile").find(".files .imgdel").trigger("click");
+					$("#queueFile").find(".images .imgdel").trigger("click");
+					$("#queueFile").html(remote_str);
+				} else{
+					$("#queueFile").append(remote_str);
+				}
+
+			    parent.layer.close(index);
+			});
+		}
+		/**
+		 * [closeIframe 关闭父级iframe]
+		 */
+		function closeIframe(){
+		    var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+		    parent.layer.close(index);
+		}
+		/**
+		 * [returnData 返回数据给父级页面]
+		 * @param  {[type]} field [父级字段id]
+		 * @param  {[type]} myid  [放内容的id]
+		 * @return {[type]}       [description]
+		 */
+		function returnData(field,iframe,myid,returntype){
+			//获取数据放置页面id,这是暂时的一个解决方案
+			if(typeof parent.frames[iframe] == 'undefined'){
+				var parentId = $(parent.document).find(myid);
+			} else {
+				var parentId = $(parent.frames[iframe].document).find(myid);
+			}
+
+			var myImg = $("#queueFile").find('div.img');
+			var imgok = myImg.find('div.imgok');
+
+			//未选中则提示错误
+			if(imgok.length <= 0){
+				parent.layer.msg("请选择文件！",{icon:2,time:2000,shade: [0.3,'#000']},function(){
+	               return false;
+	            });
+	            return false;
+			}
+
+			//获取imgok上级.img
+			var imgokParent = imgok.parent('.img');
+			if(imgokParent.length > 0){
+				$.each(imgokParent, function(index, val) {
+					//返回fileData
+					var fileData = $(val).find('img').attr('fileData');
+					var jsondata = $.parseJSON(unescape($(val).find('img').attr('fileData')));
+
+					//设置数组索引值
+					var nowdate = new Date();
+					var time = nowdate.getTime();
+					var indexdata = time * (index+1);
+					
+				    if(jsondata.oringinal_type == 'images'){
+				     	if(returntype == 'single'){
+					    	var appendstr = '<div class="'+jsondata.oringinal_type+'_list '+jsondata.oringinal_type+'_single_list" style="float:left"><img class="fancybox" href="'+jsondata.photo+'" data-fancybox-group="gallery" title="'+jsondata.name+'" src="__ROOT__'+jsondata.thumb+'" alt="'+jsondata.name+'"><div class="'+jsondata.oringinal_type+'_sort"><input type="hidden" name="'+field+'['+indexdata+'][name]" value="'+jsondata.name+'" ><input type="hidden" name="'+field+'['+indexdata+'][sort]" value="'+(index+1)+'"><input type="hidden" name="'+field+'['+indexdata+'][thumb]" value="'+jsondata.thumb+'"><input type="hidden" name="'+field+'['+indexdata+'][photo]" value="'+jsondata.photo+'"><input type="hidden" name="'+field+'['+indexdata+'][type]" value="'+jsondata.oringinal_type+'"><input type="hidden" name="'+field+'['+indexdata+'][oringinal_type]" value="'+jsondata.oringinal_type+'"><input type="hidden" name="'+field+'['+indexdata+'][location]" value="'+jsondata.location+'"></div><div class="imgdel" fileData='+fileData+' title="删除" onclick="delFiles(this,event)"></div></div>';
+					    } else {
+							var appendstr = '<div class="'+jsondata.oringinal_type+'_list"><img class="fancybox" href="'+jsondata.photo+'" data-fancybox-group="gallery" title="'+jsondata.name+'" src="__ROOT__'+jsondata.thumb+'" alt="'+jsondata.name+'"><div class="'+jsondata.oringinal_type+'_name"><input type="text" class="common-text form-control" name="'+field+'['+indexdata+'][name]" placeholder="文件名称" value="'+jsondata.name+'" ></div><div class="'+jsondata.oringinal_type+'_sort"><input type="text" class="common-text form-control" name="'+field+'['+indexdata+'][sort]" placeholder="文件排序" value="'+(index+1)+'" onkeyup="value=value.replace(/[^\\d]/ig,\'\')" ><input type="hidden" name="'+field+'['+indexdata+'][thumb]" value="'+jsondata.thumb+'"><input type="hidden" name="'+field+'['+indexdata+'][photo]" value="'+jsondata.photo+'"><input type="hidden" name="'+field+'['+indexdata+'][type]" value="'+jsondata.oringinal_type+'"><input type="hidden" name="'+field+'['+indexdata+'][oringinal_type]" value="'+jsondata.oringinal_type+'"><input type="hidden" name="'+field+'['+indexdata+'][location]" value="'+jsondata.location+'"></div><div class="imgdel" fileData='+fileData+' title="删除" onclick="delFiles(this,event)"></div></div>';
+						}
+				    } else {
+					    if(returntype == 'single'){
+					    	var appendstr = '<div class="'+jsondata.oringinal_type+'_list '+jsondata.oringinal_type+'_single_list" style="float:left"><img class="fancybox" href="__PUBLIC__/images/uploadfile/'+jsondata.ext+'.png" data-fancybox-group="gallery" title="'+jsondata.name+'" src="__PUBLIC__/images/uploadfile/'+jsondata.ext+'.png" alt="'+jsondata.name+'"><div class="'+jsondata.oringinal_type+'_sort"><input type="hidden" name="'+field+'['+indexdata+'][name]" value="'+jsondata.name+'" ><input type="hidden" name="'+field+'['+indexdata+'][sort]" value="'+(index+1)+'"><input type="hidden" name="'+field+'['+indexdata+'][filepath]" value="'+jsondata.savepathall+'"><input type="hidden" name="'+field+'['+indexdata+'][savepathall]" value="'+jsondata.savepathall+'"><input type="hidden" name="'+field+'['+indexdata+'][ext]" value="'+jsondata.ext+'"><input type="hidden" name="'+field+'['+indexdata+'][type]" value="'+jsondata.oringinal_type+'"><input type="hidden" name="'+field+'['+indexdata+'][oringinal_type]" value="'+jsondata.oringinal_type+'"><input type="hidden" name="'+field+'['+indexdata+'][location]" value="'+jsondata.location+'"></div><div class="filesdel" fileData='+fileData+' title="删除" onclick="delFiles(this,event)"></div></div>';
+					    } else {
+							var appendstr = '<div class="'+jsondata.oringinal_type+'_list"><img class="fancybox" href="__PUBLIC__/images/uploadfile/'+jsondata.ext+'.png" data-fancybox-group="gallery" title="'+jsondata.name+'" src="__PUBLIC__/images/uploadfile/'+jsondata.ext+'.png" alt="'+jsondata.name+'"><div class="'+jsondata.oringinal_type+'_name"><input type="text" class="common-text form-control" name="'+field+'['+indexdata+'][name]" placeholder="文件名称" value="'+jsondata.name+'" ></div><div class="'+jsondata.oringinal_type+'_sort"><input type="text" class="common-text form-control" name="'+field+'['+indexdata+'][sort]" placeholder="文件排序" value="'+(index+1)+'" onkeyup="value=value.replace(/[^\\d]/ig,\'\')" ><input type="hidden" name="'+field+'['+indexdata+'][filepath]" value="'+jsondata.savepathall+'"><input type="hidden" name="'+field+'['+indexdata+'][savepathall]" value="'+jsondata.savepathall+'"><input type="hidden" name="'+field+'['+indexdata+'][ext]" value="'+jsondata.ext+'"><input type="hidden" name="'+field+'['+indexdata+'][type]" value="'+jsondata.oringinal_type+'"><input type="hidden" name="'+field+'['+indexdata+'][oringinal_type]" value="'+jsondata.oringinal_type+'"><input type="hidden" name="'+field+'['+indexdata+'][location]" value="'+jsondata.location+'"></div><div class="filesdel" fileData='+fileData+' title="删除" onclick="delFiles(this,event)"></div></div>';
+						}
+				    }
+
+				    //如果是单个则放置一个即可
+				    if(returntype == 'single'){
+				    	//删除原始
+				    	parentId.find(".images_list .imgdel").trigger("click");
+				    	parentId.find(".files_list .filesdel").trigger("click");
+
+				    	parentId.html(appendstr);
+				    } else {
+						parentId.append(appendstr);
+					}
+				});
+			}
+			closeIframe();
+		}
+
+		/**
+		 * [changeImgok 改变文件的状态]
+		 * @param  {[type]} obj [description]
+		 * @return {[type]}     [description]
+		 */
+		function changeImgok (obj) {
+			if($(obj).find('.imgok').length == 1){
+				$(obj).find('.imgok').remove();
+			} else {
+				$(obj).append('<div class="imgok"></div>');
+			}
+		}
+
+		/**
+		 * [delNoFiles 只移除不删除文件]
+		 * @param  {[type]} obj [description]
+		 * @return {[type]}     [description]
+		 */
+		function delNoFiles (obj,event) {
+			//禁止冒泡
+			event.stopPropagation();
+			$(obj).parent('.img').remove();
+		}
+
+		/**
+		 * [delFiles 删除文件]
+		 * @param  {[type]} obj [description]
+		 * @return {[type]}     [description]
+		 */
+		function delFiles (obj,event) {
+			//禁止冒泡
+			event.stopPropagation();
+			var json = $.parseJSON(unescape($(obj).siblings('img').attr('fileData')));
+			$.post('{:U("del")}', json, function(data, textStatus, xhr) {
+				if(data.status){
+					$(obj).parent('.img').remove();
+				} else {
+					parent.layer.msg(data.info,{icon:2,time:2000,shade: [0.3,'#000']});
+				}
+			});
+		}
+
+		//上传配置
+		$(function() {
+			var indexA;
+			$('#file_upload').uploadifive({
+				'buttonText'   : '<span style="padding-left:5px;position:relative;top:-1px">选择文件</span>', //上传按钮样式
+				'buttonClass'  : ' btn btn-default glyphicon glyphicon-plus', //添加按钮class类
+				'auto'         : false, //是否自动上传
+				'fileSizeLimit': <?php echo $filesize;?>, //允许文件大小KB，3M,否则最大100M
+				'height'	   : 34, //按钮高度
+				'fileType'     : '<?php if($type=="images"){echo "image/*";}?>', //文件类型
+				'queueID'      : 'queue', //文件显示队列的DOM id
+				'formData'     : {'type' : "<?php if($type == 'images'){echo 'images';} else {echo 'files';}?>",'thumbw':<?php echo $thumbw;?>,'thumbh':<?php echo $thumbh;?>,'savedir':<?php echo "'".$savedir."'";?>,'filesize':<?php echo $filesize;?>}, //额外发送数据
+				'fileObjName'  : 'Filedata[]', //$_FILES['Filedata']
+				'uploadScript' : '{:U("index")}', //服务器处理函数
+				'removeCompleted' : true, //移除上传的队列
+				'dnd'          : true, //文件拖拽上传
+				'onUploadComplete' : function(file, data) {
+					//使用到函数escape主要是解决名称问题
+					var json = $.parseJSON(data);
+					if(json.status){
+						if(json.oringinal_type == 'images'){
+							var json_uploads_str = '<div class="img images" onclick="changeImgok(this)"><img src="__ROOT__'+json.thumb+'" fileData='+escape(data)+' title="'+json.name+'"><div class="imgok"></div><div class="imgdel" title="删除" onclick="delFiles(this,event)"></div></div>';
+						} else {
+							var json_uploads_str = '<div class="img files" onclick="changeImgok(this)"><img src="__PUBLIC__/images/uploadfile/'+json.ext+'.png" fileData='+escape(data)+' title="'+json.name+'"><div class="imgok"></div><div class="imgdel" title="删除" onclick="delFiles(this,event)"></div></div>';
+						}
+
+						var returntype = "<?php echo $returntype;?>";
+						//单个
+						if(returntype == 'single'){
+							//删除上一个
+							$("#queueFile").find(".files .imgdel").trigger("click");
+							$("#queueFile").find(".images .imgdel").trigger("click");
+							$("#queueFile").html(json_uploads_str);
+						} else {
+							$("#queueFile").append(json_uploads_str);
+						}
+					} else {
+						layer.msg(json.info,{icon:2,time:3000},function(){});
+					}
+				},
+				'onUpload' : function(filesToUpload){
+					indexA = parent.layer.load(2,{shade:[0.3,'#000']});
+					//获取水印
+					if($('#water').prop('checked')){
+						$(this).data('uploadifive').settings.formData.water = 1;
+					}
+				},
+				'onQueueComplete' : function(){
+					parent.layer.close(indexA);
+				},
+				/*'overrideEvents':['onError'], //取消默认错误
+				'onError' : function(errorType) {
+					if(errorType == 'QUEUE_LIMIT_EXCEEDED'){
+						$errormsg = "超过限制的队列！";
+					} else if(errorType == 'UPLOAD_LIMIT_EXCEEDED'){
+						$errormsg = "超过可上传的文件数目！";
+					} else if(errorType == 'FILE_SIZE_LIMIT_EXCEEDED'){
+						$errormsg = "文件太大！";
+					} else if(errorType == 'FORBIDDEN_FILE_TYPE'){
+						$errormsg = "不允许上传的文件类型！";
+					} else if(errorType == '404_FILE_NOT_FOUND'){
+						$errormsg = "文件不存在！";
+					}
+					layer.msg($errormsg,{icon:2,time:3000},function(){});
+		            parent.layer.close(indexA);
+		        },*/
+		        'onError' : function(errorType) {
+		        	parent.layer.close(indexA);
+		        },
+		        'queueSizeLimit' : <?php if($returntype == 'single'){echo 1;}else{echo 0;}?>, //限制队列
+				'multi'        : <?php if($returntype == 'single'){echo 'false';}else{echo 'true';}?>, //多文件上传
+				'truncateLength' : 40, //字符数的截断文件名的队列。设置为0，从未截断。
+				//'checkScript'  : 'check-exists.php', //验证文件是否重复
+				//'method'       : 'get', //上传类型，默认POST
+				//'itemTemplate' : '<div class="uploadifive-queue-item"><span class="filename"></span> | <span class="fileinfo"></span><div class="close"></div></div>', //模板
+				//'overrideEvents' : ['onProgress'], //一个事件名称的数组来重写默认的脚本。。
+				//'simUploadLimit' : 2,//在任何特定时间内可同时上载的文件的数量。设置为0，以消除限制
+				//'truncateLength' : 5, //字符数的截断文件名的队列。设置为0，从未截断。
+				//'uploadLimit'  : 3,可上载的文件的最大数目。
+				//'width'        : 200 //上传按钮宽度
+			});
+		});
+	</script>
+</body>
+</html>

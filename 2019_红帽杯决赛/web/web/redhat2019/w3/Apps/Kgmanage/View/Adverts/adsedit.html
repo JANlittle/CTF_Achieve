@@ -1,0 +1,119 @@
+<layout name="Public/layout" />
+<div class="mwrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><a href='{:U("ads",decode($linkcate_parameter))}'>广告列表</a><span class="crumb-step">&gt;</span><span class="crumb-name">编辑广告</span></div>
+    </div>
+    <div class="result-wrap table-responsive" style='padding-bottom:0;'>
+        <form action="" method="post" id="myform" name="myform" onsubmit="return false">
+            <table class="insert-tab table table-hover" width="100%">
+                <tbody>
+                    <tr>
+                        <th><i class="require-red">*</i>广告名称：</th>
+                        <td>
+                            <input class="common-text required form-control" id="name" name="name" size="50" value="{$data.name}" type="text" placeholder="请输入广告名称">
+                            <div class="help-block">例如：爱客猴内容管理系统</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>类型：</th>
+                        <td>
+                            <select name="type" id="type" class="form-control">
+                                <eq name="data.type" value="1"><option value="1" selected="selected">图片广告</option></eq>
+                                <eq name="data.type" value="2"><option value="2" selected="selected">文字广告</option></eq>
+                                <eq name="data.type" value="3"><option value="3" selected="selected">代码广告</option></eq>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>过期类型：</th>
+                        <td>
+                            <select name="datetype" id="datetype" class="form-control">
+                                <option value="1" <eq name="data.datetype" value="1">selected="selected"</eq>>永不过期</option>
+                                <option value="2" <eq name="data.datetype" value="2">selected="selected"</eq>>设定时间</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <style type="text/css">
+                        .laydate-icon{
+                            height: auto;
+                        }
+                    </style>
+                    <script type="text/javascript" src="__PUBLIC__/jqueryui/layer/extendplugin/laydate/laydate.js"></script>
+                    <script type="text/javascript" src="__PUBLIC__/js/date_select.js"></script>
+                    <script type="text/javascript">
+                        $(function(){
+                            $('select[name="datetype"]').change(function(event) {
+                                if($(this).val() == 2){
+                                    $("#datetime").show();
+                                } else {
+                                    $("#datetime").hide();
+                                }
+                            });
+                        })
+                    </script>
+                    <tr <eq name="data.datetype" value="1">style='display: none'</eq> id="datetime">
+                        <th>时间：</th>
+                        <td>
+                            <div class="form-inline">
+                                <div class="input-group">
+                                    <div class="input-group-addon">开始时间</div>
+                                    <input class="common-text required laydate-icon form-control" id="starttime" name="starttime" size="30" value="<notempty name='data.starttime'>{$data.starttime|date='Y/m/d H:i:s',###}</notempty>" type="text" placeholder="请输入开始时间">
+                                </div>
+                                <label> 到 </label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">结束时间</div>
+                                    <input class="common-text required laydate-icon form-control" id="endtime" name="endtime" size="30" value="<notempty name='data.endtime'>{$data.endtime|date='Y/m/d H:i:s',###}</notempty>" type="text" placeholder="请输入结束时间">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>广告内容：</th>
+                        <td>
+                            <if condition="$data['type'] eq 1">
+                                <include file="Uploadfile:fileedit" />
+                                <div class="clear"></div>
+                                <div class="input-group">
+                                    <div class="input-group-addon">跳转地址</div>
+                                    <input class="common-text required form-control" id="links" name="links" size="18" value="{$data.links}" type="text" placeholder="请输入跳转地址">
+                                </div>
+                            <elseif condition="$data['type'] eq 2"/>
+                                <div class="input-group">
+                                    <div class="input-group-addon">文字内容</div>
+                                    <input class="common-text required form-control" id="words" name="words" size="18" value="{$data.words}" type="text" placeholder="请输入文字内容">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-addon">跳转地址</div>
+                                    <input class="common-text required form-control" id="links" name="links" size="18" value="{$data.links}" type="text" placeholder="请输入跳转地址">
+                                </div>
+                            <elseif condition="$data['type'] eq 3"/>
+                                <textarea name="code" class="common-textarea form-control" id="code" cols="30" rows="3" placeholder="请输入代码">{$data.code}</textarea>
+                            </if>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>状态：</th>
+                        <td>
+                            <select name="status" class="form-control">
+                                <option value="1" <eq name="data.status" value="1">selected="selected"</eq>>开启</option>
+                                <option value="0" <eq name="data.status" value="0">selected="selected"</eq>>关闭</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>描述：</th>
+                        <td><textarea name="description" class="common-textarea form-control" id="description" cols="30" rows="3" placeholder="请输入描述">{$data.description}</textarea></td>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <td>
+                            <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitForm("{:U("adsedit")}","#myform")'>
+                        </td>
+                    </tr>
+                </tbody></table>
+            <input type="hidden" name="id" value="{$data['id']}">
+            <input type="hidden" name="aid" value="{$data['aid']}">
+            <input type="hidden" name="linkcate_parameter" value="{$linkcate_parameter}">
+        </form>
+    </div>
+</div>

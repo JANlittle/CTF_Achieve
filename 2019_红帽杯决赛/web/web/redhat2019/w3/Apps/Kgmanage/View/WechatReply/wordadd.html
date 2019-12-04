@@ -1,0 +1,36 @@
+<layout name="Public/layout" />
+<div class="main-wrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><a class="crumb-name" href='{:U("wordindex",decode($parameter))}'>文本回复</a><span class="crumb-step">&gt;</span><span>新增回复</span></div>
+    </div>
+    <div class="result-wrap table-responsive">
+        <div class="result-content">
+            <form action="" method="post" id="myform" name="myform" onsubmit="return false" enctype="multipart/form-data">
+                <table class="insert-tab table table-hover" width="100%">
+                    <tbody>
+                        <tr>
+                            <th width="120"><i class="require-red">*</i>关键字：</th>
+                            <td>
+                                <input class="common-text required form-control" id="keywords" name="keywords" size="50" value="" type="text" placeholder="例如：你好">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>内容：</th>
+                            <td>
+                                <textarea name="content" class="common-textarea form-control" id="content" cols="30" rows="3" placeholder="请输入内容"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <td>
+                                <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitAjaxForm("{:U("wordadd")}","#myform")'>
+                                <input class="btn btn6" onclick="history.go(-1)" value="返回" type="button">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <input type="hidden" name="parameter" value="{$parameter}">
+            </form>
+        </div>
+    </div>
+</div>

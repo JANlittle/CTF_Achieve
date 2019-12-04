@@ -1,0 +1,79 @@
+<layout name="Public/layout" />
+<div class="mwrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><a href='{:U("index",decode($parameter))}'>优惠券</a><span class="crumb-step">&gt;</span><span class="crumb-name">成员管理</span></div>
+    </div>
+    <div class="result-wrap">
+        <form name="myform" id="myform" method="post">
+            <div class="result-title">
+                <div class="result-list">
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/memberdel",session("uid")) eq 1'>
+                        <a id="batchDel" href="javascript:void(0)" onclick="delall('{:U('memberdel')}')"><i class="icon-font">&#xe037;</i>批量删除</a>
+                    </if>
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/membersort",session("uid")) eq 1'>
+                        <a id="updateOrd" href="javascript:void(0)" onclick="sort('{:U('membersort')}')"><i class="icon-font">&#xe00a;</i>更新排序</a>
+                    </if>
+                </div>
+            </div>
+            <div class="result-content table-responsive">
+                <table class="result-tab table table-hover" width="100%">
+                    <tr class='head-tr'>
+                        <th class="tc ids-td"><input class="allChoose" onchange="selectAll(this)" id="selectall" type="checkbox"></th>
+                        <th class="sort-td">排序</th>
+                        <th>ID</th>
+                        <th>优惠sn码</th>
+                        <th>openid</th>
+                        <th>昵称</th>
+                        <th>加入时间</th>
+                        <th>已使用</th>
+                        <th>过期</th>
+                        <th>使用时间</th>
+                        <th>操作</th>
+                    </tr>
+                    <volist name="data" id="datalist">
+                    <tr>
+                        <td class="tc ids-td"><input name="ids[]" class='select_ids' value="{$datalist.id}" type="checkbox" ></td>
+                        <td class="sort-td">
+                            <input class="common-input sort-input sort form-control" dataId="{$datalist.id}" name="sort[]" value="{$datalist.sort}" type="text">
+                        </td>
+                        <td>{$datalist.id}</td>
+                        <td>{$datalist.sn}</td>
+                        <td>{$datalist.openid}</td>
+                        <td>{$datalist.name}</td>
+                        <td>{$datalist.create_time|date="Y-m-d H:i:s",###}</td>
+                        <td>
+                            <eq name="datalist.status" value="1">
+                                <span class="green">已使用</span>
+                            <else />
+                                <span class="red">未使用</span>
+                            </eq>
+                        </td>
+                        <td>
+                            <if condition="time() gt $coupons['prizeendtime']">
+                                <span class="green">过期</span>
+                            <else />
+                                <span class="red">未过期</span>
+                            </if>
+                        </td>
+                        <td><neq name="datalist.usetime" value="">{$datalist.usetime|date="Y-m-d H:i:s",###}</neq></td>
+                        <td>
+                            <eq name="datalist.status" value="0">
+                                <if condition="time() elt $coupons['prizeendtime']">
+                                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/setstatus",session("uid")) eq 1'>
+                                        <a class="link-setstatus" href="javascript:;" onclick="postUrl('{:U('setstatus')}',{$datalist.id})">确认使用</a>
+                                    </if>
+                                </if>
+                            </eq>
+                            <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/memberdel",session("uid")) eq 1'>
+                                <a class="link-del" href="javascript:;" onclick="del('{:U('memberdel')}',{$datalist.id})">删除</a>
+                            </if>
+                        </td>
+                    </tr>
+                    </volist>
+
+                </table>
+                <div class="list-page">{$pagelist}</div>
+            </div>
+        </form>
+    </div>
+</div>

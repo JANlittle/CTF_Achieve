@@ -1,0 +1,313 @@
+<include file="Public:htmlcommon" />
+<include file="Public:seolist" />
+<include file="Public:headcommon" />
+</head>
+<body>
+	<div class="container">
+		<include file="Public:demonav" />
+		<h3>内容列表</h3>
+		<div class="content">
+			<notempty name="command_list">
+				<div class="focusmo">
+					<ul data-am-widget="gallery" class="am-gallery am-avg-sm-3 am-avg-md-3 am-avg-lg-4 am-gallery-default" data-am-gallery="{ pureview: false }" >
+					<volist name="command_list" id="command" key="key">
+				      <li>
+				        <div class="am-gallery-item">
+				            <a  target="_blank" <eq name="command.url" value="">href='{:U("/$command[catroute]/$command[catid]/$command[id]@$myurl","",true,true)}'<else/>href="{$command.url}"</eq> class="thumb-span" title="{$command.title}">
+				                <img data-thumb="1" data-original="__ROOT__{$command.thumb}" class="thumb" alt="{$command.title}" style="display: inline;" src="__PUBLIC__/images/loading.gif"/>
+				                <h3 class="am-gallery-title" <neq name="command.titlecolor" value="">style="color:{$command.titlecolor}"</neq>>{$command.title|msubstr=0,23,"utf-8"}</h3>
+				                <div class="am-gallery-desc">{$command.input_time|date="Y-m-d",###}</div>
+				            </a>
+				        </div>
+				      </li>
+				      </volist>
+				  </ul>
+				</div>
+			</notempty>
+
+		    <notempty name="list">
+			    <volist name="list" id="lists">
+			       <if condition="!empty($lists['pictures'])">
+					    <article class="excerpt excerpt-multi">
+					   		<header>
+					   			<a class="label label-success" <eq name="lists.caturl" value="">href='{:U("/$lists[catroute]/$lists[catid]@$myurl","",true,true)}'<else/>href='{$lists.caturl}' target="_blank"</eq> title="{$lists.catname}">{$lists.catname}<i class="label-arrow"></i></a>
+					   			<h2><a target="_blank" <eq name="lists.url" value="">href='{:U("/$lists[catroute]/$lists[catid]/$lists[id]@$myurl","",true,true)}'<else/>href="{$lists.url}"</eq> title="{$lists.title}" <neq name="lists.titlecolor" value="">style="color:{$lists.titlecolor}"</neq>>{$lists.title}</a></h2>
+					   		</header>
+					   		<p class="text-muted time"><eq name="lists.edituser" value="">{$lists.username}<else />{$lists.edituser}</eq> 发布于 {$lists.input_time|date="Y-m-d",###}</p>
+					   		<p class="focus">
+					   			<a target="_blank" <eq name="lists.url" value="">href='{:U("/$lists[catroute]/$lists[catid]/$lists[id]@$myurl","",true,true)}'<else/>href="{$lists.url}"</eq>  class="thumbnail">
+						   			<volist name="lists.pictures" id="pictures" key="pictureskey">
+							   			<lt name="pictureskey" value="9">
+								   			<span class="item">
+								   				<span class="thumb-span">
+								   					<img data-original="__ROOT__{$pictures.thumb}" alt="{$lists.title}"  class="thumb" style="display: inline;" src="__PUBLIC__/images/loading.gif">
+								   				</span>
+								   			</span>
+							   			</lt>
+						   			</volist>
+						   		</a>
+						   	</p>
+						   	<p class="note">{$lists.description}</p>
+						   	<p class="text-muted views">
+						   		<span class="post-views">阅读({$lists.count})</span>
+						   		<if condition="C('CONTENT_ALLOW_COMMENTS')">
+						   			<span class="post-comments">评论({$lists.commentsnum})</span>
+						   		</if>
+						   		<if condition="!empty($lists['tag'])">
+						   			<span class="post-tags">标签：
+						   				<volist name="lists.tag" id="tags">
+						   					<a href='{:U("/tag/$tags@$myurl","",true,true)}' target="_blank" rel="tag" title="{$tags}">{$tags}</a>&nbsp;&nbsp;
+						   				</volist>
+						   			</span>
+						   		</if>
+						   	</p>
+						</article>
+
+					<else />
+						
+					    <article class="excerpt excerpt-one">
+					   		<header>
+					   			<a class="label label-success" <eq name="lists.caturl" value="">href='{:U("/$lists[catroute]/$lists[catid]@$myurl","",true,true)}'<else/>href='{$lists.caturl}' target="_blank"</eq> title="{$lists.catname}">{$lists.catname}<i class="label-arrow"></i></a>
+					   			<h2><a target="_blank" <eq name="lists.url" value="">href='{:U("/$lists[catroute]/$lists[catid]/$lists[id]@$myurl","",true,true)}'<else/>href="{$lists.url}"</eq>  title="{$lists.title}" <neq name="lists.titlecolor" value="">style="color:{$lists.titlecolor}"</neq>>{$lists.title}</a></h2>
+					   		</header>
+					   		<p class="text-muted time"><eq name="lists.edituser" value="">{$lists.username}<else />{$lists.edituser}</eq> 发布于 {$lists.input_time|date="Y-m-d",###}</p>
+						    <p class="focus">
+						   		<a target="_blank" <eq name="lists.url" value="">href='{:U("/$lists[catroute]/$lists[catid]/$lists[id]@$myurl","",true,true)}'<else/>href="{$lists.url}"</eq>  class="thumbnail">
+						   			<span class="item">
+						   				<span class="thumb-span">
+						   					<img data-original="__ROOT__{$lists.thumb}" class="thumb" alt="{$lists.title}" style="display: inline;" src="__PUBLIC__/images/loading.gif">
+						   				</span>
+						   			</span>
+						   		</a>
+						    </p>
+						    <p class="note">{$lists.description}</p>
+						    <p class="text-muted views">
+						    	<span class="post-views">阅读({$lists.count})</span>
+						    	<if condition="C('CONTENT_ALLOW_COMMENTS')">
+						    		<span class="post-comments">评论({$lists.commentsnum})</span>
+						    	</if>
+						    	<if condition="!empty($lists['tag'])">
+						   			<span class="post-tags">标签：
+						   				<volist name="lists.tag" id="tags">
+						   					<a href='{:U("/tag/$tags@$myurl","",true,true)}' target="_blank" rel="tag" title="{$tags}">{$tags}</a>&nbsp;&nbsp;
+						   				</volist>
+						   			</span>
+						   		</if>
+						    </p>
+					    </article>
+					</if>
+				</volist>
+				<div class="pagination">
+					{$showpage}
+				</div>
+			<else />
+				<include file="Public:nodata" />
+			</notempty>
+		</div>
+<div class="blokc-help">PHP代码：</div>
+<pre class="prettyprint linenums">
+代码文件：NewsController.class.php
+
+config.php中路由配置：
+
+'/^a\/(\d+)$/'        => 'News/index?cid=:1',
+'/^a\/(\d+)\_(\d+)$/'   => 'News/index?cid=:1&p=:2',
+'/^a\/(\d+)\/(\d+)$/'   => 'News/details?cid=:1&id=:2',
+'/^a\/(\d+)\/(\d+)\_c(\d+)$/'   => 'News/details?cid=:1&id=:2&p=:3',
+
+/**
+ * 文章列表
+*/
+public function index(){
+    //获取分类id
+    $cid = I('get.cid',0);
+    if(!is_numeric($cid) || empty($cid)){
+        $this->_404();
+    }
+
+    //获取分类
+    $Category = M('Category');
+    $cate_where['status'] = array('eq',1);
+    $cate_where['siteid'] = array('eq',C('SITEID'));
+    $cate_where['id'] = array('eq',$cid);
+    $this->cate = $Category->where($cate_where)->find();
+    $cate = $this->cate;
+
+    //获取seo数据
+    $this->seoData = seo($this->cate);
+
+    //获取列表数据
+    $_p = I('get.p',0);
+    $this->list = S('meitulist'.md5(__ACTION__).C('SITEID')."c_".$cid.$_p);
+    $this->showpage = S('meitushowpage'.md5(__ACTION__).C('SITEID')."c_".$cid.$_p);
+    if(empty($this->list) || empty($this->showpage)){
+        $Article = D('Article');
+        $Article_where['status'] = array('eq',1);
+        $Article_where['isdel'] = array('eq',0);
+        $Article_where['catid'] = array('eq',$cid);
+        $count = $Article->where($Article_where)->count();
+        $page = getPage($count,C('BASE_PAGENUM'),'',$cate['route'].'/'.$cid.'/',"_",1,"<span aria-hidden='true'>&laquo;</span>","<span aria-hidden='true'>&raquo;</span>",'');
+        $this->showpage = $page->show();
+        
+        //分页缓存
+        S('meitushowpage'.md5(__ACTION__).C('SITEID')."c_".$cid.$_p,$this->showpage);
+
+        //获取数据
+        $list = $Article->where($Article_where)->relation(array('Category'))->order('input_time DESC,sort ASC')->limit($page->firstRow,$page->listRows)->select();
+
+
+        //验证评论开启，并且判断是否是第三方多说插件
+        if(C('CONTENT_ALLOW_COMMENTS') == 1 && C('CONTENT_DUOSHUO_COMMENTS') == 0){
+            //评论条件
+            $comments = M('Comments');
+            $comments_where['status'] = array('eq',1);
+            $comments_where['siteid'] = array('eq',C('SITEID'));
+            $comments_where['modelid'] = array('eq',$cate['modelid']);
+        }
+
+        //处理数据信息
+        if(!empty($list)){
+            foreach ($list as $key => $value) {
+                //验证评论开启，并且判断是否是第三方多说插件
+                if(C('CONTENT_ALLOW_COMMENTS') == 1 && C('CONTENT_DUOSHUO_COMMENTS') == 0){
+                    //获取评论数量
+                    $comments_where['aid'] = array('eq',$value['id']);
+                    $list[$key]['commentsnum'] = $comments->where($comments_where)->count();
+
+                }  elseif (C('CONTENT_ALLOW_COMMENTS') == 1 && C('CONTENT_DUOSHUO_COMMENTS') == 1) {
+                    //获取多说评论，并且写入数据库
+                    $comments_url = "http://api.duoshuo.com/threads/counts.json";
+                    $comments = gethttp($comments_url,array('short_name'=>C('CONTENT_DUOSHUO_DOMAIN'),'threads'=>$value['id']));
+                    $comments_arr = json_decode($comments,true);
+                    if(!empty($comments_arr['response'])){
+                        $list[$key]['commentsnum'] = $comments_arr['response'][$value['id']]['comments'];
+                    }
+                }
+                
+                //pictures
+                if(!empty($value['pictures'])){
+                   $list[$key]['pictures'] =  unserialize($value['pictures']);
+                }
+
+                //tag
+                if(!empty($value['tag'])){
+                   $list[$key]['tag'] = explode("|",$value['tag']);
+                }
+            }
+        }
+        $this->list = $list;
+
+        //数据缓存
+        S('meitulist'.md5(__ACTION__).C('SITEID')."c_".$cid.$_p,$this->list);
+    }
+    $this->display();
+}
+</pre>
+
+<div class="blokc-help">HTML代码：</div>
+<pre class="prettyprinthtml prettyprint linenums">
+<literal>
+<div class="content">
+	<notempty name="command_list">
+		<div class="focusmo">
+			<ul data-am-widget="gallery" class="am-gallery am-avg-sm-3 am-avg-md-3 am-avg-lg-4 am-gallery-default" data-am-gallery="{ pureview: false }" >
+			<volist name="command_list" id="command" key="key">
+		      <li>
+		        <div class="am-gallery-item">
+		            <a  target="_blank" <eq name="command.url" value="">href='{:U("/$command[catroute]/$command[catid]/$command[id]@$myurl","",true,true)}'<else/>href="{$command.url}"</eq> class="thumb-span" title="{$command.title}">
+		                <img data-thumb="1" data-original="__ROOT__{$command.thumb}" class="thumb" alt="{$command.title}" style="display: inline;" src="__PUBLIC__/images/loading.gif"/>
+		                <h3 class="am-gallery-title" <neq name="command.titlecolor" value="">style="color:{$command.titlecolor}"</neq>>{$command.title|msubstr=0,23,"utf-8"}</h3>
+		                <div class="am-gallery-desc">{$command.input_time|date="Y-m-d",###}</div>
+		            </a>
+		        </div>
+		      </li>
+		      </volist>
+		  </ul>
+		</div>
+	</notempty>
+
+    <notempty name="list">
+	    <volist name="list" id="lists">
+	       <if condition="!empty($lists['pictures'])">
+			    <article class="excerpt excerpt-multi">
+			   		<header>
+			   			<a class="label label-success" <eq name="lists.caturl" value="">href='{:U("/$lists[catroute]/$lists[catid]@$myurl","",true,true)}'<else/>href='{$lists.caturl}' target="_blank"</eq> title="{$lists.catname}">{$lists.catname}<i class="label-arrow"></i></a>
+			   			<h2><a target="_blank" <eq name="lists.url" value="">href='{:U("/$lists[catroute]/$lists[catid]/$lists[id]@$myurl","",true,true)}'<else/>href="{$lists.url}"</eq> title="{$lists.title}" <neq name="lists.titlecolor" value="">style="color:{$lists.titlecolor}"</neq>>{$lists.title}</a></h2>
+			   		</header>
+			   		<p class="text-muted time"><eq name="lists.edituser" value="">{$lists.username}<else />{$lists.edituser}</eq> 发布于 {$lists.input_time|date="Y-m-d",###}</p>
+			   		<p class="focus">
+			   			<a target="_blank" <eq name="lists.url" value="">href='{:U("/$lists[catroute]/$lists[catid]/$lists[id]@$myurl","",true,true)}'<else/>href="{$lists.url}"</eq>  class="thumbnail">
+				   			<volist name="lists.pictures" id="pictures" key="pictureskey">
+					   			<lt name="pictureskey" value="9">
+						   			<span class="item">
+						   				<span class="thumb-span">
+						   					<img data-original="__ROOT__{$pictures.thumb}" alt="{$lists.title}"  class="thumb" style="display: inline;" src="__PUBLIC__/images/loading.gif">
+						   				</span>
+						   			</span>
+					   			</lt>
+				   			</volist>
+				   		</a>
+				   	</p>
+				   	<p class="note">{$lists.description}</p>
+				   	<p class="text-muted views">
+				   		<span class="post-views">阅读({$lists.count})</span>
+				   		<if condition="C('CONTENT_ALLOW_COMMENTS')">
+				   			<span class="post-comments">评论({$lists.commentsnum})</span>
+				   		</if>
+				   		<if condition="!empty($lists['tag'])">
+				   			<span class="post-tags">标签：
+				   				<volist name="lists.tag" id="tags">
+				   					<a href='{:U("/tag/$tags@$myurl","",true,true)}' target="_blank" rel="tag" title="{$tags}">{$tags}</a>&nbsp;&nbsp;
+				   				</volist>
+				   			</span>
+				   		</if>
+				   	</p>
+				</article>
+
+			<else />
+				
+			    <article class="excerpt excerpt-one">
+			   		<header>
+			   			<a class="label label-success" <eq name="lists.caturl" value="">href='{:U("/$lists[catroute]/$lists[catid]@$myurl","",true,true)}'<else/>href='{$lists.caturl}' target="_blank"</eq> title="{$lists.catname}">{$lists.catname}<i class="label-arrow"></i></a>
+			   			<h2><a target="_blank" <eq name="lists.url" value="">href='{:U("/$lists[catroute]/$lists[catid]/$lists[id]@$myurl","",true,true)}'<else/>href="{$lists.url}"</eq>  title="{$lists.title}" <neq name="lists.titlecolor" value="">style="color:{$lists.titlecolor}"</neq>>{$lists.title}</a></h2>
+			   		</header>
+			   		<p class="text-muted time"><eq name="lists.edituser" value="">{$lists.username}<else />{$lists.edituser}</eq> 发布于 {$lists.input_time|date="Y-m-d",###}</p>
+				    <p class="focus">
+				   		<a target="_blank" <eq name="lists.url" value="">href='{:U("/$lists[catroute]/$lists[catid]/$lists[id]@$myurl","",true,true)}'<else/>href="{$lists.url}"</eq>  class="thumbnail">
+				   			<span class="item">
+				   				<span class="thumb-span">
+				   					<img data-original="__ROOT__{$lists.thumb}" class="thumb" alt="{$lists.title}" style="display: inline;" src="__PUBLIC__/images/loading.gif">
+				   				</span>
+				   			</span>
+				   		</a>
+				    </p>
+				    <p class="note">{$lists.description}</p>
+				    <p class="text-muted views">
+				    	<span class="post-views">阅读({$lists.count})</span>
+				    	<if condition="C('CONTENT_ALLOW_COMMENTS')">
+				    		<span class="post-comments">评论({$lists.commentsnum})</span>
+				    	</if>
+				    	<if condition="!empty($lists['tag'])">
+				   			<span class="post-tags">标签：
+				   				<volist name="lists.tag" id="tags">
+				   					<a href='{:U("/tag/$tags@$myurl","",true,true)}' target="_blank" rel="tag" title="{$tags}">{$tags}</a>&nbsp;&nbsp;
+				   				</volist>
+				   			</span>
+				   		</if>
+				    </p>
+			    </article>
+			</if>
+		</volist>
+		<div class="pagination">
+			{$showpage}
+		</div>
+	<else />
+		<include file="Public:nodata" />
+	</notempty>
+</div>
+</literal>
+</pre>		
+	</div>
+<include file="Public:foot" />	
+</body>
+</html>

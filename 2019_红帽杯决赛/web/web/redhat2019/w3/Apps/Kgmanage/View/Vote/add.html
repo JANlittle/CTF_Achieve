@@ -1,0 +1,151 @@
+<include file="Public:head" />
+<div class="main-wrap">
+    <div class="result-wrap table-responsive" style='padding-top:10px'>
+        <div class="result-content">
+            <form action="" method="post" id="myform" name="myform" onsubmit="return false" enctype="multipart/form-data">
+                <table class="insert-tab table table-hover" width="100%">
+                    <tbody>
+                        <tr>
+                            <th><i class="require-red">*</i>投票类型：</th>
+                            <td>
+                                <select name="type" id="type" class="form-control">
+                                    <option value="1" selected="selected">图文</option>
+                                    <option value="2">文本</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>选项类型：</th>
+                            <td>
+                                <select name="votetype" id="votetype" class="form-control">
+                                    <option value="1" selected="selected">单选</option>
+                                    <option value="2">多选</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>标题：</th>
+                            <td>
+                                <input class="common-text required form-control" id="title" name="title" size="50" value="" type="text" placeholder="请输入标题">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>封面图片：</th>
+                            <td>
+                                <include file="Uploadfile:fileadd" />
+                                <div class="clear"></div>
+                            </td>
+                        </tr>
+                        <script type="text/javascript">
+                            $(function(){
+                                $('select[name="type"]').change(function(event) {
+                                    if($(this).val() == 1){
+                                        $("#chicun").show();
+                                    } else {
+                                        $("#chicun").hide();
+                                    }
+                                });
+                            })
+                        </script>
+                        <tr id="chicun">
+                            <th>选项图片尺寸：</th>
+                            <td>
+                                <div class="form-inline">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">宽度：</div>
+                                        <input type="number" name="width" class="form-control" id="width" value="200" placeholder="请输入宽度" onkeyup="value=value.replace(/[^\d]/ig,'')">
+                                    </div>
+                                    <label>×</label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">高度：</div>
+                                        <input type="number" name="height" value="150" id="height" placeholder="请输入高度" class="form-control" onkeyup="value=value.replace(/[^\d]/ig,'')">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <style type="text/css">
+                            .laydate-icon{
+                                height: auto;
+                            }
+                        </style>
+                        <script type="text/javascript" src="__PUBLIC__/jqueryui/layer/extendplugin/laydate/laydate.js"></script>
+                        <script type="text/javascript" src="__PUBLIC__/js/date_select.js"></script>
+                        <tr>
+                            <th><i class="require-red">*</i>时间范围：</th>
+                            <td>
+                                <div class="form-inline">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">开始时间：</div>
+                                        <input type="text" name="start" class="form-control" id="starttime" value="" placeholder="请输入开始时间" size="30">
+                                    </div>
+                                    <label> ~ </label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">结束时间：</div>
+                                        <input type="text" name="end" value="" id="endtime" placeholder="请输入结束时间" class="form-control" size="30">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>限制时间类型：</th>
+                            <td>
+                                <select name="datetype" id="datetype" class="form-control">
+                                    <option value="1" selected="selected">周期(单位：秒)</option>
+                                    <option value="2">间隔天数(单位：天)</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>周期/间隔天数：</th>
+                            <td data-toggle="popover" data-trigger="hover" data-html="true" data-container="body" data-placement='top' title='说明' data-content="<strong>周期：</strong>限制用户投票的周期（单位：秒），即隔一个周期的时间后可以投一次票！<br/><strong>间隔天数：</strong>即用户间隔几天可以投的票数！<br/>如果值为0则没有周期或者间隔天数的时间限制！">
+                                <input class="common-text required form-control" id="cycle" name="cycle" size="50" value="0" type="number" placeholder="请输入周期/间隔天数">
+                                <div class="help-block">周期：(单位：秒)，间隔天数：(单位：天)，请按照 <span class="red">限制时间类型</span> 选项填写！</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>允许投票次数：</th>
+                            <td>
+                                <input class="common-text required form-control" id="number" name="number" size="50" value="1" type="number" placeholder="请输入投票次数">
+                                <div class="help-block">限制每个用户的投票次数！</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style='width:120px'>简介：</th>
+                            <td>
+                                <!-- 加载编辑器的容器 -->
+                                <textarea name="content" id="container" style="width:100%;height:150px;line-height:20px"></textarea>
+                                <include file="Public:ueditor" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>允许游客投票：</th>
+                            <td>
+                                <select name="guest" id="guest" class="form-control">
+                                    <option value="0" selected="selected">不允许</option>
+                                    <option value="1">允许</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>状态：</th>
+                            <td>
+                                <select name="status" id="status" class="form-control">
+                                    <option value="1" selected="selected">开启</option>
+                                    <option value="0">关闭</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <td>
+                                <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitFormIframe("{:U("add")}","#myform")'>
+                                <input class="btn btn6" onclick="closeIframe()" value="关闭" type="button">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <input type="hidden" name="parameter" value="{$parameter}">
+            </form>
+        </div>
+    </div>
+</div>

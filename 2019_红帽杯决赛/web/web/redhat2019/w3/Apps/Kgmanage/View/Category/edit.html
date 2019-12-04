@@ -1,0 +1,138 @@
+<layout name="Public/layout" />
+<div class="main-wrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><a class="crumb-name" href='{:U("index",decode($parameter))}'>栏目管理</a><span class="crumb-step">&gt;</span><span>编辑栏目</span></div>
+    </div>
+    <div class="result-wrap table-responsive">
+        <div class="result-content">
+            <form action="" method="post" id="myform" name="myform" onsubmit="return false">
+                <table class="insert-tab table table-hover" width="100%">
+                    <tbody>
+                        <tr>
+                            <th style='width:150px'><i class="require-red">*</i>父级栏目：</th>
+                            <td>
+                                <select name="pid" class="form-control">
+                                    <option value="0">顶级栏目</option>
+                                    {$menulist_a}
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style='width:150px'><i class="require-red">*</i>模型：</th>
+                            <td>
+                                <select name="modelid" class="form-control">
+                                    {$sitemodellist}
+                                </select>
+                            </td>
+                        </tr>
+                        <tr class="">
+                            <th style='width:150px'>单页：</th>
+                            <td>
+                                <select name="danye" id="danye" class="form-control">
+                                    <option value="1" <eq name="data.danye" value="1">selected="selected"</eq>>是</option>
+                                    <option value="0" <eq name="data.danye" value="0">selected="selected"</eq>>否</option>
+                                </select>
+                                <div class="help-block"><span style="color:red">用于显示单篇内容！</span></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>名称：</th>
+                            <td>
+                                <input class="common-text required form-control" id="name" name="name" size="50" value="{$data.name}" type="text" placeholder="请输入名称">
+                                <div class="help-block">例如：首页</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>路由变量：</th>
+                            <td>
+                                <input class="common-text required form-control" id="route" name="route" size="50" value="{$data.route}" type="text" placeholder="请输入路由变量，例如：route" onkeyup="value=value.replace(/[^\w\d\_]/ig,'')">
+                                <div class="help-block">路由变量：用于url地址路由重写，必须以因为字母开头</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>缩略图：</th>
+                            <td>
+                                <include file="Uploadfile:fileedit" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>跳转地址：</th>
+                            <td>
+                                <input class="common-text required form-control" id="url" name="url" size="50" value="{$data.url}" type="text" placeholder="请输入跳转地址">
+                                 <div class="help-block">例如：{:C('SYSTEM_COPYRIGHT_URL')}</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>标题：</th>
+                            <td>
+                                <input class="common-text required form-control" id="title" name="title" size="50" value="{$data.title}" type="text" placeholder="请输入标题">
+                                <div class="help-block">seo标题</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>关键字：</th>
+                            <td>
+                                <input class="common-text required form-control" id="keywords" name="keywords" size="50" value="{$data.keywords}" type="text" placeholder="请输入关键字">
+                                <div class="help-block">seo关键字</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>描述：</th>
+                            <td>
+                                <textarea name="description" class="common-textarea form-control" id="description" cols="30" rows="3" placeholder="请输入描述">{$data.description}</textarea>
+                                <div class="help-block">seo描述</div>
+                            </td>
+                        </tr>
+                        <tr class="">
+                            <th>打开方式：</th>
+                            <td>
+                                <select name="open" id="open" class="form-control">
+                                    <option value="1" <eq name="data.open" value="1">selected="selected"</eq>>新窗口</option>
+                                    <option value="0" <eq name="data.open" value="0">selected="selected"</eq>>当前窗口</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr class="">
+                            <th>显示位置：</th>
+                            <td>
+                                <select name="position" id="position" class="form-control">
+                                    <option value="0"  <eq name="data.position" value="0">selected="selected"</eq>>不显示</option>
+                                    <option value="1"  <eq name="data.position" value="1">selected="selected"</eq>>顶部</option>
+                                    <option value="2" <eq name="data.position" value="2">selected="selected"</eq>>中部</option>
+                                    <option value="3"  <eq name="data.position" value="3">selected="selected"</eq>>底部</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>属性：</th>
+                            <td>
+                                <textarea name="other" class="common-textarea form-control" id="other" cols="30" rows="3" placeholder="请输入属性">{$data.other}</textarea>
+                                <div class="help-block">例如：onclick='javascript:;'，请使用单引号</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>状态：</th>
+                            <td>
+                                 <select name="status" class="form-control">
+                                    <option value="1" <eq name="data.status" value="1">selected="selected"</eq>>开启</option>
+                                    <option value="0" <eq name="data.status" value="0">selected="selected"</eq>>关闭</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <td>
+                                <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitForm("{:U("edit")}","#myform")'>
+                                <input class="btn btn6" onclick="history.go(-1)" value="返回" type="button">
+                            </td>
+                        </tr>
+                    </tbody>
+                    </table>
+                    <input type="hidden" name="siteid" value="{$data.siteid}">
+                    <input type="hidden" name="id" value="{$data.id}">
+                    <input type="hidden" name="parameter" value="{$parameter}">
+            </form>
+        </div>
+    </div>
+
+</div>

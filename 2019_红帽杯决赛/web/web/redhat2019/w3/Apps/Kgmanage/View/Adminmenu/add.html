@@ -1,0 +1,89 @@
+<layout name="Public/layout" />
+<div class="main-wrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><a class="crumb-name" href='{:U("index",decode($link_parameter))}'>后台菜单</a><span class="crumb-step">&gt;</span><span>新增菜单</span><span class="tips"><kbd>Tips:此功能只对开发者使用！</kbd></span></div>
+    </div>
+    <div class="result-wrap table-responsive">
+        <div class="result-content">
+            <form action="" method="post" id="myform" name="myform" onsubmit="return false">
+                <table class="insert-tab table table-hover" width="100%">
+                    <tbody>
+                        <tr>
+                            <th><i class="require-red">*</i>父级菜单：</th>
+                            <td>
+                                <select name="pid" class="form-control">
+                                    <option value="0" selected="selected">顶级菜单</option>
+                                    {$menulist_a}
+                                </select>
+                                <div class="help-block">注意：第四级菜单是不会显示在相应的模块下面的</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>归属模块：</th>
+                            <td>
+                                <select name="mid" class="form-control">
+                                    {$rulemodule_ab}
+                                </select>
+                                <div class="help-block">模块：用于区分菜单在某个模块下，便于分组显示，如果是顶级菜单跟模块没有关系</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>名称：</th>
+                            <td>
+                                <input class="common-text required form-control" id="name" name="name" size="50" value="" type="text" placeholder="请输入名称">
+                                <div class="help-block">例如：首页</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>url：</th>
+                            <td>
+                                <input class="common-text required form-control" id="url" name="url" size="50" value="" type="text" placeholder="请输入url">
+                                <div class="help-block">例如：AuthRule/index</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>参数：</th>
+                            <td>
+                                <div data-toggle="popover" data-trigger="hover" data-html="true" data-container="body" data-placement='top' title="参数说明" data-content="<strong>格式：</strong><br/>thumbw=200&thumbh=150&filesize=3072&returntype=single&savedir=uploadfile&thumbfield=thumb<br/><strong>解释：</strong><br/>thumbw：缩略图宽度<br/>thumbh：缩略图高度<br/>filesize：上传文件大小（KB）<br/>returntype：上传方式，single单个上传<br/>savedir：文件上传目录<br/>thumbfield：保存数据的字段名称">
+                                    <input class="common-text required form-control" id="parameter" name="parameter" size="50" value="" type="text" placeholder="请输入参数">
+                                    <div class="help-block">格式：thumbw=200&thumbh=150&filesize=3072&returntype=single&savedir=uploadfile&thumbfield=thumb，请保证格式的正确性！</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>状态：</th>
+                            <td>
+                                <select name="status" class="form-control">
+                                    <option value="1" selected="selected">开启</option>
+                                    <option value="0">关闭</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>描述：</th>
+                            <td><textarea name="description" class="common-textarea form-control" id="description" cols="30" rows="3" placeholder="请输入描述"></textarea></td>
+                        </tr>
+                        <tr>
+                            <th><span style='color:red'>开发者：</span></th>
+                            <td>
+                                <select name="dev" class="form-control">
+                                    <option value="1">是</option>
+                                    <option value="0" selected="selected">否</option>
+                                </select>
+                                <div class="help-block">只有开发者显示此菜单！</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <td>
+                                <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitForm("{:U("add")}","#myform")'>
+                                <input class="btn btn6" onclick="history.go(-1)" value="返回" type="button">
+                            </td>
+                        </tr>
+                    </tbody></table>
+                    <input type="hidden" name="link_parameter" value="{$link_parameter}">
+            </form>
+        </div>
+    </div>
+
+</div>

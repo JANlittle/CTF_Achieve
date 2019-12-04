@@ -1,0 +1,84 @@
+<layout name="Public/layout" />
+<div class="main-wrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><a class="crumb-name" href='{:U("index")}'>自定义菜单</a><span class="crumb-step">&gt;</span><span>新增菜单</span></div>
+    </div>
+    <div class="result-wrap table-responsive">
+        <div class="result-content">
+            <form action="" method="post" id="myform" name="myform" onsubmit="return false">
+                <table class="insert-tab table table-hover" width="100%">
+                    <tbody>
+                        <tr>
+                            <th style='width:150px'><i class="require-red">*</i>父级菜单：</th>
+                            <td>
+                                <select name="pid" class="form-control">
+                                    <option value="0">顶级菜单</option>
+                                    {$menulist_a}
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>类型：</th>
+                            <td>
+                                <select name="type" id='data-type' class="form-control">
+                                    <option value="none">无事件的一级菜单</option>
+                                    <option value="click">点击推事件</option>
+                                    <option value="view">跳转URL</option>
+                                    <option value="scancode_push">扫码推事件</option>
+                                    <option value="scancode_waitmsg">扫码带提示</option>
+                                    <option value="pic_sysphoto">弹出系统拍照发图</option>
+                                    <option value="pic_photo_or_album">弹出拍照或者相册发图</option>
+                                    <option value="pic_weixin">弹出微信相册发图器</option>
+                                    <option value="location_select">弹出地理位置选择器</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>名称：</th>
+                            <td>
+                                <input class="common-text required form-control" id="name" name="name" size="50" value="" type="text" placeholder="例如：技术支持"><div class="help-block">可创建最多 3 个一级菜单，每个一级菜单下可创建最多 5 个二级菜单。</div>
+                            </td>
+                        </tr>
+                        <script type="text/javascript">
+                            $(function(){
+                                $("#data-type").change(function(event) {
+                                    if($(this).val() == 'view'){
+                                        $("#data-url").show();
+                                    } else {
+                                        $("#data-url").hide();
+                                    }
+                                    if($(this).val() == 'click'){
+                                        $("#data-key").show();
+                                    } else {
+                                        $("#data-key").hide();
+                                    }
+                                });
+                            })
+                        </script>
+                        <tr id='data-url' style='display:none'>
+                            <th>跳转地址：</th>
+                            <td>
+                                <input class="common-text required form-control" id="url" name="url" size="50" value="" type="text" placeholder="请输入跳转地址">
+                                <div class="help-block">例如：{:C('SYSTEM_COPYRIGHT_URL')}</div>
+                            </td>
+                        </tr>
+                        <tr id='data-key' style='display:none'>
+                            <th>关联关键字：</th>
+                            <td>
+                                <input class="common-text required form-control" id="key" name="key" size="50" value="" type="text" placeholder="请输入关联关键字">
+                                <div class="help-block">例如：可以从：<a href="{:U('WechatReply/index')}" class='red'>自定义回复</a> 中选取相应的关键字</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <td>
+                                <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitForm("{:U("add")}","#myform")'>
+                                <input class="btn btn6" onclick="history.go(-1)" value="返回" type="button">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,150 @@
+<include file="Public:head" />
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/jqueryui/easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/jqueryui/easyui/themes/icon.css">
+<script src="__PUBLIC__/jqueryui/easyui/jquery.easyui.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    /**
+ * [delall 组装删除数据的id：批量删除]
+ * @param  {[string]} url [处理数据的url地址]
+ * @return {[json]}       [返回json格式]
+ */
+function delallContent(url,otherData){
+    var ids = [];
+    $(".select_ids:checked").each(function(index, el) {
+        ids.push($(this).val());
+    });
+
+    if(ids.length == 0){
+        parent.layer.open({
+            content:'请选择要删除的数据！',
+            yes:function(index){
+                parent.layer.close(index);
+            },
+            icon:2
+        });
+        return false;
+    }
+
+    //变成字符串
+    ids = ids.join(',');
+    //发送数据
+    delContent(url,ids,otherData);
+}
+
+/**
+ * [del 删除函数]
+ * @param  {[string]} url [处理数据的url地址]
+ * @param  {[string]} ids [数据的id字符串]
+ * @return {[json]}       [返回json格式]
+ */
+function delContent(url,ids,otherData){
+    parent.layer.confirm('确定要删除数据？',{icon:3},function(index){
+        $.post(url,{id:ids,other:otherData}, function(data, textStatus, xhr) {
+            //返回消息
+            if(data.status){
+                //改变左侧栏目
+                refreshCate('{:U("refreshCate")}',{},parent.document);
+
+                parent.layer.msg(data.info,{icon:1,time:2000,shade: [0.3,'#000']},function(){
+                    location.reload();
+                });
+            } else {
+                parent.layer.open({
+                    content:data.info,
+                    yes:function(index){
+                        parent.layer.close(index);
+                    },
+                    icon:2
+                });
+                //layer.msg(data.info,{icon:2});
+            }
+
+        });
+    });
+}
+</script>
+<div style="padding-right: 17px;padding-left: 5px">
+    <form name="myform" id="myform" method="post">
+        <div class="result-title">
+            <div class="result-list">
+                <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/add",session("uid")) eq 1'>
+                    <a href='{:U("add",array("cid"=>$cid,"modelid"=>$modelid))}'><i class="icon-font">&#xe026;</i>新增内容</a>
+                </if>
+                <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/del",session("uid")) eq 1'>
+                    <a id="batchDel" href="javascript:void(0)" onclick="delallContent('{:U('del')}',{$modelid})"><i class="icon-font">&#xe037;</i>批量删除</a>
+                </if>
+                <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/sort",session("uid")) eq 1'>
+                    <a id="updateOrd" href="javascript:void(0)" onclick="sort('{:U('sort')}',{$modelid})"><i class="icon-font">&#xe00a;</i>更新排序</a>
+                </if>
+                <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/move",session("uid")) eq 1'>
+                    <a id="moveAll" href="javascript:void(0)" onclick="moveall('{:U('move',array('cid'=>$cid,'modelid'=>$modelid))}','移动文件')"><i class="icon-font">&#xe008;</i>批量移动</a>
+                </if>
+                <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/search",session("uid")) eq 1'>
+                    <a id="searchId" href="javascript:void(0)" onclick="dialogIframe('{:U('search',array('id'=>$cid,'modelid'=>$modelid))}','搜索','80%','55%')" class="fr"><i class="icon-font">&#xe05b;</i>搜索</a>
+                </if>
+            </div>
+        </div>
+        <div class="result-content table-responsive">
+            <table class="result-tab table table-hover" width="100%">
+                <tr class='head-tr'>
+                    <th class="tc ids-td"><input class="allChoose" onchange="selectAll(this)" id="selectall" type="checkbox"></th>
+                    <th class="sort-td">排序</th>
+                    <th>ID</th>
+                    <th>标题</th>
+                    <th>缩略图</th>
+                    <th>推荐</th>
+                    <th>发布时间</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+                <volist name="data" id="datalist">
+                <tr>
+                    <td class="tc ids-td"><input name="ids[]" class='select_ids' value="{$datalist.id}" type="checkbox" ></td>
+                    <td class="sort-td">
+                        <input class="common-input sort-input sort form-control" dataId="{$datalist.id}" name="sort[]" value="{$datalist.sort}" type="text">
+                    </td>
+                    <td>{$datalist.id}</td>
+                    <td data-toggle="popover" data-trigger="hover" data-html="true" data-container="body" data-placement='top' title="标题" data-content="{$datalist.title}"><neq name="datalist.url" value=""><a href='{$datalist.url}' target="_blank">{$datalist.title|msubstr=0,20,'utf-8'}</a><else/>{$datalist.title|msubstr=0,20,'utf-8'}</neq></td>
+                    <td>
+                        <neq name="datalist.thumb" value=''>
+                            <img src="__ROOT__{$datalist.thumb}" height="30">
+                        </neq>
+                    </td>
+                    <td>
+                        <eq name="datalist.command" value="1">
+                            <img src="__IMG__/yes.gif" alt="是">
+                        <else />
+                            <img src="__IMG__/no.gif" alt="否">
+                        </eq>
+                    </td>
+                    <td>{$datalist.input_time|date='Y-m-d H:i:s',###}</td>
+                    <td>
+                        <eq name="datalist.status" value="1">
+                            <img src="__IMG__/yes.gif" alt="开启">
+                        <else />
+                            <img src="__IMG__/no.gif" alt="关闭">
+                        </eq>
+                    </td>
+                    <td>
+                        <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/comments",session("uid")) eq 1'>
+                            <a class="link-comments" href='{:U("comments",array("aid"=>$datalist["id"],"cid"=>$cid,"modelid"=>$modelid))}'>评论( <span class="red"><b>{:count($datalist['commentscount'])}</b></span> )</a>
+                        </if>
+                        <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/move",session("uid")) eq 1'>
+                            <a class="link-update" href='javascript:;' onclick="dialogIframe('{:U('move',array('id'=>$datalist['id'],'cid'=>$cid,'modelid'=>$modelid))}','移动文件','80%','80%')">移动</a>
+                        </if>
+                        <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/edit",session("uid")) eq 1'>
+                            <a class="link-update" href='{:U("edit",array("id"=>$datalist["id"],"cid"=>$cid,"modelid"=>$modelid))}'>编辑</a>
+                        </if>
+                        <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/del",session("uid")) eq 1'>
+                            <a class="link-del" href="javascript:;" onclick="delContent('{:U('del')}',{$datalist.id},{$modelid})">删除</a>
+                        </if>
+                    </td>
+                </tr>
+                </volist>
+
+            </table>
+            <div class="list-page">{$pagelist}</div>
+        </div>
+    </form>
+</div>
+<include file="Public:foot" />

@@ -1,0 +1,179 @@
+<layout name="Public/layout" />
+<div class="mwrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list">
+            <div id="wechatReply">
+                <ul class="wechat-nav wechatnav">
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/index",session("uid")) eq 1'>
+                    <li class="current">
+                        <a href="{:U('index',$parameter)}">会员卡信息<span class="arrow fa fa-sort-up"></span></a>
+                    </li>
+                    </if>
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/member",session("uid")) eq 1'>
+                    <li class="">
+                        <a href="{:U('member','parameter='.encode($parameter))}">会员管理<span class="arrow fa fa-sort-up"></span></a>
+                    </li>
+                    </if>
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/notice",session("uid")) eq 1'>
+                    <li class="">
+                        <a href="{:U('notice','parameter='.encode($parameter))}">通知管理<span class="arrow fa fa-sort-up"></span></a>
+                    </li>
+                    </if>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="result-wrap table-responsive">
+        <form name="myform" id="myform" method="post" onsubmit="return false" enctype="multipart/form-data">
+            <div class="result-content">
+               <table class="insert-tab table table-hover" width="100%">
+                    <tbody>
+                        <tr>
+                            <th><i class="require-red">*</i>背景图：</th>
+                            <td>
+                               <select name="background" id="background" class="form-control">
+                                    <option value="1" <eq name="data.background" value="1">selected="selected"</eq>>背景1</option>
+                                    <option value="2" <eq name="data.background" value="2">selected="selected"</eq>>背景2</option>
+                                    <option value="3" <eq name="data.background" value="3">selected="selected"</eq>>背景3</option>
+                                    <option value="4" <eq name="data.background" value="4">selected="selected"</eq>>背景4</option>
+                                    <option value="5" <eq name="data.background" value="5">selected="selected"</eq>>背景5</option>
+                                    <option value="6" <eq name="data.background" value="6">selected="selected"</eq>>背景6</option>
+                                    <option value="7" <eq name="data.background" value="7">selected="selected"</eq>>背景7</option>
+                                    <option value="8" <eq name="data.background" value="8">selected="selected"</eq>>背景8</option>
+                                    <option value="9" <eq name="data.background" value="9">selected="selected"</eq>>背景9</option>
+                                    <option value="10" <eq name="data.background" value="10">selected="selected"</eq>>背景10</option>
+                                    <option value="0" <eq name="data.background" value="0">selected="selected"</eq>>自定义</option>
+                                </select>
+                                <div class="help-block"><div id="background_img" <eq name="data.background" value="0">style="display:none"</eq>><img src="__PUBLIC__/images/wechatcard/card_bg_{$data.background}.png" width="150"></div></div>
+                            </td>
+                        </tr>
+                        <script type="text/javascript">
+                            $(function(){
+                                $('#background').change(function(event) {
+                                    if($(this).val() == 0){
+                                        $("#photo").show();
+                                        $("#background_img").hide();
+                                    } else {
+                                        $("#background_img").show();
+                                        $("#background_img").find('img').attr('src',"__PUBLIC__/images/wechatcard/card_bg_"+$(this).val()+".png");
+                                        $("#photo").hide();
+                                    }
+                                });
+                            })
+                        </script>
+                        <tr class="" id='photo' <neq name="data.background" value="0">style='display:none'</neq>>
+                            <th><i class="require-red">*</i>自定义背景：</th>
+                            <td>
+                                <include file="Uploadfile:fileedit" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>卡名：</th>
+                            <td>
+                                <input class="common-text required form-control" id="name" name="name" size="50" value="{$data.name}" type="text" placeholder="请输入卡名">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>卡号前缀：</th>
+                            <td>
+                                <input class="common-text required form-control" id="qianzhui" name="qianzhui" size="50" value="{$data.qianzhui}" type="text" placeholder="例如：HY">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>卡位数：</th>
+                            <td>
+                                <select name="length" id="length" class="form-control">
+                                    <option value="5" <eq name="data.length" value="5">selected="selected"</eq>>5</option>
+                                    <option value="6" <eq name="data.length" value="6">selected="selected"</eq>>6</option>
+                                    <option value="7" <eq name="data.length" value="7">selected="selected"</eq>>7</option>
+                                    <option value="8" <eq name="data.length" value="8">selected="selected"</eq>>8</option>
+                                    <option value="9" <eq name="data.length" value="9">selected="selected"</eq>>9</option>
+                                    <option value="10" <eq name="data.length" value="10">selected="selected"</eq>>10</option>
+                                </select>
+                                <div class="help-block">例如：卡号随机数的个数</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style='width:120px'>使用说明：</th>
+                            <td>
+                                <!-- 加载编辑器的容器 -->
+                                <textarea name="content" id="container" style="width:100%;height:200px;line-height:20px">
+                                    {$data.content}
+                                </textarea>
+                                <include file="Public:ueditor" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>地址：</th>
+                            <td>
+                                <input class="common-text required form-control" id="address" name="address" size="50" value="{$data.address}" type="text" placeholder="请输入地址">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>联系电话：</th>
+                            <td>
+                                <input class="common-text required form-control" id="tel" name="tel" size="50" value="{$data.tel}" type="text" placeholder="请输入联系电话">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>网址：</th>
+                            <td>
+                                <input class="common-text required form-control" id="url" name="url" size="50" value="{$data.url}" type="text" placeholder="例如：{:C('SYSTEM_COPYRIGHT_URL')}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <td>
+                                 <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitAjaxForm("{:U("index")}","#myform")'>
+                                <input class="btn btn6 mr10" onclick="history.go(-1)" value="返回" type="button">
+                                <a class="btn btn-warning btn6 mr10" href="javascript:;" onclick="dialogContent('#getcode_{$data.id}','获取代码','80%','27%')">获取代码</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <input type="hidden" name="thumbw" value="{$thumbw}">
+            <input type="hidden" name="thumbh" value="{$thumbh}">
+            <input type="hidden" name="id" value="{$data.id}">
+        </form>
+    </div>
+</div>
+
+<volist name="data" id="datalist">
+<div id="getcode_{$datalist.id}" style="display: none;padding:15px 20px;">
+    <style type="text/css">
+        fieldset{
+            border:1px solid #ccc;
+            border-radius:5px;
+            padding: 10px;
+        }
+
+        legend{
+            border-radius:5px;
+            padding:3px 10px;
+            font-weight:bold;
+            background:#1e64c8;
+            color:#fff;
+        }
+
+        legend {
+            display: inherit;
+            width: auto;
+            margin-bottom: 0px;
+            font-size: inherit;
+            border-bottom: none 
+        }
+    </style>
+    <div class="form">
+        <fieldset>
+            <legend>调用URL代码</legend>
+            <div class="form-group">
+                <input type="text" name="jscode_js_{$datalist.id}" id="jscode_js_{$datalist.id}" value='{:U("Wechat/Card/index",array(),true,true)}' class="form-control">
+            </div>
+            <div class="input-group">
+                <input type="button" onclick="$('#jscode_js_{$datalist.id}').select();document.execCommand('Copy');" value="复制代码至剪贴板" class="btn btn-primary">
+            </div>
+        </fieldset>
+    </div>
+</div>
+</volist>

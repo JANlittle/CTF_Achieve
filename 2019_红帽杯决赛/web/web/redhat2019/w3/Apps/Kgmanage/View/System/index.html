@@ -1,0 +1,99 @@
+<layout name="Public/layout" />
+<div class="mwrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><span class="crumb-name">系统配置</span></div>
+    </div>
+    <div class="result-wrap" style='padding-bottom:0;'>
+        <form name="myform" id="myform" method="post">
+            <div class="result-title">
+                <div class="result-list">
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/add",session("uid")) eq 1'>
+                        <a href='{:U("add",$parameter."&parameter=".encode($parameter))}'><i class="icon-font">&#xe026;</i>新增配置</a>
+                    </if>
+                    <eq name="show_del_edit" value="1">
+                        <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/del",session("uid")) eq 1'>
+                            <a id="batchDel" href="javascript:void(0)" onclick="delall('{:U('del')}')"><i class="icon-font">&#xe037;</i>批量删除</a>
+                        </if>
+                        <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/sort",session("uid")) eq 1'>
+                            <a id="updateOrd" href="javascript:void(0)" onclick="sort('{:U('sort')}')"><i class="icon-font">&#xe00a;</i>更新排序</a>
+                        </if>
+                    </eq>
+                </div>
+            </div>
+            <div class="result-content">
+                <div class="tab-wrap">
+                    <ul class="tab-nav nav">
+                        <li <eq name="group" value="1">class="current"</eq>><a href='{:U("index",array("group"=>1))}' title="前缀：BASE_">基本配置</a></li>
+                        <li <eq name="group" value="2">class="current"</eq>><a href='{:U("index",array("group"=>2))}' title="前缀：CONTENT_">内容配置</a></li>
+                        <li <eq name="group" value="3">class="current"</eq>><a href='{:U("index",array("group"=>3))}' title="前缀：USER_">用户配置</a></li>
+                        <li <eq name="group" value="4">class="current"</eq>><a href='{:U("index",array("group"=>4))}' title="前缀：SYSTEM_">系统配置</a></li>
+                        <li <eq name="group" value="5">class="current"</eq>><a href='{:U("index",array("group"=>5))}' title="前缀：CACHE_">缓存配置</a></li>
+                        <li <eq name="group" value="6">class="current"</eq>><a href='{:U("index",array("group"=>6))}' title="前缀：OTHER_">其他配置</a></li>
+                        <div class="clear"></div>
+                    </ul>
+                    <div class="table-responsive">
+                    <if condition="!empty($data)">
+                        <table class="insert-tab table table-condensed table-hover" width="100%">
+                        <tbody>
+                            <tr>
+                                <td class="tc" colspan ="6" style='text-align: left;padding-left: 13px'>
+                                    <label class="label">
+                                        <input class="allChoose" onchange="selectAll(this)" id="selectall" type="checkbox" <eq name="show_del_edit" value="0">disabled="disabled"</eq>><span>全选</span>
+                                    </label>
+                                </td>
+                            </tr>
+
+                            <volist name="data" id="datalist">
+                            <tr>
+                            <td class="tc ids-td"><input name="ids[]" class='select_ids' value="{$datalist.id}" type="checkbox" <eq name="show_del_edit" value="0">disabled="disabled"</eq>></td>
+                                <td class="sort-td">
+                                    <input class="common-input sort-input sort form-control" dataId="{$datalist.id}" name="sort[]" value="{$datalist.sort}" type="text" <eq name="show_del_edit" value="0">disabled="disabled"</eq>>
+                                </td>
+                                <td style='text-align:right;width: 140px'><strong title="{$datalist.name}">{$datalist.title}：</strong></td>
+                                <td>
+                                    <switch name="datalist.type">
+                                        <case value="1">
+                                            <input class="common-text required form-control" id="{$datalist.name}" name="config[{$datalist.id}]" size="50" value="{$datalist.value}" type="text" <neq name="datalist.remark" value="">data-toggle="popover" data-trigger="hover" data-html="true" data-placement='top' title="说明" data-content="{$datalist.remark}"</neq> <eq name="show_del_edit" value="0">disabled="disabled"</eq> placeholder="请输入{$datalist.title}">
+                                        </case>
+                                        <case value="2">
+                                            <textarea name="config[{$datalist.id}]" class="common-textarea form-control" id="{$datalist.name}" cols="30" rows="3" <neq name="datalist.remark" value="">data-toggle="popover" data-trigger="hover" data-html="true" data-placement='top' title="说明" data-content="{$datalist.remark}"</neq> <eq name="show_del_edit" value="0">disabled="disabled"</eq> placeholder="请输入{$datalist.title}">{$datalist.value}</textarea>
+                                        </case>
+                                    </switch>
+                                </td>
+                                <eq name="show_del_edit" value="1">
+                                    <td>
+                                        <eq name="datalist.status" value="1">
+                                            <img src="__IMG__/yes.gif" alt="开启">
+                                        <else />
+                                            <img src="__IMG__/no.gif" alt="关闭">
+                                        </eq>
+                                    </td>
+                                    
+                                    <td>
+                                        <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/edit",session("uid")) eq 1'>
+                                            <a class="link-update" href='{:U("edit",$parameter."&id=".$datalist["id"]."&parameter=".encode($parameter))}'>修改</a>
+                                        </if>
+                                        <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/del",session("uid")) eq 1'>
+                                            <a class="link-del" href="javascript:;" onclick="del('{:U('del')}',{$datalist.id})">删除</a>
+                                        </if>
+                                    </td>
+                                </eq>
+                            </tr>
+                            </volist>
+                        </tbody>
+                        </table>
+                    </if>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <eq name="show_del_edit" value="1">
+        <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/setConfig",session("uid")) eq 1'>
+            <div class="blank10"></div>
+            <input class="btn btn-primary btn6 mr10 ml10" value="生成配置" type="button" onclick='submitForm("{:U("setConfig")}","#myform")'> 
+            <div class="help-block inline">（添加完配置请生成文件，否则无法使用新增配置项）</div>
+            <div class="blank10"></div>
+        </if>
+    </eq>
+</div>

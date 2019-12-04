@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>UC测试：用户首页</title>
+	<link rel = "shortcut icon" href="__PUBLIC__/images/favicon.ico" />
+	<link rel="stylesheet" href="__PUBLIC__/jqueryui/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="__CSS__/base.css">
+	<script src="__PUBLIC__/jqueryui/jquery-1.11.1.min.js"></script>
+	<script src="__PUBLIC__/jqueryui/bootstrap/js/bootstrap.min.js"></script>
+	<script src="__PUBLIC__/jqueryui/layer/layer.js"></script>
+	<script src="__PUBLIC__/jqueryui/layer/extend/layer.ext.js"></script>
+	<script type="text/javascript">
+		layer.config({
+			extend: ['skin/moon/style.css'],
+    		skin: 'layer-ext-moon'
+		});
+	</script>
+	<script src="__JS__/base.js"></script>
+</head>
+<body>
+	<div class="container">
+		<if condition="$uid">
+			恭喜你登陆成功！<a href='javascript:;' onclick='loginout("{:U("loginout")}")' class='btn btn-default'>退出</a><br>
+			用户名：{$username}<br>
+		<else />
+			<a href='{:U("login")}' class='btn btn-primary'>去登陆</a>
+			<a href='{:U("register")}' class='btn btn-primary'>去注册</a>
+		</if>
+	</div>
+</body>
+</html>

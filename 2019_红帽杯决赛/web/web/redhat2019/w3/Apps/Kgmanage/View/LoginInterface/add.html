@@ -1,0 +1,71 @@
+<layout name="Public/layout" />
+<div class="main-wrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><a class="crumb-name" href='{:U("index",decode($parameter))}'>登录接口</a><span class="crumb-step">&gt;</span><span>新增接口</span></div>
+    </div>
+    <div class="result-wrap table-responsive">
+        <div class="result-content">
+            <form action="" method="post" id="myform" name="myform" onsubmit="return false">
+                <table class="insert-tab table table-hover" width="100%">
+                    <tbody>
+                        <tr>
+                            <th><i class="require-red">*</i>名称：</th>
+                            <td>
+                                <input class="common-text required form-control" id="name" name="name" size="50" value="" type="text" placeholder="请输入名称">
+                                <div class="help-block">例如：新浪微博登录接口</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>类型名称：</th>
+                            <td>
+                                <input class="common-text required form-control" id="typename" name="typename" size="50" value="" type="text" placeholder="请输入类型名称">
+                                <div class="help-block">例如：sina</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>APP key：</th>
+                            <td>
+                                <input class="common-text required form-control" id="appkey" name="appkey" size="50" value="" type="text" placeholder="请输入APP key">
+                                <div class="help-block">应用注册成功后分配的 APP ID</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i> App secret：</th>
+                            <td>
+                                <input class="common-text required form-control" id="appsecret" name="appsecret" size="50" value="" type="text" placeholder="请输入App secret">
+                                <div class="help-block">应用注册成功后分配的KEY</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i> 回调地址：</th>
+                            <td>
+                                <input class="common-text required form-control" id="callbak" name="callbak" size="50" value="" type="text" placeholder="请输入回调地址">
+                                <div class="help-block">例如：http://www.aikehou.com/Members/callbak/type/sina，其中callbak是方法，type/sina是参数</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>状态：</th>
+                            <td>
+                                <select name="status" class="form-control">
+                                    <option value="1" selected="selected">开启</option>
+                                    <option value="0">关闭</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>描述：</th>
+                            <td><textarea name="description" class="common-textarea form-control" id="description" cols="30" rows="3" placeholder="请输入描述"></textarea></td>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <td>
+                                <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitForm("{:U("add")}","#myform")'>
+                                <input class="btn btn6" onclick="history.go(-1)" value="返回" type="button">
+                            </td>
+                        </tr>
+                    </tbody></table>
+                    <input type="hidden" name="parameter" value="{$parameter}">
+            </form>
+        </div>
+    </div>
+</div>

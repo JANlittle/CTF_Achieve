@@ -1,0 +1,87 @@
+<layout name="Public/layout" />
+<div class="main-wrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span>邮件配置</div>
+    </div>
+    <div class="result-wrap table-responsive">
+        <div class="result-content">
+            <form action="" method="post" id="myform" name="myform" onsubmit="return false">
+                <table class="insert-tab table table-hover" width="100%">
+                    <tbody>
+                        <tr>
+                            <th><i class="require-red">*</i>邮箱地址：</th>
+                            <td>
+                                <input class="common-text required form-control" id="email" name="email" size="50" value="{$email.email}" type="text" placeholder="请输入邮箱地址">
+                                <div class="help-block">例如：admin@163.com</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>SMTP服务器：</th>
+                            <td>
+                                <input class="common-text required form-control" id="smtp" name="smtp" size="50" value="{$email.smtp}" type="text" placeholder="请输入SMTP服务器">
+                                <div class="help-block">例如：smtp.163.com</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>SMTP端口号：</th>
+                            <td>
+                                <input class="common-text required form-control" id="port" name="port" size="50" value="{$email.port}" type="text" placeholder="请输入SMTP端口号">
+                                <div class="help-block">例如：25</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>邮箱登录帐号：</th>
+                            <td>
+                                <input class="common-text required form-control" id="accout" name="accout" size="50" value="{$email.accout}" type="text" placeholder="请输入邮箱登陆账号">
+                                <div class="help-block">例如：admin@163.com</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>邮箱密码：</th>
+                            <td>
+                                <input class="common-text required form-control" id="password" name="password" size="50" value="" type="password" placeholder="请输入邮箱密码">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>发件人名字：</th>
+                            <td>
+                                <input class="common-text required form-control" id="fromusername" name="fromusername" size="50" value="{$email.fromusername}" type="text" placeholder="请输入发件人名字">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>邮件模板：</th>
+                            <td>
+                                <textarea name="moban" class="common-textarea form-control" cols="30" rows="3" placeholder="请输入邮件模板">{$email.moban}</textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>状态：</th>
+                            <td>
+                                <select name="status" class="form-control">
+                                    <option value="1" <eq name="email.status" value="1">selected="selected"</eq>>开启</option>
+                                    <option value="0" <eq name="email.status" value="0">selected="selected"</eq>>关闭</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/emailtest",session("uid")) eq 1'>
+                        <tr>
+                            <th>邮件测试：</th>
+                            <td>
+                                <input class="common-text required form-control" id="ceshi" name="ceshi" size="50" value="" type="text" style="width:80%;display: inline-block" placeholder="请输入测试邮件地址"> <input class="btn btn-primary btn6 mr10" value="测试" type="button" onclick='submitForm("{:U("emailtest")}","#ceshi")'>
+                            </td>
+                        </tr>
+                        </if>
+                        <tr>
+                            <th></th>
+                            <td>
+                                <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitForm("{:U("index")}","#myform")'>
+                                <input class="btn btn6" onclick="history.go(-1)" value="返回" type="button">
+                            </td>
+                        </tr>
+                    </tbody></table>
+                    <input type="hidden" name='id' value="{$email.id}" />
+            </form>
+        </div>
+    </div>
+
+</div>

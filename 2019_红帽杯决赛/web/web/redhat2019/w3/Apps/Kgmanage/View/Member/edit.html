@@ -1,0 +1,66 @@
+<layout name="Public/layout" />
+<div class="main-wrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><a class="crumb-name" href='{:U("index",decode($parameter))}'>用户管理</a><span class="crumb-step">&gt;</span><span>编辑用户信息</span></div>
+    </div>
+    <div class="result-wrap table-responsive">
+        <div class="result-content">
+            <form action="" method="post" id="myform" name="myform" onsubmit="return false;">
+                <table class="insert-tab table table-hover" width="100%">
+                    <tbody>
+                        <tr>
+                            <th>昵称：</th>
+                            <td>
+                                <notempty name="data.ucmembers.username">
+                                    {$data.ucmembers.username}
+                                <else/>
+                                    {$data.ucmembers.openid}
+                                </notempty>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>类型：</th>
+                            <td>
+                                {$data.ucmembers.type}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>积分：</th>
+                            <td>
+                                <input class="common-text required form-control" id="score" name="score" size="50" value="{$data.score}" type="text" placeholder="请输入积分">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>锁定：</th>
+                            <td>
+                                <select name="lock" class="form-control">
+                                    <option value="0" <eq name="data.lock" value="0">selected="selected"</eq>>未锁定</option>
+                                    <option value="1" <eq name="data.lock" value="1">selected="selected"</eq>>锁定</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>状态：</th>
+                            <td>
+                                <select name="status" class="form-control">
+                                    <option value="1" <eq name="data.status" value="1">selected="selected"</eq>>开启</option>
+                                    <option value="0" <eq name="data.status" value="0">selected="selected"</eq>>关闭</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <td>
+                                <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitForm("{:U("edit")}","#myform")'>
+                                <input class="btn btn6" onclick="history.go(-1)" value="返回" type="button">
+                            </td>
+                        </tr>
+                    </tbody>
+                    </table>
+                    <input type="hidden" name="uid" value="{$data.uid}">
+                    <input type="hidden" name="parameter" value="{$parameter}">
+            </form>
+        </div>
+    </div>
+
+</div>

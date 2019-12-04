@@ -1,0 +1,39 @@
+<include file="Public:htmlcommon" />
+<include file="Public:seolist" />
+<include file="Public:headcommon" />
+</head>
+<body>
+	<div class="container">
+		<include file="Public:demonav" />
+		<h3>系统配置</h3>
+		<?php
+			p($system_config);
+		?>
+
+<div class="blokc-help">PHP代码：</div>
+<pre class="prettyprint linenums">
+代码文件：CommonController.class.php、SystemController.class.php
+
+//获取配置
+$system_config = S('ALL_CONFIG'.C('SITEID'));
+//空的情况下生成缓存
+if(empty($system_config)){
+    //生成缓存
+    setConfig('ALL_CONFIG'.C('SITEID'),array(0,C('SITEID')));
+    $system_config = S('ALL_CONFIG'.C('SITEID'));
+}
+//缓存设置成配置
+C($system_config);
+$this->system_config = $system_config;
+</pre>
+
+<div class="blokc-help">获取配置：</div>
+<pre class="prettyprinthtml prettyprint linenums">
+<literal>
+示例：{:C('BASE_WEBNAME')}
+</literal>
+</pre>
+	</div>
+<include file="Public:foot" />	
+</body>
+</html>

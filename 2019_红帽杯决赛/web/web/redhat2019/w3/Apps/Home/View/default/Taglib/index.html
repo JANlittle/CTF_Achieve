@@ -1,0 +1,77 @@
+<include file="Public:htmlcommon" />
+<include file="Public:seolist" />
+<include file="Public:headcommon" />
+</head>
+<body>
+<div class="container">
+	<include file="Public:demonav" />
+	<runsql name="articledata" id="mydata" table="article" truetable="" join="" relation="" field="" where="" order="" limit="10" page="2" cache="0" cachename="list" pageparameter="" pageurl="taglib/" pagedepr="_" pageisbootstrap="1" pageprev="上" pagenext="下" pageheader="">
+		{$mydata.catid}：{$mydata.id}<br/>
+	</runsql>
+
+<div class="blokc-help">HTML代码：</div>
+<pre class="prettyprinthtml prettyprint linenums">
+<literal>
+<runsql name="articledata" id="mydata" table="article" truetable="echo_article" join="RIGHT JOIN __CATEGORY__ ON __ARTICLE__.catid = __CATEGORY__.id" relation="array('Category')" field="id,catid,title" where="id = $id" order="input_time DESC" limit="10" page="2" cache="0" cachename="list" pageparameter="" pageurl="taglib/" pagedepr="_" pageisbootstrap="1" pageprev="上一页" pagenext="下一页" pageheader="">
+		{$mydata.catid}：{$mydata.id}<br/>
+</runsql>
+
+或者
+
+<aikehou:runsql name="articledata" id="mydata" table="article" truetable="echo_article" join="RIGHT JOIN __CATEGORY__ ON __ARTICLE__.catid = __CATEGORY__.id" relation="array('Category')" field="id,catid,title" where="id = $id" order="input_time DESC" limit="10" page="2" cache="0" cachename="list" pageparameter="" pageurl="taglib/" pagedepr="_" pageisbootstrap="1" pageprev="上一页" pagenext="下一页" pageheader="">
+		{$mydata.catid}：{$mydata.id}<br/>
+</aikehou:runsql>
+
+runsql标签：（使用前倾确保标签库已经加载）
+
+1、文件位置：Apps/Plugins/TagLib/Aikehou.class.php
+
+2、runsql是内置标签volist改装而来，所以基本属性可以参考volist标签(例如：name属性，id属性)
+
+3、属性解释
+
+	name="articledata"：runsql的名称唯一标识符，必填
+
+	id="mydata"：循环数据的名称，必填
+
+	table="article"：数据表名称为article，必填
+
+	truetable="echo_geyoutu geyoutu,echo_article article"：设置新的真实表（带前缀），但如果relation存在时则无效
+
+	relation="Category" 或者 relation="array('Category','Category1')"：关联模型，必须保证有相应的Model
+
+	join="RIGHT JOIN __CATEGORY__ ON __ARTICLE__.catid = __CATEGORY__.id"：join的sql语句，请配置表名
+
+	field="id,catid,title"：需要取出的字段
+
+	where="id = 1"：where条件，可以传递变量：where="id = $id"
+
+	order="sort DESC"：order条件
+
+	cache="0"：是否开启缓存，1-开启，0-不开启
+
+		cachename="list"：当前页面缓存唯一标识符，这个作用是当前页面多个runsql标签，并且开启缓存时，请确保唯一
+
+	limit="10"：limit条件，注意当page属性存在时，无效
+
+	page="2"：分页数量，必须为数字，否则不生效，分页规则调用的是function.php中的getPage()方法
+
+		pageparameter=""：分页参数，一般不填写
+
+		pageurl="index/"：分页url
+
+		pagedepr="_"：分页连接符，与pageurl配合使用
+
+		pageisbootstrap="1"：是否bootstrap分页
+
+		pageprev="上"：首页字符串
+
+		pagenext="下"：尾页字符串
+
+		pageheader="<span class='rows'>共 %TOTAL_ROW% 条记录</span>"：记录
+</literal>
+</pre>
+	</div>
+<include file="Public:foot" />	
+</body>
+</html>

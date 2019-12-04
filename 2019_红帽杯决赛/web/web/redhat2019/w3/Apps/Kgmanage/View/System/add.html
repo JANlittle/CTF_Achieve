@@ -1,0 +1,77 @@
+<layout name="Public/layout" />
+<div class="main-wrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><a class="crumb-name" href='{:U("index",decode($parameter))}'>系统配置</a><span class="crumb-step">&gt;</span><span>新增配置</span></div>
+    </div>
+    <div class="result-wrap table-responsive">
+        <div class="result-content">
+            <form action="" method="post" id="myform" name="myform" onsubmit="return false">
+                <table class="insert-tab table table-hover" width="100%">
+                    <tbody>
+                        <tr>
+                            <th><i class="require-red">*</i>分组：</th>
+                            <td>
+                                <select name="group" class="form-control">
+                                    <option value="1" selected="selected">基本配置</option>
+                                    <option value="2">内容配置</option>
+                                    <option value="3">用户配置</option>
+                                    <option value="4">系统配置</option>
+                                    <option value="5">缓存配置</option>
+                                    <option value="6">其他配置</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>名称：</th>
+                            <td>
+                                <input class="common-text required form-control" id="name" name="name" size="50" value="" type="text" placeholder="请输入名称">
+                                <div class="help-block">例如：BASE_WEBNAME，为了避免重复最好添加不同的前缀，站点配置请与公共站点区分开，可加前缀：SITE_</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>显示标题：</th>
+                            <td>
+                                <input class="common-text required form-control" id="title" name="title" size="50" value="" type="text" placeholder="请输入显示标题">
+                                <div class="help-block">例如：网站名称</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><i class="require-red">*</i>类型：</th>
+                            <td>
+                                <select name="type" class="form-control">
+                                    <option value="1" selected="selected">单文本</option>
+                                    <option value="2">多文本</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>配置内容：</th>
+                            <td><textarea name="value" class="common-textarea form-control" id="value" cols="30" rows="3" placeholder="请输入配置内容"></textarea></td>
+                        </tr>
+                        <tr>
+                            <th>状态：</th>
+                            <td>
+                                <select name="status" class="form-control">
+                                    <option value="1" selected="selected">开启</option>
+                                    <option value="0">关闭</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>配置说明：</th>
+                            <td><textarea name="remark" class="common-textarea form-control" id="remark" cols="30" rows="3" placeholder="请输入配置说明"></textarea></td>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <td>
+                                <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitForm("{:U("add")}","#myform")'>
+                                <input class="btn btn6" onclick="history.go(-1)" value="返回" type="button">
+                            </td>
+                        </tr>
+                    </tbody></table>
+                    <input type="hidden" name="parameter" value="{$parameter}">
+            </form>
+        </div>
+    </div>
+
+</div>

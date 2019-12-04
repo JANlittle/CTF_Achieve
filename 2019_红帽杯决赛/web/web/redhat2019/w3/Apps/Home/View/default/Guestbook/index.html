@@ -1,0 +1,175 @@
+<include file="Public:htmlcommon" />
+<include file="Public:seolist" />
+<include file="Public:headcommon" />
+</head>
+<body>
+	<div class="container">
+		<include file="Public:demonav" />
+		<h3>留言建议</h3>
+		<form action="" method="post" id="guestbookForm" onsubmit="return false">
+			<div class="form-group">
+				<label for="guestbook_title">留言主题：</label>
+				<input type="text"  name="title"  value="" placeholder="请输入主题" id="guestbook_title" class='form-control'>
+			</div>
+			<div class="form-group">
+				<label for="guestbook_content">留言内容：</label>
+				<textarea name="content" placeholder="请输入内容" id="guestbook_content" class='form-control'></textarea>
+			</div>
+			<div class="form-group">
+				<label for="guestbook_code">验证码：</label>
+				<input type="text" name="code" value="" placeholder="请输入验证码" id="guestbook_code" class='form-control'>
+			</div>
+			<div class="form-group">
+				<img style='vertical-align: middle;cursor: pointer' class="captcha" onclick="changeVerify('#guestbook_captcha')" title="点击刷新验证码" id="guestbook_captcha" src="{:U('Common/verify')}">
+			</div>
+			<div class="form-group">
+				<input type="submit" name="sub" value="提交" id="sub" class="btn btn-default" onclick="Guestbook()">
+			</div>
+			<input type="hidden" name="source" value="留言建议">
+			<script type="text/javascript">
+
+                /**
+                 * [changeVerify 刷新验证码]
+                 * @param  {[object]} obj [传递的对象]
+                 * @return {[void]}
+                 */
+                function changeVerify(obj){
+                    $(obj).attr({
+                        src:"{:U('Common/verify')}"+"?time="+Math.random()
+                    });
+                }
+
+	            function Guestbook(){
+	                //验证数据合法性
+	                //验证主题
+	                if($("#guestbook_title").val().length == ''){
+	                    layer.open({
+	                        content:'留言主题必须填写！',
+	                        yes:function(index){
+	                            layer.close(index);
+	                            $("#guestbook_title").focus();
+	                        },
+	                        icon:2
+	                    });
+	                    return false;
+	                }
+
+	                //验证内容
+	                if($("#guestbook_content").val().length == ''){
+	                    layer.open({
+	                        content:'留言内容必须填写！',
+	                        yes:function(index){
+	                            layer.close(index);
+	                            $("#guestbook_content").focus();
+	                        },
+	                        icon:2
+	                    });
+	                    return false;
+	                }
+
+	                //验证验证码
+	                if($("#guestbook_code").val().length == ''){
+	                    layer.open({
+	                        content:'验证码必须填写！',
+	                        yes:function(index){
+	                            layer.close(index);
+	                            $("#guestbook_code").focus();
+	                        },
+	                        icon:2
+	                    });
+	                    return false;
+	                }
+
+	                //执行写入
+	                submitForm("{:U('guestbook')}",'#guestbookForm');
+	            }
+	        </script>
+		</form>
+<div class="blokc-help">PHP代码：</div>
+<pre class="prettyprint linenums">
+代码文件：GuestbookController.class.php
+
+/**
+ * [guestbook 留言建议]
+ * @return [type] [description]
+ */
+public function guestbook()
+{
+    if(IS_POST){
+
+        //验证ip是否被限制
+        $this->iplimit();
+
+        //验证是否允许游客登陆
+        if(C('ALLOW_USRE_GUESTBOOK')){
+            //允许游客留言
+            $uid = 0;
+        } else {
+            //不允许游客留言，则提示登陆
+            if(session('?echouid')){
+                $uid = session('echouid');
+            } else {
+                //跳转登陆
+                $return_data['status']  = 0;
+                $return_data['url'] = U('Members/login@'.$this->myurl,array('returnurl' => encode(U('index@'.$this->myurl,'',false,true))),true,true);
+                $return_data['info'] = L('_ALLOW_USER_GUESTBOOK_ERROR_');
+                $this->ajaxReturn($return_data);
+            }
+        }
+
+        //验证标题敏感词汇
+        $this->sensitivewords(I('post.title'),L('_GUESTBOOK_TITLE_SENSITIVE_'));
+        $this->sensitivewords(I('post.content'),L('_GUESTBOOK_CONTENT_SENSITIVE_'));
+
+        //验证码
+        $code = I('post.code');
+        if(isset($code) && !empty($code)){
+            if(!check_verify($code)){
+                $this->error(L('_VERIFY_ERROR_'));
+            }
+        }
+
+        //创建数据
+        $guestbook = D('Guestbook');
+        if($guestbook->create()){
+            //验证是否存在数据
+            $where['uid'] = array('eq',$uid);
+            $where['siteid'] = array('eq',C('SITEID'));
+            $where['create_time'] = array('egt',time() - C('GUESTBOOK_LIMIT_TIME'));
+            if($one = $guestbook->where($where)->find()){
+                $this->error(L('_GUESTBOOK_EXISTS_',array('time' => (C('GUESTBOOK_LIMIT_TIME') + $one['create_time'] - time())."s")));
+            }
+
+            //uid
+            $guestbook->uid = $uid;
+
+            //ip
+            $guestbook->ip = get_client_ip();
+
+            //地区
+            $ip = new \Org\Net\IpLocation('UTFWry.dat');
+            $area = $ip->getlocation($guestbook->ip);
+            $guestbook->area = serialize($area);
+
+            //事件
+            $guestbook->create_time = time();
+            $guestbook->siteid = C('SITEID');
+
+            if($inserid = $guestbook->add()){
+                $guestbook->where("id = ".$inserid."")->setField("sort",$inserid);
+                $this->success(L('_GUESTBOOK_SUCCESS_'));
+            } else {
+                $this->error(L('_GUESTBOOK_ERROR_'));
+            }
+        } else {
+            $this->error($guestbook->getError());
+        }
+    } else {
+        $this->error(L('_ACCESS_ERROR_'));
+    }
+}
+</pre>		
+	</div>
+<include file="Public:foot" />    
+</body>
+</html>

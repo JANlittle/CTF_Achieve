@@ -1,0 +1,75 @@
+<layout name="Public/layout" />
+<div class="mwrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><span class="crumb-name">欢迎语</span></div>
+    </div>
+    <div class="result-wrap table-responsive" style='padding-bottom:0;'>
+        <form name="myform" id="myform" method="post" onsubmit="return false" enctype="multipart/form-data">
+            <div class="result-content">
+                <div class="tab-wrap">
+                    <table class="insert-tab table table-hover" id="tab1" width="100%">
+                        <tbody>
+                            <tr>
+                                <th width="150"><i class="require-red">*</i>类型：</th>
+                                <td>
+                                    <select name="type" id="data-type" class="form-control">
+                                        <option value="1" <eq name="data.type" value="1">selected="selected"</eq>>文本</option>
+                                        <option value="2" <eq name="data.type" value="2">selected="selected"</eq>>图文</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr id='title-data' <eq name="data.type" value="1">style='display:none'</eq>>
+                                <th><i class="require-red">*</i>标题：</th>
+                                <td>
+                                    <input class="common-text required form-control" id="title" name="title" size="50" value="{$data.title}" type="text" placeholder="请输入标题">
+                                </td>
+                            </tr>
+                            <script type="text/javascript">
+                                $(function(){
+                                    $('#data-type').change(function(event) {
+                                        if($(this).val() == 2){
+                                            $("#photo,#title-data,#data-link").show();
+                                        } else {
+                                            $("#photo,#title-data,#data-link").hide();
+                                        }
+                                    });
+                                })
+                            </script>
+                            <tr class="" id='photo' <eq name="data.type" value="1">style='display:none'</eq>>
+                                <th><i class="require-red">*</i>图片：</th>
+                                <td>
+                                    <include file="Uploadfile:fileedit" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><i class="require-red">*</i>内容：</th>
+                                <td>
+                                    <textarea name="content" class="common-textarea form-control" id="content" cols="30" rows="3" placeholder="请输入内容">{$data.content}</textarea>
+                                </td>
+                            </tr>
+                            <tr id='data-link'  <eq name="data.type" value="1">style='display:none'</eq>>
+                                <th><i class="require-red">*</i>链接：</th>
+                                <td>
+                                    <input class="common-text required form-control" id="url" name="url" size="50" value="{$data.url}" type="text" placeholder="例如：{:C('SYSTEM_COPYRIGHT_URL')}">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="blank15"></div>
+                    <table width="100%">
+                        <tbody>
+                            <tr>
+                                <th></th>
+                                <td>
+                                    <input class="btn btn-primary btn6 mr10" value="提交" type="submit" onclick='submitAjaxForm("{:U("index")}","#myform")'>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="blank15"></div>
+                </div>
+            </div>
+            <input type="hidden" name="id" value="{$data.id}">
+        </form>
+    </div>
+</div>

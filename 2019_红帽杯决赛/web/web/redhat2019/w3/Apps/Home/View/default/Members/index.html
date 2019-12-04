@@ -1,0 +1,26 @@
+<include file="Public:htmlcommon" />
+	<title>会员中心 - {:C('BASE_WEBNAME')}</title>
+	<meta name="keywords" content="会员中心" />
+	<meta name="description" content="会员中心" />
+<include file="Public:headcommon" />
+</head>
+<body>
+	<div class="container">
+		<include file="Public:demonav" />
+		<h3>用户中心</h3>
+		<notempty name="userinfo">
+			恭喜你登陆成功！<a href='javascript:;' onclick='loginout("{:U("loginout")}")' class='btn btn-default'>退出</a><br>
+			用户名：<if condition="$userinfo['type'] eq 'system'">{$userinfo.username}<else/>{$userinfo.name}</if><br>
+			<notempty name="userinfo.thumb">头像：<if condition="$userinfo['type'] eq 'system'"><img src="{:C('UCENTER_DOMAIN')}{$userinfo[thumb][0][thumb]}" alt="{$userinfo.username}"><else/><img src="{$userinfo[thumb][0][thumb]}" alt="{$userinfo.name}"></if></notempty><br>
+		<else />
+			<a href='{:U("login@$myurl","",true,true)}' class='btn btn-primary'>去登陆</a>
+			<a href='{:U("register@$myurl","",true,true)}' class='btn btn-primary'>去注册</a>
+		</notempty>
+<div class="blokc-help">PHP代码：</div>
+<pre class="prettyprint linenums">
+代码文件：MembersController.class.php，用户中心参考此文件代码
+</pre>		
+	</div>
+<include file="Public:foot" />	
+</body>
+</html>

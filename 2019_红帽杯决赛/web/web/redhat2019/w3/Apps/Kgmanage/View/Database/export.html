@@ -1,0 +1,83 @@
+<layout name="Public/layout" />
+<div class="mwrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href='{:U("Index/index")}'>首页</a><span class="crumb-step">&gt;</span><span class="crumb-name">数据库备份</span></div>
+    </div>
+    <div class="result-wrap">
+        <form name="myform" id="myform" method="post">
+            <div class="result-title">
+                <div class="result-list">
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/exportsql",session("uid")) eq 1'>
+                        <a href='javascript:;' onclick="optimize_repaire('{:U('exportsql')}')"><i class="icon-font">&#xe032;</i>立即备份</a>
+                    </if>
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/optimize",session("uid")) eq 1'>
+                        <a id="batchDel" href="javascript:void(0)" onclick="optimize_repaire('{:U('optimize')}')"><i class="icon-font">&#xe014;</i>优化表</a>
+                    </if>
+                    <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/repair",session("uid")) eq 1'>
+                        <a id="updateOrd" href="javascript:void(0)" onclick="optimize_repaire('{:U('repair')}')"><i class="icon-font">&#xe00b;</i>修复表</a>
+                    </if>
+                </div>
+            </div>
+            <div class="result-content table-responsive">
+                <table class="result-tab table table-hover" width="100%">
+                    <tr class='head-tr'>
+                        <th class="tc ids-td"><input class="allChoose" onchange="selectAll(this)" id="selectall" type="checkbox"></th>
+                        <th>表名</th>
+                        <th>数据量</th>
+                        <th>数据大小</th>
+                        <th>描述</th>
+                        <th>引擎类型</th>
+                        <th>创建时间</th>
+                        <th>操作</th>
+                    </tr>
+                    <volist name="data" id="datalist">
+                    <tr>
+                        <td class="tc ids-td"><input name="tables[]" class='select_ids' value="{$datalist.name}" type="checkbox" ></td>
+                        <td>{$datalist.name}</td>
+                        <td>{$datalist.rows}</td>
+                        <td>{$datalist.data_length|format_bytes}</td>
+                        <td>{$datalist.comment}</td>
+                        <td>{$datalist.engine}</td>
+                        <td>{$datalist.create_time}</td>
+                        <td>
+                            <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/optimize",session("uid")) eq 1'>
+                                <a class="link-optimize" href="javascript:;"  onclick="postUrl('{:U('optimize')}','{$datalist.name}')">优化表</a>
+                            </if>
+                            <if condition='authCheck(MODULE_NAME."/".CONTROLLER_NAME."/repair",session("uid")) eq 1'>
+                                <a class="link-repair" href="javascript:;" onclick="postUrl('{:U('repair')}','{$datalist.name}')">修复表</a>
+                            </if>
+                        </td>
+                    </tr>
+                    </volist>
+
+                </table>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+/**
+ * [optimize_repaire 批量修复优化表]
+ * @param  {[string]} url [处理数据的url地址]
+ * @return {[json]}       [返回json格式]
+ */
+function optimize_repaire(url){
+    var tables = [];
+    $(".select_ids:checked").each(function(index, el) {
+        tables.push($(this).val());
+    });
+
+    if(tables.length == 0){
+        layer.open({
+            content:'请选择要操作的数据！',
+            yes:function(index){
+                layer.close(index);
+            },
+            icon:2
+        });
+        return false;
+    }
+    postUrl(url,tables);
+}
+</script>
